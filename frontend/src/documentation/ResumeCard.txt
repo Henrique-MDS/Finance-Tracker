@@ -1,0 +1,10 @@
+
+Card exibido na página principal para resumo de valores
+argumentos que devem ser enviados ao usar
+title -> título
+valor -> valor em dinheiro
+desc -> descrição curta do resumo financeiro
+emoji -> ícone para exibição
+themeColor -> cor para texto e customizações em hexadecimal
+
+
