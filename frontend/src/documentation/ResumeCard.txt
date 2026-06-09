@@ -6,5 +6,5 @@ valor -> valor em dinheiro
 desc -> descrição curta do resumo financeiro
 emoji -> ícone para exibição
 themeColor -> cor para texto e customizações em hexadecimal
-
+bgColor -> cor de fundo do ícone em hexadecimal
 
