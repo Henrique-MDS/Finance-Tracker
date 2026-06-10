@@ -3,9 +3,11 @@ import { Outlet } from "react-router-dom";
 function App() {
   
   return (
-    <>
-      <Outlet />
-    </>
+    <div>
+      <div className="p-7">
+        <Outlet />
+      </div>
+    </div> 
   );
 }
 

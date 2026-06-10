@@ -1,0 +1,2 @@
+getData -> Função para pegar um dado específico com base nos parametros enviados em forma de objeto
+-> A variável "operation" é um breve resumo do que será buscado no banco. É utilizado para retornar um log, caso haja erro
