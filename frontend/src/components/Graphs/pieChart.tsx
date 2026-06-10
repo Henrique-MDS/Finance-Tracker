@@ -17,7 +17,7 @@ export default function DonutChart() {
         getData("Users", {id: "91c6fb66-af21-46bb-bb98-bf9aab96ea6b", name: "Delta"}, "get user");
     }, [])
   return (
-    <div className="bg-[#0E1621] rounded-xl flex items-center">
+    <div className="bg-[#0E1621] rounded-xl flex items-center p-3">
         <div className="relative w-[300px] h-[300px]">
             <ResponsiveContainer>
                 <PieChart>

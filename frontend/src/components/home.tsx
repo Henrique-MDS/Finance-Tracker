@@ -1,5 +1,6 @@
 import ResumeCard from "./ResumeCards/ResumeCard";
 import DonutChart from "./Graphs/pieChart";
+import BarGraph from "./Graphs/barGraph";
 
 export function MainPage() {
   
@@ -16,8 +17,14 @@ export function MainPage() {
                     emoji="💵" themeColor="#2CAE60" bgColor="#12302F"/>
         
       </div>
-      <div>
-        <DonutChart />
+      <div className="flex flex-wrap gap-4">
+        <div className="w-full lg:flex-1">
+          <DonutChart />
+        </div>
+
+        <div className="w-full lg:flex-1">
+          <BarGraph />
+        </div>
       </div>
     </div>
   );
