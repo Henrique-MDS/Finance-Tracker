@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import MainPage from "./components/home";
+import Transactions from "./components/Transactions/transactions";
 
 export const router = createBrowserRouter([
   {
@@ -11,10 +12,10 @@ export const router = createBrowserRouter([
             index: true,
             element: <MainPage />,
        },
-    //   {
-    //     path: "users",
-    //     element: <Users />,
-    //   },
+      {
+        path: "Transactions",
+        element: <Transactions />,
+      },
     ],
   },
 ]);

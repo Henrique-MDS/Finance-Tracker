@@ -9,9 +9,9 @@ export function Navbar(){
             <img src="src/assets/logo-tracker.png" alt="finance-tracker-logo" className="h-[150px]"/>
         </div>
         <div className="flex flex-col gap-3">
-            <NavbarOption svgPath="src/assets/dashboard-icon.svg" label="Dashboard"/>
-            <NavbarOption svgPath="src/assets/transaction-icon.svg" label="Transações"/>
-            <NavbarOption svgPath="src/assets/category-icon.svg" label="Categorias"/>
+            <NavbarOption svgPath="src/assets/dashboard-icon.svg" label="Dashboard" pagePath="/"/>
+            <NavbarOption svgPath="src/assets/transaction-icon.svg" label="Transações" pagePath="Transactions"/>
+            <NavbarOption svgPath="src/assets/category-icon.svg" label="Categorias" pagePath="Categories"/>
         </div>        
     </div>
   );
