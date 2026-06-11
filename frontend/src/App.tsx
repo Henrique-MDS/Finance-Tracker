@@ -6,7 +6,7 @@ function App() {
   return (
     <div className="flex">
       <Navbar />
-      <div className="p-7">
+      <div className="p-7 flex-1">
         <Outlet />
       </div>
     </div> 
