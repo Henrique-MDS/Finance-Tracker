@@ -1,0 +1,8 @@
+
+
+packs que precisam ser instalados:
+1 - supabase npm install @supabase/supabase-js
+2 - recharts
+3 - react-router-dom
+4 - react-hot-toast para popups
+

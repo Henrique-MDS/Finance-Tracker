@@ -1,0 +1,64 @@
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { insertUser } from "../../Utils/insertUser";
+
+export function RegisterPage() {
+
+    const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
+    const [password, setPassword] = useState("");
+
+    const getCredentials = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if(e.target.placeholder == "Email"){
+           setEmail(e.target.value); 
+        } else if(e.target.placeholder == "Nome") {
+            setName(e.target.value);
+        } else if(e.target.placeholder == "Senha") {
+            setPassword(e.target.value);
+        }
+    }
+
+    const registerUser = async () => {
+        if(!name || !email || !password){
+            toast.dismiss();
+            toast.error("Todos os campos deve estar preenchidos", {
+                duration: 1500,
+                position: "top-center",
+            });
+        }
+        
+
+        let result = await insertUser(name, email, password);
+        let getResult = result;
+        console.log(getResult)
+        if(getResult.success){
+            toast.success(getResult.message, {
+                duration: 1500,
+                position: "top-center",
+            });
+        } else {
+            toast.error(getResult.message, {
+                duration: 1500,
+                position: "top-center",
+            });
+        }
+        
+    }
+
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center">
+        <div className="flex flex-col gap-8 bg-[#060B14] p-10 rounded-xl">
+            <h1 className="text-2xl">Crie uma conta</h1>
+            <input type="text" placeholder="Nome" onChange={(e) => getCredentials(e)}/>
+            <input type="text" placeholder="Email" onChange={(e) => getCredentials(e)}/>
+            <input type="password" placeholder="Senha" onChange={(e) => getCredentials(e)}/>
+            <div className="flex items-center justify-center">
+                <button className="text-xl cursor-pointer bg-emerald-800 p-2.5 rounded-xl w-full hover:bg-emerald-600 text-amber-50"
+                onClick={() => registerUser()}>Registrar</button>
+            </div>  
+        </div>          
+    </div>
+  );
+}
+
+export default RegisterPage;
