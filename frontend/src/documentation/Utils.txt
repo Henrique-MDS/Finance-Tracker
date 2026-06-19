@@ -1,2 +1,4 @@
 getData -> Função para pegar um dado específico com base nos parametros enviados em forma de objeto
 -> A variável "operation" é um breve resumo do que será buscado no banco. É utilizado para retornar um log, caso haja erro
+verifyEmail -> Função com uma regex para testar se o email é valido (apenas os caracteres, não envia token)
+getUserLogin -> Pega as credenciais do usuario e faz uma consulta, se tiver grava o id no localStorage para poder entrar em rotas protegidas
