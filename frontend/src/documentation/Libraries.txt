@@ -5,4 +5,5 @@ packs que precisam ser instalados:
 2 - recharts
 3 - react-router-dom
 4 - react-hot-toast para popups
+5 - shadcn ui npx shadcn@latest init e npm install -D @types/node
 

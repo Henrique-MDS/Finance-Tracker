@@ -1,3 +1,4 @@
+RESUMECARD
 
 Card exibido na página principal para resumo de valores
 argumentos que devem ser enviados ao usar
@@ -8,3 +9,8 @@ emoji -> ícone para exibição
 themeColor -> cor para texto e customizações em hexadecimal
 bgColor -> cor de fundo do ícone em hexadecimal
 
+SELECT_INPUTS
+um input select com um label, suas propriedades são
+label -> texto de exibiçao do input
+placeholder -> placeholder para exibir no campo
+option -> opções para selecionar (enviado em forma de array de strings)
