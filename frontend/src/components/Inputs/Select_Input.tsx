@@ -11,27 +11,36 @@ interface SelectInputProps {
   label: string;
   placeholder: string;
   options: string[];
+  value?: string
+  onValueChange?: (value: string) => void;
 }
 
-export function SelectInput({label, placeholder, options}:SelectInputProps){
-  
+export function SelectInput({
+  label,
+  placeholder,
+  options,
+  value,
+  onValueChange
+}: SelectInputProps) {
   return (
     <div className="flex flex-col gap-3">
-        <p>{label}</p>
-        <Select>
+      <p>{label}</p>
+
+      <Select onValueChange={onValueChange} value={value}>
         <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder={placeholder} />
+          <SelectValue placeholder={placeholder} />
         </SelectTrigger>
+
         <SelectContent>
-            <SelectGroup>
-                {
-                    options.map((option) => (
-                        <SelectItem key={option} value={option}>{option}</SelectItem>
-                    ))
-                }
-            </SelectGroup>
+          <SelectGroup>
+            {options.map((option) => (
+              <SelectItem key={option} value={option}>
+                {option}
+              </SelectItem>
+            ))}
+          </SelectGroup>
         </SelectContent>
-        </Select>
+      </Select>
     </div>
   );
 }

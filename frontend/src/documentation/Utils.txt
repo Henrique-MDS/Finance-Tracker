@@ -9,3 +9,4 @@ const categories = await getData(
 
 verifyEmail -> Função com uma regex para testar se o email é valido (apenas os caracteres, não envia token)
 getUserLogin -> Pega as credenciais do usuario e faz uma consulta, se tiver grava o id no localStorage para poder entrar em rotas protegidas
+notify -> aceita uma mensagem como parametro para exibir um popup na tela, pode ser de erro ou sucesso. ex: notify.error("Campos obrigatórios não preenchidos")
