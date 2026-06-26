@@ -20,6 +20,8 @@ import {
 import toast, { Toaster } from "react-hot-toast";
 import { insertTransactionFormData } from "@/Utils/insertTransactionFormData";
 import { notify } from "@/Utils/notify";
+import TransactionGrid from "../Transaction_Grid/TransactionGrid";
+import { verifyForm } from "@/Utils/verifyForm";
 
 interface Category {
   created_at: string;
@@ -38,6 +40,9 @@ export function Transactions() {
   const [value, setValue] = useState("");
   const [desc, setDesc] = useState("");
   const userId = localStorage.getItem("userId");
+  const [transactions, setTransactions] = useState<any[]>([]);
+
+  
 
   useEffect(() => {
     const getCategories = async () => {
@@ -50,30 +55,31 @@ export function Transactions() {
         { user_id: userId },
         "Buscar todas as categorias"
       );
-
-      const safeCategories = Array.isArray(categories) ? categories : [];
-
+      const safeCategories = Array.isArray(categories.data) ? categories.data : [];
       setCat(safeCategories);
 
       const names = safeCategories.map((c) => c.name);
       setCatOptions(names);
     };
 
+    const getTransactionData = async () => {
+      const transctionData = await getData(
+        "Transactions",
+        { user_id: userId },
+        "Buscar transações do usuário no banco"
+      );
+
+      if(transctionData.success == false){
+        notify.error(transctionData.message);
+        return;
+      }
+
+      setTransactions(transctionData.data || []);
+    }
+
     getCategories();
-  }, []);
-
-  const verifyForm = () => {
-    if(!type || !category || !value){
-      notify.error("Campos obrigatórios não preenchidos")
-      return false;
-    }
-
-    if(desc && desc.length > 100){
-      notify.error("Descrição deve ter menos que 100 caracteres");
-      return false;
-    }
-    return true;
-  }
+    getTransactionData();
+  }, [userId]);
 
   const resetForm = () => {
     setType("");
@@ -84,7 +90,11 @@ export function Transactions() {
   };
 
   const saveFormData = async () => {
-    if(verifyForm()){
+    if(verifyForm([type, category, value])){
+      if(desc && desc.length > 100){
+        notify.error("Descrição deve ter menos que 100 caracteres");
+        return false;
+      }
       const selectedCategory = cat.find(
         (c) => c.name === category
       );
@@ -112,7 +122,7 @@ export function Transactions() {
       }
     }
   }
-
+  console.log(transactions)
   return (
     <div className="flex flex-col gap-5">
       <Toaster />
@@ -164,6 +174,15 @@ export function Transactions() {
         <div>
           <Button className="cursor-pointer bg-emerald-600 hover:bg-emerald-900" onClick={()=>saveFormData()}>Salvar Transação</Button>
         </div>
+      </div>
+
+      <div className="flex flex-col gap-5">
+        <p className="text-2xl">Suas Transações</p>
+        <div className="max-h-96 overflow-y-auto flex flex-col gap-3">
+          {transactions && transactions.map((transaction) => (
+            <TransactionGrid key={transaction.id} transactionProps={transaction}/>
+          ))}
+        </div>        
       </div>
     </div>
   );

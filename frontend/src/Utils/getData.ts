@@ -1,10 +1,19 @@
 import { supabase } from "../services/supabase";
 
+type getDataInterface = {
+    success: boolean;
+    message: string;
+    data?: any[];
+    name?: string;
+    email?: string;
+    error?: any;
+}
+
 export async function getData(
   tableName: string,
-  filters: Record<string, string | number>,
+  filters: Record<string, string | number | null>,
   operation: string
-) {
+):Promise<getDataInterface> {
   let query = supabase.from(tableName).select("*");
 
   Object.entries(filters).forEach(([key, value]) => {
@@ -14,9 +23,8 @@ export async function getData(
   const { data, error } = await query;
 
   if (error) {
-    console.error(`Error on getting operation: ${operation}`);
-    return null;
+    return {success: false, message: `Error on getting operation: ${operation}`, error: error};
   }
   
-  return data;
+  return {success: true, data: data, message: `Data has been found correctly`, error: error};
 }

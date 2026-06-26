@@ -6,6 +6,16 @@ const categories = await getData(
     { user_id: "101a0389-8f55-4467-afca-29bcc93a723a" },
     "Buscar todas as categorias"
 );
+get data retorna um objeto com essas propriedades:
+type getDataInterface = {
+    success: boolean;
+    message: string;
+    data?: any[];
+    name?: string;
+    email?: string;
+    error?: any;
+}
+
 
 verifyEmail -> Função com uma regex para testar se o email é valido (apenas os caracteres, não envia token)
 getUserLogin -> Pega as credenciais do usuario e faz uma consulta, se tiver grava o id no localStorage para poder entrar em rotas protegidas
