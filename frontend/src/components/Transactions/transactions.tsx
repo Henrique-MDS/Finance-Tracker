@@ -42,7 +42,20 @@ export function Transactions() {
   const userId = localStorage.getItem("userId");
   const [transactions, setTransactions] = useState<any[]>([]);
 
-  
+  const getTransactionData = async () => {
+    const transctionData = await getData(
+      "Transactions",
+      { user_id: userId },
+      "Buscar transações do usuário no banco"
+    );
+
+    if(transctionData.success == false){
+      notify.error(transctionData.message);
+      return;
+    }
+
+    setTransactions(transctionData.data || []);
+  }
 
   useEffect(() => {
     const getCategories = async () => {
@@ -62,20 +75,7 @@ export function Transactions() {
       setCatOptions(names);
     };
 
-    const getTransactionData = async () => {
-      const transctionData = await getData(
-        "Transactions",
-        { user_id: userId },
-        "Buscar transações do usuário no banco"
-      );
-
-      if(transctionData.success == false){
-        notify.error(transctionData.message);
-        return;
-      }
-
-      setTransactions(transctionData.data || []);
-    }
+    
 
     getCategories();
     getTransactionData();
@@ -117,6 +117,7 @@ export function Transactions() {
       if(result.success){
         notify.success(result.message);
         resetForm();
+        await getTransactionData();
       } else {
         notify.error(result.message);
       }
