@@ -20,3 +20,18 @@ type getDataInterface = {
 verifyEmail -> Função com uma regex para testar se o email é valido (apenas os caracteres, não envia token)
 getUserLogin -> Pega as credenciais do usuario e faz uma consulta, se tiver grava o id no localStorage para poder entrar em rotas protegidas
 notify -> aceita uma mensagem como parametro para exibir um popup na tela, pode ser de erro ou sucesso. ex: notify.error("Campos obrigatórios não preenchidos")
+deleteData -> Funciona como a função getData, usando os mesmos parametros, mas delete o registro no banco de acordo com o parametro passado. ex:
+const categories = await deleteData(
+    "Categories",
+    { user_id: "101a0389-8f55-4467-afca-29bcc93a723a" },
+    "Deletar categoria do usuário"
+);
+get data retorna um objeto com essas propriedades:
+type deleteDataInterface = {
+    success: boolean;
+    message: string;
+    data?: any[];
+    name?: string;
+    email?: string;
+    error?: any;
+}
