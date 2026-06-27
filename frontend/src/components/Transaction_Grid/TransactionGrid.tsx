@@ -6,6 +6,7 @@ import trash from "../../assets/trash-icon.svg";
 import { Button } from "../ui/button";
 import { deleteData } from "@/Utils/deleteData";
 import { notify } from "@/Utils/notify";
+import { updateBalance } from "@/Utils/updateBalance";
 
 type Category = {
   created_at: string;
@@ -38,6 +39,7 @@ export function TransactionGrid({transactionProps, onDelete}:TransactionGridProp
     let color = transactionProps.type == "Receita" ? "#0C1D1D" : "#1D1218";
     let arrowBgColor = transactionProps.type == "Receita" ? "#0F402C" : "#552021";
     const transactionId = transactionProps.id;
+    console.log(transactionProps)
 
     const deleteOnClick = async () => {
         const isDeleted = await deleteData(
@@ -48,6 +50,7 @@ export function TransactionGrid({transactionProps, onDelete}:TransactionGridProp
 
         if(isDeleted.success){
             notify.success("Transação excluída!");
+            updateBalance(transactionProps.user_id, Number(transactionProps.value), transactionProps.type == "Receita" ? "Despesa" : "Receita"); // inverso para operaçao de deletar
             await onDelete();
             return;
         } else {
@@ -64,6 +67,7 @@ export function TransactionGrid({transactionProps, onDelete}:TransactionGridProp
                     <span className="p-1 rounded-full" style={{ backgroundColor: arrowBgColor }}>
                         <img src={transactionProps.type == "Receita" ? upArrow : downArrow} alt="arrow icon" />
                     </span>
+                    {transactionProps.type == "Receita" ? "+ " : "- "}
                     {transactionProps.value}
                 </p>
                 <div>

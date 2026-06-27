@@ -35,3 +35,7 @@ type deleteDataInterface = {
     email?: string;
     error?: any;
 }
+updateBanlance -> Função que atualiza valor total do usuário quando cadastra ou deleta transações. Se o usuário nao tem trasaçao ele insere a primeira transaçao como valor da balança
+caso já tenha ele atualiza, de acordo com o parametro de despesa ou receita.
+recebe tres parametros: userId para fazer operaçoes no banco, valor para inserir, acrescentar ou decrementar e o tipo da transaçao (Receita ou despesa), para indicar qual será a operaçao
+exemplo de uso: updateBalance(userId, Number(value), type);

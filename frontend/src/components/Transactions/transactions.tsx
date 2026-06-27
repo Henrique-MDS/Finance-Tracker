@@ -22,6 +22,7 @@ import { insertTransactionFormData } from "@/Utils/insertTransactionFormData";
 import { notify } from "@/Utils/notify";
 import TransactionGrid from "../Transaction_Grid/TransactionGrid";
 import { verifyForm } from "@/Utils/verifyForm";
+import { updateBalance } from "@/Utils/updateBalance";
 
 interface Category {
   created_at: string;
@@ -41,6 +42,7 @@ export function Transactions() {
   const [desc, setDesc] = useState("");
   const userId = localStorage.getItem("userId");
   const [transactions, setTransactions] = useState<any[]>([]);
+  const [nowBalance, setNowBalance] = useState<any[]>([]);
 
   const getTransactionData = async () => {
     const transctionData = await getData(
@@ -115,6 +117,7 @@ export function Transactions() {
 
       if(result.success){
         notify.success(result.message);
+        updateBalance(userId, Number(value), type);
         resetForm();
         await getTransactionData();
       } else {
