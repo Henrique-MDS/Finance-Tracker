@@ -39,7 +39,6 @@ export function TransactionGrid({transactionProps, onDelete}:TransactionGridProp
     let color = transactionProps.type == "Receita" ? "#0C1D1D" : "#1D1218";
     let arrowBgColor = transactionProps.type == "Receita" ? "#0F402C" : "#552021";
     const transactionId = transactionProps.id;
-    console.log(transactionProps)
 
     const deleteOnClick = async () => {
         const isDeleted = await deleteData(
