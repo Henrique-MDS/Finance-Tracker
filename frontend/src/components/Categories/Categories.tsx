@@ -6,7 +6,7 @@ import CategorieGrid from "../Categorie_Grid/Categorie_Grid";
 import { useEffect, useState } from "react";
 import { getData } from "@/Utils/getData";
 import { notify } from "@/Utils/notify";
-import { insertData } from "@/Utils/insertDate";
+import { insertData } from "@/Utils/insertData";
 import { verifyForm } from "@/Utils/verifyForm";
 
 type Category = {
@@ -31,9 +31,7 @@ export function CategoriesPage() {
         );
 
         if(categories.success){
-            if(categories.data && categories.data.length > 0){
-                setCat(categories.data);
-            }
+            setCat(categories.data ?? []);
         } else {
             notify.error("Erro ao buscar categorias");
             return;
@@ -49,6 +47,7 @@ export function CategoriesPage() {
             if(catName.length > 20){
                 notify.error("Nome deve ter menos que 20 caracteres");
             }
+
             const saveResponse = await insertData(
                 "Categories",
                 {
@@ -62,8 +61,13 @@ export function CategoriesPage() {
                 notify.success("Categoria Adicionada");
                 getAllCategories();
             } else {
-                notify.error("Erro ao adicionar categoria");
+                if(saveResponse.error.code == "23505"){
+                    notify.error("Categoria já existe");
+                } else {
+                    notify.error("Erro ao adicionar categoria");
+                }                
             }
+            setCatName("");
         }        
     }
 
@@ -79,7 +83,7 @@ export function CategoriesPage() {
                 <p>Nome da Categoria</p>
                 <div className="flex items-center gap-2">
                     <Field>
-                        <Input id="input-demo-api-key" type="text" placeholder="Nome da categoria..." onChange={(e) => setCatName(e.target.value)}/>
+                        <Input id="input-demo-api-key" type="text" placeholder="Nome da categoria..." onChange={(e) => setCatName(e.target.value)} value={catName}/>
                     </Field>
                     <Button className="bg-emerald-500 cursor-pointer" onClick={() => saveCategory()}>Salvar</Button>
                 </div>                
