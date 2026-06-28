@@ -8,6 +8,7 @@ import { getData } from "@/Utils/getData";
 import { notify } from "@/Utils/notify";
 import { insertData } from "@/Utils/insertData";
 import { verifyForm } from "@/Utils/verifyForm";
+import { Toaster } from "react-hot-toast";
 
 type Category = {
   created_at: string;
@@ -73,6 +74,7 @@ export function CategoriesPage() {
 
   return (
     <div className="flex flex-col gap-4">
+        <Toaster />
         <div className="flex flex-col gap-2">
             <h1 className="text-2xl text-white">Categorias</h1>
             <p>Gerencie suas categorias de receitas e despesas</p>

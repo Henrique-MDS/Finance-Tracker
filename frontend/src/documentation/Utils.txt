@@ -39,3 +39,12 @@ updateBanlance -> Função que atualiza valor total do usuário quando cadastra 
 caso já tenha ele atualiza, de acordo com o parametro de despesa ou receita.
 recebe tres parametros: userId para fazer operaçoes no banco, valor para inserir, acrescentar ou decrementar e o tipo da transaçao (Receita ou despesa), para indicar qual será a operaçao
 exemplo de uso: updateBalance(userId, Number(value), type);
+insertData -> recebe nome da tabela, objeto com campo e valor e desc da operaçao. Faz insert. ex:
+const saveResponse = await insertData(
+    "Categories",
+    {
+        user_id: userId,
+        name: catName
+    },
+    "Inserir categoria"
+);
