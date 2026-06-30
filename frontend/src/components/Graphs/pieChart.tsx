@@ -36,7 +36,6 @@ export default function DonutChart() {
         }
         fetchData();
     }, [])
-    console.log(transData)
 
   return (
     <div className="bg-[#0E1621] rounded-xl flex items-center p-3">
