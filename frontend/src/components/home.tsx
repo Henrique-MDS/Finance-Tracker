@@ -91,7 +91,7 @@ export function MainPage() {
         notify.error("Erro ao buscar balança mensal");
         return;
       } else {
-        if(response && response.data){
+        if(response && response.data !== undefined){
           setMonthTransactionsVal(response.data);
         } else {
           notify.error("Sem dados de transações");
