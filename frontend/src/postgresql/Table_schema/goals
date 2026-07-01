@@ -1,0 +1,10 @@
+create table public."Goals" (
+  id uuid not null default gen_random_uuid (),
+  user_id uuid not null default gen_random_uuid (),
+  title character varying not null,
+  goal_value double precision not null,
+  now_value double precision not null default '0'::double precision,
+  limit_date date null,
+  constraint Goals_pkey primary key (id),
+  constraint Goals_user_id_fkey foreign KEY (user_id) references "Users" (id) on delete CASCADE
+) TABLESPACE pg_default;

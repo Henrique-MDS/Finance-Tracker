@@ -1,0 +1,5 @@
+CREATE TRIGGER transactions_operation_log_trigger
+AFTER INSERT OR UPDATE OR DELETE
+ON "Categories"
+FOR EACH ROW
+EXECUTE FUNCTION log_operation_function();

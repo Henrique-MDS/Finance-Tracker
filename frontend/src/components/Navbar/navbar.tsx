@@ -5,7 +5,7 @@ import NavbarOption from "./navbarOption";
 export function Navbar(){
   const logout = useLogout();
   return (
-    <div className="bg-[#060B14] w-[300px] min-h-screen px-5">
+    <div className="bg-[#060B14] w-[250px] min-h-screen px-5">
         <div className="flex items-center flex-col">
             <img src="src/assets/logo-tracker.png" alt="finance-tracker-logo" className="h-[150px]"/>
         </div>

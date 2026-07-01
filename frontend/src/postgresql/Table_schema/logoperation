@@ -1,0 +1,10 @@
+create table public.logoperation (
+  id uuid not null default gen_random_uuid (),
+  table_name character varying null,
+  user_id uuid null default gen_random_uuid (),
+  operation character varying null,
+  created_at timestamp with time zone not null default now(),
+  new_data jsonb null,
+  old_data jsonb null,
+  constraint LogOperation_pkey primary key (id)
+) TABLESPACE pg_default;

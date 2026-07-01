@@ -48,3 +48,34 @@ const saveResponse = await insertData(
     },
     "Inserir categoria"
 );
+getIntervalData -> Funciona para pegar dados dentro de um intervalo, podendo ser data, numero, etc. Para usar passe a tabela, valor1 e valor2, o campo que quer filtrar e a operaçaoa ex:
+const response = await getIntervalData(
+    "Transactions",
+    "tran_date",
+    firstDay.toISOString(),
+    lastDay.toISOString(),
+    "buscar valores dentro do mês atual"
+);
+lembrando que se usar data o supabase aceita só no formato usando toISOString
+filterDespesaReceita -> funçao que filtra e devolve um objeto com as operaçoes separadas entre "Despesa" e "Receita". Só aceita um array de dados do tipo Transactions ex:
+setFilteredType(filterDespesaReceita(transactions));
+type Transaction = {
+  cat_id: string;
+  created_at: string;
+  desc: string;
+  id: string;
+  tran_date: string;
+  type: "Despesa" | "Receita";
+  user_id: string;
+  value: number;
+};
+Transaction[]
+getMonthTransactionsValue -> funçao para chamar funçao do postgre que retorna o valor do mes calculado por receitas - despesas retorna o mesmo objeto de getData
+type getDataInterface = {
+    success: boolean;
+    message: string;
+    data?: any[];
+    name?: string;
+    email?: string;
+    error?: any;
+}

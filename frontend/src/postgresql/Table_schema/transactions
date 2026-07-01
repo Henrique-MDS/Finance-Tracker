@@ -1,0 +1,20 @@
+create table public."Transactions" (
+  id uuid not null default gen_random_uuid (),
+  user_id uuid not null default gen_random_uuid (),
+  cat_id uuid not null default gen_random_uuid (),
+  "desc" text null,
+  value double precision not null,
+  type character varying not null,
+  tran_date timestamp with time zone not null default now(),
+  created_at timestamp with time zone not null default now(),
+  constraint Transactions_pkey primary key (id),
+  constraint Transactions_cat_id_fkey foreign KEY (cat_id) references "Categories" (id),
+  constraint Transactions_user_id_fkey foreign KEY (user_id) references "Users" (id) on delete CASCADE
+) TABLESPACE pg_default;
+
+create trigger transactions_operation_log_trigger
+after INSERT
+or DELETE
+or
+update on "Transactions" for EACH row
+execute FUNCTION log_operation_function ();

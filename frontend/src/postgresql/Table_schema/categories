@@ -1,0 +1,17 @@
+create table public."Categories" (
+  id uuid not null default gen_random_uuid (),
+  user_id uuid null default gen_random_uuid (),
+  name character varying not null,
+  created_at timestamp without time zone not null default now(),
+  updated_at timestamp without time zone not null default now(),
+  constraint Categories_pkey primary key (id),
+  constraint Categories_name_key unique (name),
+  constraint Categories_user_id_fkey foreign KEY (user_id) references "Users" (id) on delete CASCADE
+) TABLESPACE pg_default;
+
+create trigger transactions_operation_log_trigger
+after INSERT
+or DELETE
+or
+update on "Categories" for EACH row
+execute FUNCTION log_operation_function ();

@@ -5,6 +5,9 @@ import { getData } from "@/Utils/getData";
 import { useEffect, useState } from "react";
 import { notify } from "@/Utils/notify";
 import { Toaster } from "react-hot-toast";
+import { filterDespesaReceita } from "@/Utils/filterDespesaReceita";
+import { getMonthTransactionsValue } from "@/Utils/callGetMonthBalance";
+import { Navigate } from "react-router-dom";
 
 type Transaction = {
   cat_id: string;
@@ -24,9 +27,13 @@ type FilteredType = {
 
 export function MainPage() {
   const userId = localStorage.getItem("userId");
+  if(!userId){
+    return <Navigate to="/login" replace />;
+  }
   const [balance, setBalance] = useState<any>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [filteredType, setFilteredType] = useState<FilteredType>({despesas: [], receitas: []});
+  const [monthTransactionsVal, setMonthTransactionsVal] = useState<any>(0);
   
   useEffect(() => {
     if(!userId) return;
@@ -76,22 +83,24 @@ export function MainPage() {
   }, [])
 
   useEffect(() => {
-    const filterDespesaReceita = () => {
-      const despesas = transactions.filter(
-        (transaction) => transaction.type === "Despesa"
-      );
+    setFilteredType(filterDespesaReceita(transactions));
+    
+    const getMonthVal = async () => {
+      const response = await getMonthTransactionsValue(userId);
+      if(!response.success){
+        notify.error("Erro ao buscar balança mensal");
+        return;
+      } else {
+        if(response && response.data){
+          setMonthTransactionsVal(response.data);
+        } else {
+          notify.error("Sem dados de transações");
+          return;
+        }
+      }
+    }
 
-      const receitas = transactions.filter(
-        (transaction) => transaction.type === "Receita"
-      );
-
-      setFilteredType({
-        despesas,
-        receitas,
-      });
-    };
-
-    filterDespesaReceita();
+    getMonthVal();
   }, [transactions])
 
   const sumByType = (data:Transaction[]) => {
@@ -121,9 +130,11 @@ export function MainPage() {
         <ResumeCard title="Saldo atual" value={balance == null ? 0 : Number(balance.balance_now)} desc="+12% em relação ao mês anterior" 
                     emoji="💵" themeColor="#2CAE60" bgColor="#12302F"/>
         <ResumeCard title="Receitas" value={sumByType(filteredType.receitas)} desc="+12% em relação ao mês anterior" 
-                    emoji="💵" themeColor="#2CAE60" bgColor="#12302F"/>
+                    emoji="💵" themeColor="#2763AA" bgColor="#2763AA"/>
         <ResumeCard title="Despesas" value={sumByType(filteredType.despesas)} desc="+12% em relação ao mês anterior" 
                     emoji="💵" themeColor="#2CAE60" bgColor="#12302F"/>
+        <ResumeCard title="Saldo do mês" value={monthTransactionsVal ?? 0} desc="+12% em relação ao mês anterior" 
+                    emoji="💵" themeColor="#3F3663" bgColor="#3F3663"/>
         
       </div>
       <div className="flex flex-wrap gap-4">
