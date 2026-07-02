@@ -104,7 +104,7 @@ export function CategoriesPage() {
                 <p>Criado em</p>
                 <p>Ações</p>
             </div>
-            <div className="max-h-96 overflow-y-auto">
+            <div className="max-h-96 overflow-y-auto scrollbar-hide">
                 {
                     cat && cat.map((c:Category) => (
                         <CategorieGrid key={c.id} categories={c} refreshCategories={getAllCategories}/>

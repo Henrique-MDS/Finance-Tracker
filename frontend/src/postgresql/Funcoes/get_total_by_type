@@ -1,0 +1,11 @@
+CREATE OR REPLACE FUNCTION get_total_by_type(
+    p_user_id UUID,
+    p_type TEXT
+)
+RETURNS NUMERIC
+AS $$
+    SELECT COALESCE(SUM(value), 0)
+    FROM "Transactions"
+    WHERE user_id = p_user_id
+      AND type = p_type;
+$$ LANGUAGE SQL;

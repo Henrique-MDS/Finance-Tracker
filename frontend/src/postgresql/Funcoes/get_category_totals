@@ -1,0 +1,20 @@
+CREATE OR REPLACE FUNCTION get_category_totals(
+    p_user_id UUID,
+    p_type TEXT
+)
+RETURNS TABLE (
+    category_name TEXT,
+    total NUMERIC
+)
+AS $$
+    SELECT
+        C.name AS category_name,
+        SUM(T.value) AS total
+    FROM "Transactions" T
+    LEFT JOIN "Categories" C
+        ON T.cat_id = C.id
+    WHERE T.user_id = p_user_id
+      AND T.type = p_type
+    GROUP BY C.name
+    ORDER BY total DESC;
+$$ LANGUAGE SQL;

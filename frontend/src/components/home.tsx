@@ -1,6 +1,5 @@
 import ResumeCard from "./ResumeCards/ResumeCard";
 import DonutChart from "./Graphs/pieChart";
-import BarGraph from "./Graphs/barGraph";
 import { getData } from "@/Utils/getData";
 import { useEffect, useState } from "react";
 import { notify } from "@/Utils/notify";
@@ -184,21 +183,21 @@ export function MainPage() {
 
         <div className="w-full lg:flex-1 bg-[#0E1621] rounded-xl flex items-center p-3">
           <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-          <BarChart accessibilityLayer data={monthBalForChart}>
-            <CartesianGrid vertical={false} horizontal={false}/>
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
-            />
-            <ChartTooltip content={<ChartTooltipContent />} />
-            <ChartLegend content={<ChartLegendContent />} />
-            <Bar dataKey="receita" fill="var(--color-receita)" radius={4} />
-            <Bar dataKey="despesa" fill="var(--color-despesa)" radius={4} />
-          </BarChart>
-        </ChartContainer>
+            <BarChart accessibilityLayer data={monthBalForChart}>
+              <CartesianGrid vertical={false} horizontal={false}/>
+              <XAxis
+                dataKey="month"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+                tickFormatter={(value) => value.slice(0, 3)}
+              />
+              <ChartTooltip content={<ChartTooltipContent />} />
+              <ChartLegend content={<ChartLegendContent />} />
+              <Bar dataKey="receita" fill="var(--color-receita)" radius={4} />
+              <Bar dataKey="despesa" fill="var(--color-despesa)" radius={4} />
+            </BarChart>
+          </ChartContainer>
         </div>
       </div>
     </div>

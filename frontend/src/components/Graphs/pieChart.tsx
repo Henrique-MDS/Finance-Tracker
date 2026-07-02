@@ -1,68 +1,120 @@
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
-import { getData } from "../../Utils/getData";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 import { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
+import { getCategoryTotals } from "@/Utils/callGetCategoryTotals";
+import { notify } from "@/Utils/notify";
+import { generateColor } from "@/Utils/generateColor";
+import { getTotalByType } from "@/Utils/callGetTotalByType";
 
-const data = [
-  { name: "Receitas", value: 5000 },
-  { name: "Despesas", value: 3000 },
-  { name: "Alimentação", value: 10000 },
-];
-
-const COLORS = ["#22c55e", "#ef4444", "#ef4400"];
-
-
+type TotalCategory = {
+    category_name: string;
+    total: number;
+}
 
 export default function DonutChart() {
-
-    interface Transaction {
-        cat_id: string
-        created_at: Date
-        desc: string
-        id: string
-        tran_date: Date
-        type: string
-        user_id: string
-        value: number
+    const userId = localStorage.getItem("userId");
+    if(!userId){
+        return <Navigate to="/login" replace />;
     }
 
-    const [transData, setTransdata] = useState<Transaction[]>([]);
+    const [totalDespesasCat, setTotalDespesasCat] = useState<TotalCategory[]>([{category_name: '', total: 0}]);
+    const [totalDespesa, setTotalDespesa] = useState<any>(0);
 
     useEffect(() => {
-        const fetchData = async () => {
-            let data = await getData("Transactions", {user_id: "91c6fb66-af21-46bb-bb98-bf9aab96ea6b"}, "get transaction");
-            if(data != null){
-                setTransdata(data);
+        const getTotalDespesasByCategory = async () => {
+            const response = await getCategoryTotals(
+                userId,
+                "Despesa"
+            )
+            
+            if(!response.success){
+                notify.error("Erro ao buscar total por categoria");
+                return;
+            } else {
+                if(response && response.data){
+                    setTotalDespesasCat(response.data);
+                    return;
+                } else {
+                    notify.error("Nenhum dado a ser exibido");
+                    return;
+                }
             }
         }
-        fetchData();
+
+        const fetchTotalByType = async () => {
+            const response = await getTotalByType(
+                userId,
+                "Despesa"
+            )
+            
+            if(!response.success){
+                notify.error("Erro ao buscar total por categoria");
+                return;
+            } else {
+                if(response && response.data !== undefined){
+                    setTotalDespesa(response.data);
+                    return;
+                } else {
+                    notify.error("Nenhum dado a ser exibido");
+                    return;
+                }
+            }
+        }
+
+        fetchTotalByType();
+        getTotalDespesasByCategory();
     }, [])
 
-  return (
-    <div className="bg-[#0E1621] rounded-xl flex items-center p-3">
-        <div className="relative w-[300px] h-[300px]">
-            <ResponsiveContainer>
-                <PieChart>
-                <Pie
-                    data={data}
-                    dataKey="value"
-                    innerRadius={70}
-                    outerRadius={100}
-                >
-                    {data.map((_, index) => (
-                    <Cell key={index} fill={COLORS[index]} />
-                    ))}
-                </Pie>
-                </PieChart>
-            </ResponsiveContainer>
+    return (
+        <div className="bg-[#0E1621] rounded-xl flex items-center p-3 h-full">
+            <div className="relative w-[300px] h-[300px]">
+                <ResponsiveContainer>
+                    <PieChart>
+                    <Pie
+                        data={totalDespesasCat}
+                        dataKey="total"
+                        innerRadius={70}
+                        outerRadius={100}
+                    >
+                        {totalDespesasCat.map((_, index) => (
+                        <Cell key={index} fill={generateColor(index)} />
+                        ))}
+                    </Pie>
+                    </PieChart>
+                </ResponsiveContainer>
 
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-sm text-gray-400">Total</span>
-                <span className="text-2xl font-bold">R$ 8.000</span>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-sm text-gray-400">Total</span>
+                    <span className="text-2xl font-bold">R$ {totalDespesa}</span>
+                </div>
+            </div>
+            <div className="flex flex-col gap-2 max-h-66 overflow-y-auto scrollbar-hide">
+                {totalDespesasCat.map((item, index) => {
+                    const percentage = (
+                        (item.total / totalDespesa) * 100
+                    ).toFixed(1);
+
+                    return (
+                        <div
+                            key={item.category_name}
+                            className="flex items-center justify-between gap-3"
+                        >
+                        <div className="flex items-center gap-2">
+                            <div
+                                className="w-3 h-3 rounded-full"
+                                style={{
+                                    backgroundColor: generateColor(index),
+                                }}
+                            />
+
+                            <span>{item.category_name}</span>
+                        </div>
+
+                        <span>{percentage}%</span>
+                        </div>
+                    );
+                })}
             </div>
         </div>
-        <div>
-            dasdasd
-        </div>
-    </div>
-  );
+    );
 }

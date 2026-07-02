@@ -181,7 +181,7 @@ export function Transactions() {
 
       <div className="flex flex-col gap-5">
         <p className="text-2xl">Suas Transações</p>
-        <div className="max-h-96 overflow-y-auto flex flex-col gap-3">
+        <div className="max-h-96 overflow-y-auto flex flex-col gap-3 scrollbar-hide">
           {transactions &&
             transactions.map((transaction) => {
               const specificCat = cat.find((c) => c.id === transaction.cat_id);

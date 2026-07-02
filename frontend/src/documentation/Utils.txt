@@ -15,8 +15,6 @@ type getDataInterface = {
     email?: string;
     error?: any;
 }
-
-
 verifyEmail -> Função com uma regex para testar se o email é valido (apenas os caracteres, não envia token)
 getUserLogin -> Pega as credenciais do usuario e faz uma consulta, se tiver grava o id no localStorage para poder entrar em rotas protegidas
 notify -> aceita uma mensagem como parametro para exibir um popup na tela, pode ser de erro ou sucesso. ex: notify.error("Campos obrigatórios não preenchidos")
@@ -79,3 +77,20 @@ type getDataInterface = {
     email?: string;
     error?: any;
 }
+getMonthlySummary -> Funçao que chama outra funçao do postgre que retorna a balança das transaçoes mensais (receitas - despesas), retorna dados da balança separado pelos meses que existem transaçoes
+const response = await getMonthlySummary(userId);
+retorna algo como:
+[
+  { month: "Jan", receita: 186, despesa: 80 },
+  { month: "Fev", receita: 250, despesa: 120 },
+  { month: "Mar", receita: 300, despesa: 150 }
+]
+getCategoryTotals -> busca o valor total das categorias, seja em despesa ou receita. Para user passe o userId e o tipo (receita e despesa)
+const response = await getCategoryTotals(
+    userId,
+    "Despesa"
+)
+retorna algo como:
+{category_name: 'Alimentação', total: 2257}
+generateColor -> retorna uma cor aleatoria em hsl, gera o tanto de cor de acordo com o parametro enviado (numero)
+generateColor(index)
