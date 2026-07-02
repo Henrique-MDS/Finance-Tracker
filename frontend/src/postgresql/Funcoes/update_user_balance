@@ -1,0 +1,35 @@
+CREATE OR REPLACE FUNCTION update_user_balance()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+
+    IF TG_OP = 'INSERT' THEN
+
+        IF NEW.type = 'Receita' THEN
+            UPDATE "Balance"
+            SET balance_now = balance_now + NEW.value
+            WHERE user_id = NEW.user_id;
+        ELSE
+            UPDATE "Balance"
+            SET balance_now = balance_now - NEW.value
+            WHERE user_id = NEW.user_id;
+        END IF;
+
+    ELSIF TG_OP = 'DELETE' THEN
+
+        IF OLD.type = 'Receita' THEN
+            UPDATE "Balance"
+            SET balance_now = balance_now - OLD.value
+            WHERE user_id = OLD.user_id;
+        ELSE
+            UPDATE "Balance"
+            SET balance_now = balance_now + OLD.value
+            WHERE user_id = OLD.user_id;
+        END IF;
+
+    END IF;
+
+    RETURN NULL;
+END;
+$$;

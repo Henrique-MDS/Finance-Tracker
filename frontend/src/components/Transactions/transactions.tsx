@@ -22,7 +22,6 @@ import { insertTransactionFormData } from "@/Utils/insertTransactionFormData";
 import { notify } from "@/Utils/notify";
 import TransactionGrid from "../Transaction_Grid/TransactionGrid";
 import { verifyForm } from "@/Utils/verifyForm";
-import { updateBalance } from "@/Utils/updateBalance";
 
 interface Category {
   created_at: string;
@@ -117,7 +116,6 @@ export function Transactions() {
 
       if(result.success){
         notify.success(result.message);
-        updateBalance(userId, Number(value), type);
         resetForm();
         await getTransactionData();
       } else {

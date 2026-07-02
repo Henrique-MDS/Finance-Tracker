@@ -6,7 +6,6 @@ import trash from "../../assets/trash-icon.svg";
 import { Button } from "../ui/button";
 import { deleteData } from "@/Utils/deleteData";
 import { notify } from "@/Utils/notify";
-import { updateBalance } from "@/Utils/updateBalance";
 
 type Category = {
   created_at: string;
@@ -49,7 +48,6 @@ export function TransactionGrid({transactionProps, onDelete}:TransactionGridProp
 
         if(isDeleted.success){
             notify.success("Transação excluída!");
-            updateBalance(transactionProps.user_id, Number(transactionProps.value), transactionProps.type == "Receita" ? "Despesa" : "Receita"); // inverso para operaçao de deletar
             await onDelete();
             return;
         } else {
