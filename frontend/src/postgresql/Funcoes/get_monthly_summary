@@ -1,0 +1,21 @@
+CREATE OR REPLACE FUNCTION get_monthly_summary(
+    p_user_id UUID
+)
+RETURNS TABLE (
+    month TEXT,
+    receita NUMERIC,
+    despesa NUMERIC
+)
+AS $$
+SELECT
+    TO_CHAR(tran_date, 'Mon') AS month,
+    COALESCE(SUM(value) FILTER (WHERE type = 'Receita'), 0) AS receita,
+    COALESCE(SUM(value) FILTER (WHERE type = 'Despesa'), 0) AS despesa
+FROM "Transactions"
+WHERE user_id = p_user_id
+GROUP BY
+    EXTRACT(MONTH FROM tran_date),
+    TO_CHAR(tran_date, 'Mon')
+ORDER BY
+    EXTRACT(MONTH FROM tran_date);
+$$ LANGUAGE SQL;

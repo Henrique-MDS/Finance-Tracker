@@ -8,6 +8,9 @@ import { Toaster } from "react-hot-toast";
 import { filterDespesaReceita } from "@/Utils/filterDespesaReceita";
 import { getMonthTransactionsValue } from "@/Utils/callGetMonthBalance";
 import { Navigate } from "react-router-dom";
+import { ChartLegend, ChartLegendContent, ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart"
+import { Bar, BarChart, CartesianGrid,  XAxis} from "recharts";
+import { getMonthlySummary } from "@/Utils/callGetMonthlySummary";
 
 type Transaction = {
   cat_id: string;
@@ -25,6 +28,12 @@ type FilteredType = {
   receitas: Transaction[];
 };
 
+type MonthsBalance = {
+  month: string;
+  receita: number;
+  despesa: number;
+};
+
 export function MainPage() {
   const userId = localStorage.getItem("userId");
   if(!userId){
@@ -34,6 +43,18 @@ export function MainPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [filteredType, setFilteredType] = useState<FilteredType>({despesas: [], receitas: []});
   const [monthTransactionsVal, setMonthTransactionsVal] = useState<any>(0);
+  const [monthBalForChart, setMonthBalForChart] = useState<MonthsBalance[]>([{month: '', receita: 0, despesa: 0}]);
+
+  const chartConfig = {
+    receita: {
+      label: "Receitas",
+      color: "#2CAE60",
+    },
+    despesa: {
+      label: "Despesas",
+      color: "#EF4444",
+    },
+  } satisfies ChartConfig
   
   useEffect(() => {
     if(!userId) return;
@@ -100,6 +121,25 @@ export function MainPage() {
       }
     }
 
+    const getMonthlySummaryForChart = async () => {
+      const response = await getMonthlySummary(userId);
+      
+      if(!response.success){
+        notify.error("Erro ao buscar balanças mensais");
+        return;
+      } else {
+        if(response && response.data){
+          setMonthBalForChart(response.data);
+          return;
+        } else {
+          notify.error("Nenhum dado mensal a ser exibido");
+          return;
+        }
+      }
+
+    }
+
+    getMonthlySummaryForChart();
     getMonthVal();
   }, [transactions])
 
@@ -142,8 +182,23 @@ export function MainPage() {
           <DonutChart />
         </div>
 
-        <div className="w-full lg:flex-1">
-          <BarGraph />
+        <div className="w-full lg:flex-1 bg-[#0E1621] rounded-xl flex items-center p-3">
+          <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+          <BarChart accessibilityLayer data={monthBalForChart}>
+            <CartesianGrid vertical={false} horizontal={false}/>
+            <XAxis
+              dataKey="month"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              tickFormatter={(value) => value.slice(0, 3)}
+            />
+            <ChartTooltip content={<ChartTooltipContent />} />
+            <ChartLegend content={<ChartLegendContent />} />
+            <Bar dataKey="receita" fill="var(--color-receita)" radius={4} />
+            <Bar dataKey="despesa" fill="var(--color-despesa)" radius={4} />
+          </BarChart>
+        </ChartContainer>
         </div>
       </div>
     </div>
