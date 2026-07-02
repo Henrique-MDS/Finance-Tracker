@@ -1,0 +1,24 @@
+CREATE OR REPLACE FUNCTION get_monthly_comparative_balance(
+    p_user_id UUID
+)
+RETURNS TABLE (
+    month TIMESTAMP,
+    total NUMERIC
+)
+LANGUAGE sql
+STABLE
+AS $$
+    SELECT
+        date_trunc('month', tran_date) AS month,
+        SUM(
+            CASE
+                WHEN type = 'Receita' THEN value
+                WHEN type = 'Despesa' THEN -value
+                ELSE 0
+            END
+        ) AS total
+    FROM "Transactions"
+    WHERE user_id = p_user_id
+    GROUP BY date_trunc('month', tran_date)
+    ORDER BY month;
+$$;

@@ -1,6 +1,6 @@
 import { supabase } from "@/services/supabase";
 
-type getDataInterface = {
+type getMonthlyComparativeInterface = {
     success: boolean;
     message: string;
     data?: any[];
@@ -10,13 +10,11 @@ type getDataInterface = {
 }
 
 
-export const getMonthTransactionsValue = async (userId:string, firstDay:Date, lastDay:Date):Promise<getDataInterface> => {
+export const getMonthlyComparativeBalance = async (userId:string):Promise<getMonthlyComparativeInterface> => {
     const { data, error } = await supabase.rpc(
-        "get_month_balance",
+        "get_monthly_comparative_balance",
         {
-            p_user_id: userId,
-            p_start_date: firstDay.toISOString(),
-            p_end_date: lastDay.toISOString(),
+            p_user_id: userId
         }
     );
 

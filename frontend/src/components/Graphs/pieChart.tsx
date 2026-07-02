@@ -107,7 +107,7 @@ export default function DonutChart() {
                                 }}
                             />
 
-                            <span>{item.category_name}</span>
+                            <span>{item.category_name.length > 15 ? item.category_name.slice(0, 15) + "..." : item.category_name}</span>
                         </div>
 
                         <span>{percentage}%</span>

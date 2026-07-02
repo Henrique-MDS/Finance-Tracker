@@ -55,7 +55,23 @@ type Transaction = {
   value: number;
 };
 Transaction[]
-getMonthTransactionsValue -> funçao para chamar funçao do postgre que retorna o valor do mes calculado por receitas - despesas retorna o mesmo objeto de getData
+getMonthTransactionsValue -> funçao para chamar funçao do postgre que retorna o valor do mes calculado por receitas - despesas retorna o mesmo objeto de getData. Deve passar o primeiro dia e o ultimo dia do mes que deseja
+ex:
+    const now = new Date();
+
+    const firstDay = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        1
+    );
+
+    const lastDayMonth = new Date(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        -1
+    );
+
+    const response = await getMonthTransactionsValue(userId, firstDay, firstDayNextMonth);
 type getDataInterface = {
     success: boolean;
     message: string;

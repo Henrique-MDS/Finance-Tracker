@@ -10,6 +10,11 @@ import { Navigate } from "react-router-dom";
 import { ChartLegend, ChartLegendContent, ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart"
 import { Bar, BarChart, CartesianGrid,  XAxis} from "recharts";
 import { getMonthlySummary } from "@/Utils/callGetMonthlySummary";
+import walletIcon from "../assets/wallet-icon.svg";
+import upArrow from "../assets/up-arrow-icon.svg";
+import downArrow from "../assets/down-arrow-icon.svg";
+import profitIcon from "../assets/profit-icon.svg";
+import { getMonthlyComparativeBalance } from "@/Utils/callGetMonthlyComparative";
 
 type Transaction = {
   cat_id: string;
@@ -33,6 +38,11 @@ type MonthsBalance = {
   despesa: number;
 };
 
+type MonthsComparative = {
+  month: string;
+  total: number;
+};
+
 export function MainPage() {
   const userId = localStorage.getItem("userId");
   if(!userId){
@@ -43,6 +53,7 @@ export function MainPage() {
   const [filteredType, setFilteredType] = useState<FilteredType>({despesas: [], receitas: []});
   const [monthTransactionsVal, setMonthTransactionsVal] = useState<any>(0);
   const [monthBalForChart, setMonthBalForChart] = useState<MonthsBalance[]>([{month: '', receita: 0, despesa: 0}]);
+  const [monthsCompartive, setMonthsComparative] = useState<MonthsComparative[]>([{month: '', total: 0}]);
 
   const chartConfig = {
     receita: {
@@ -106,7 +117,21 @@ export function MainPage() {
     setFilteredType(filterDespesaReceita(transactions));
     
     const getMonthVal = async () => {
-      const response = await getMonthTransactionsValue(userId);
+      const now = new Date();
+
+      const firstDay = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        1
+      );
+
+      const lastDayMonth = new Date(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        -1
+      );
+
+      const response = await getMonthTransactionsValue(userId, firstDay, lastDayMonth);
       if(!response.success){
         notify.error("Erro ao buscar balança mensal");
         return;
@@ -138,6 +163,20 @@ export function MainPage() {
 
     }
 
+    const getMonthComparative = async () => {
+      const response = await getMonthlyComparativeBalance(userId);
+      if(!response.success){
+        notify.error("Erro ao buscar comparativo mensal");
+        return;
+      } else {
+        if(response && response.data){
+          setMonthsComparative(response.data);
+          return;
+        }
+      }
+    }
+
+    getMonthComparative();
     getMonthlySummaryForChart();
     getMonthVal();
   }, [transactions])
@@ -153,6 +192,28 @@ export function MainPage() {
     return total;
   }
 
+  const calculateComparativeSaldoMes = (data:MonthsComparative[]) => {
+    // calcula % em relaçao ao saldo (receita - despesa) do mês passado
+    if(!data || data.length == 0) return 0;
+    const now = new Date();
+    const currentMonth = now.toISOString().slice(0, 7);
+    const previousDate = new Date(now);
+    previousDate.setMonth(previousDate.getMonth() - 1);
+    const previousMonth = previousDate.toISOString().slice(0, 7);
+
+    const current = data.find(item =>
+      item.month.startsWith(currentMonth)
+    );
+
+    const previous = data.find(item =>
+      item.month.startsWith(previousMonth)
+    );
+
+    if(!current || !previous) return 0;
+    
+    return (((current.total - previous.total) / Math.abs(previous.total)) * 100).toFixed(1);
+  }
+
   return (
     <div>
       <Toaster />
@@ -165,15 +226,15 @@ export function MainPage() {
           
         </div>
       </div>      
-      <div className="py-3 flex gap-3 flex-wrap">
+      <div className="py-3 flex gap-3 lg:flex-nowrap sm:flex-wrap">
         <ResumeCard title="Saldo atual" value={balance == null ? 0 : Number(balance.balance_now)} desc="+12% em relação ao mês anterior" 
-                    emoji="💵" themeColor="#2CAE60" bgColor="#12302F"/>
+                    icon={upArrow} themeColor="#2CAE60" bgColor="#12302F"/>
         <ResumeCard title="Receitas" value={sumByType(filteredType.receitas)} desc="+12% em relação ao mês anterior" 
-                    emoji="💵" themeColor="#2763AA" bgColor="#2763AA"/>
+                    icon={profitIcon} themeColor="#2763AA" bgColor="#2763AA"/>
         <ResumeCard title="Despesas" value={sumByType(filteredType.despesas)} desc="+12% em relação ao mês anterior" 
-                    emoji="💵" themeColor="#2CAE60" bgColor="#12302F"/>
-        <ResumeCard title="Saldo do mês" value={monthTransactionsVal ?? 0} desc="+12% em relação ao mês anterior" 
-                    emoji="💵" themeColor="#3F3663" bgColor="#3F3663"/>
+                    icon={downArrow} themeColor="#EF4444" bgColor="#EF4444"/>
+        <ResumeCard title="Saldo do mês" value={monthTransactionsVal ?? 0} desc={`${calculateComparativeSaldoMes(monthsCompartive)}% em relação ao mês anterior`}
+                    icon={walletIcon} themeColor="#3F3663" bgColor="#3F3663"/>
         
       </div>
       <div className="flex flex-wrap gap-4">
@@ -199,6 +260,9 @@ export function MainPage() {
             </BarChart>
           </ChartContainer>
         </div>
+      </div>
+      <div>
+
       </div>
     </div>
   );
