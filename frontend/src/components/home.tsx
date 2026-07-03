@@ -15,6 +15,7 @@ import upArrow from "../assets/up-arrow-icon.svg";
 import downArrow from "../assets/down-arrow-icon.svg";
 import profitIcon from "../assets/profit-icon.svg";
 import { getMonthlyComparativeBalance } from "@/Utils/callGetMonthlyComparative";
+import { getMonthlyComparativeReceitaDespesa } from "@/Utils/callGetMonthlyComparativeReceitaDespesa";
 
 type Transaction = {
   cat_id: string;
@@ -54,6 +55,10 @@ export function MainPage() {
   const [monthTransactionsVal, setMonthTransactionsVal] = useState<any>(0);
   const [monthBalForChart, setMonthBalForChart] = useState<MonthsBalance[]>([{month: '', receita: 0, despesa: 0}]);
   const [monthsCompartive, setMonthsComparative] = useState<MonthsComparative[]>([{month: '', total: 0}]);
+  const [totalReceitaMonth, setTotalReceitaMonth] = useState<MonthsComparative[]>([{month: '', total: 0}]);
+  const [totalDespesaMonth, setTotalDespesaMonth] = useState<MonthsComparative[]>([{month: '', total: 0}]);
+  const defitColor  = "#EF4444";
+  const profitColor = "#2763AA";
 
   const chartConfig = {
     receita: {
@@ -176,6 +181,34 @@ export function MainPage() {
       }
     }
 
+    const getReceitaComparative = async () => {
+      const response = await getMonthlyComparativeReceitaDespesa(userId, "Receita");
+      if(!response.success){
+        notify.error("Erro ao buscar comparativo mensal");
+        return;
+      } else {
+        if(response && response.data){
+          setTotalReceitaMonth(response.data);
+          return;
+        }
+      }
+    }
+
+    const getDespesaComparative = async () => {
+      const response = await getMonthlyComparativeReceitaDespesa(userId, "Despesa");
+      if(!response.success){
+        notify.error("Erro ao buscar comparativo mensal");
+        return;
+      } else {
+        if(response && response.data){
+          setTotalDespesaMonth(response.data);
+          return;
+        }
+      }
+    }
+
+    getDespesaComparative();
+    getReceitaComparative();
     getMonthComparative();
     getMonthlySummaryForChart();
     getMonthVal();
@@ -214,6 +247,10 @@ export function MainPage() {
     return (((current.total - previous.total) / Math.abs(previous.total)) * 100).toFixed(1);
   }
 
+  const receitaPercent = calculateComparativeSaldoMes(totalReceitaMonth);
+  const despesaPercent = calculateComparativeSaldoMes(totalDespesaMonth);
+  const saldoPercent = calculateComparativeSaldoMes(monthsCompartive);
+  
   return (
     <div>
       <Toaster />
@@ -227,15 +264,14 @@ export function MainPage() {
         </div>
       </div>      
       <div className="py-3 flex gap-3 lg:flex-nowrap sm:flex-wrap">
-        <ResumeCard title="Saldo atual" value={balance == null ? 0 : Number(balance.balance_now)} desc="+12% em relação ao mês anterior" 
+        <ResumeCard title="Saldo atual" value={balance == null ? 0 : Number(balance.balance_now)} desc="total de receitas menos despesas" 
                     icon={upArrow} themeColor="#2CAE60" bgColor="#12302F"/>
-        <ResumeCard title="Receitas" value={sumByType(filteredType.receitas)} desc="+12% em relação ao mês anterior" 
+        <ResumeCard title="Receitas" value={sumByType(filteredType.receitas)} desc={`${receitaPercent}% em relação ao mês anterior`}
                     icon={profitIcon} themeColor="#2763AA" bgColor="#2763AA"/>
-        <ResumeCard title="Despesas" value={sumByType(filteredType.despesas)} desc="+12% em relação ao mês anterior" 
+        <ResumeCard title="Despesas" value={sumByType(filteredType.despesas)} desc={`${despesaPercent}% em relação ao mês anterior`} 
                     icon={downArrow} themeColor="#EF4444" bgColor="#EF4444"/>
-        <ResumeCard title="Saldo do mês" value={monthTransactionsVal ?? 0} desc={`${calculateComparativeSaldoMes(monthsCompartive)}% em relação ao mês anterior`}
+        <ResumeCard title="Saldo do mês" value={monthTransactionsVal ?? 0} desc={`${saldoPercent}% em relação ao mês anterior`}
                     icon={walletIcon} themeColor="#3F3663" bgColor="#3F3663"/>
-        
       </div>
       <div className="flex flex-wrap gap-4">
         <div className="w-full lg:flex-1">
