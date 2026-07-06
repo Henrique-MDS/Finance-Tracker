@@ -164,7 +164,12 @@ export function Transactions() {
                 type="number"
                 placeholder="Valor da transação"
                 value={value}
-                onChange={(e)=>setValue(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (Number(value) >= 0 || value === "") {
+                    setValue(value);
+                  }
+                }}
               />
             </Field>
           </div>

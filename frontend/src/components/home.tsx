@@ -16,6 +16,7 @@ import downArrow from "../assets/down-arrow-icon.svg";
 import profitIcon from "../assets/profit-icon.svg";
 import { getMonthlyComparativeBalance } from "@/Utils/callGetMonthlyComparative";
 import { getMonthlyComparativeReceitaDespesa } from "@/Utils/callGetMonthlyComparativeReceitaDespesa";
+import RecentTransactions from "./Recent_Transacations/RecentTransactions";
 
 type Transaction = {
   cat_id: string;
@@ -252,7 +253,7 @@ export function MainPage() {
   const saldoPercent = calculateComparativeSaldoMes(monthsCompartive);
   
   return (
-    <div>
+    <div className="flex flex-col gap-3">
       <Toaster />
       <div className="flex justify-between items-center">
         <div>
@@ -263,7 +264,7 @@ export function MainPage() {
           
         </div>
       </div>      
-      <div className="py-3 flex gap-3 lg:flex-nowrap sm:flex-wrap">
+      <div className="flex gap-3 lg:flex-nowrap sm:flex-wrap">
         <ResumeCard title="Saldo atual" value={balance == null ? 0 : Number(balance.balance_now)} desc="total de receitas menos despesas" 
                     icon={upArrow} themeColor="#2CAE60" bgColor="#12302F"/>
         <ResumeCard title="Receitas" value={sumByType(filteredType.receitas)} desc={`${receitaPercent}% em relação ao mês anterior`}
@@ -298,7 +299,16 @@ export function MainPage() {
         </div>
       </div>
       <div>
-
+        <div className="bg-[#0E1621] p-4 rounded-xl flex flex-col gap-4">
+          <div className="flex justify-between cursor-pointer">
+            <h2 className="text-white">Transações Recentes</h2>
+            <p>Ver Todas</p>
+          </div>
+          {transactions && transactions.map((transaction, i) => {
+            if (i > 3) return null;
+            return <RecentTransactions key={transaction.id}/>
+          })}
+        </div>
       </div>
     </div>
   );
