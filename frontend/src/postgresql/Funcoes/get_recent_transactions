@@ -1,0 +1,26 @@
+CREATE FUNCTION get_recent_transactions(p_user_id uuid)
+RETURNS TABLE (
+    id uuid,
+    "desc" text,
+    type text,
+    category_name text,
+    value numeric,
+    tran_date timestamptz,
+    icon text
+)
+LANGUAGE sql
+AS $$
+    SELECT
+        t.id,
+        t."desc",
+        t.type,
+        c.name AS category_name,
+        t.value,
+        t.tran_date,
+        c.icon
+    FROM "Transactions" t
+    LEFT JOIN "Categories" c
+        ON t.cat_id = c.id
+    WHERE t.user_id = p_user_id
+    ORDER BY t.tran_date DESC;
+$$;

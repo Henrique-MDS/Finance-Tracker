@@ -1,6 +1,5 @@
 import { Separator } from "@/components/ui/separator"
 import { formatDate } from "@/Utils/formatDate";
-import { generateColor } from "@/Utils/generateColor";
 import { defaultIcons } from "@/Utils/icons";
 
 type RecentTransaction = {

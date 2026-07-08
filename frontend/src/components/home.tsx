@@ -242,7 +242,7 @@ export function MainPage() {
     getMonthlySummaryForChart();
     getMonthVal();
   }, [transactions])
-  //console.log(recentTransactions)
+  
   const sumByType = (data:Transaction[]) => {
     let total = 0;
     if(!data) return 0;

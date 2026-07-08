@@ -98,3 +98,11 @@ retorna algo como:
 generateColor -> retorna uma cor aleatoria em hsl, gera o tanto de cor de acordo com o parametro enviado (numero)
 generateColor(index)
 getMonthlyComparativeReceitaDespesa -> retorna todos os valores totais de receita ou despesa, recebe o userId e o tipo
+get_recent_transactions -> função do banco para trazer os dados abaixo do usuario, é um join entre categorias e transacoes, usa o userId como parametro
+    id uuid,
+    "desc" text,
+    type text,
+    category_name text,
+    value numeric,
+    tran_date timestamptz,
+    icon text
