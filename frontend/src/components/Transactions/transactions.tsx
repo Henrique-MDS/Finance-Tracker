@@ -22,7 +22,6 @@ import { insertTransactionFormData } from "@/Utils/insertTransactionFormData";
 import { notify } from "@/Utils/notify";
 import TransactionGrid from "../Transaction_Grid/TransactionGrid";
 import { verifyForm } from "@/Utils/verifyForm";
-import { defaultIcons } from "@/Utils/icons";
 
 interface Category {
   created_at: string;
@@ -43,8 +42,6 @@ export function Transactions() {
   const userId = localStorage.getItem("userId");
   const [transactions, setTransactions] = useState<any[]>([]);
   const [nowBalance, setNowBalance] = useState<any[]>([]);
-  const [openMenu, setOpenMenu] = useState(false);
-  const [selectedIcon, setSelectedIcon] = useState("");
 
   const getTransactionData = async () => {
     const transctionData = await getData(
@@ -126,7 +123,7 @@ export function Transactions() {
       }
     }
   }
-  console.log(openMenu)
+
   return (
     <div className="flex flex-col gap-5">
       <Toaster />
@@ -186,34 +183,6 @@ export function Transactions() {
               </Field>
             </div>
           </div>
-          <div className="flex flex-col gap-3 bg-[#1A232F] p-8 rounded-xl">
-            <h3 className="flex gap-2">
-              <span>
-                <UserSearch className="text-blue-500"/>
-              </span>
-              Escolha um ícone
-            </h3>
-            <p className="text-sm text-gray-400">Escolha um ícone que melhor representa sua transação</p>
-            <div>
-              <div className="grid sm:grid-cols-3 lg:grid-cols-8 gap-3">
-                {defaultIcons.map(({ name, icon: Icon }) => (
-                  <button
-                    key={name}
-                    type="button"
-                    onClick={() => setSelectedIcon(name)}
-                    className={`flex items-center justify-center rounded-lg border p-3 cursor-pointer
-                    ${
-                      selectedIcon === name
-                        ? "border-blue-500"
-                        : "border-gray-300"
-                    }`}
-                  >
-                    <Icon size={24} />
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
           <div className="w-full min-w-0 bg-[#1A232F] p-8 rounded-xl flex flex-col gap-5">
             <p>Descrição (Opicional)</p>
             <Textarea placeholder="Adicione uma descrição para sua transação" 
@@ -222,7 +191,11 @@ export function Transactions() {
           </div>
         </div>
         <div>
-          <Button className="cursor-pointer bg-emerald-600 hover:bg-emerald-900" onClick={()=>saveFormData()}> <Save /> Salvar Transação</Button>
+          <Button className="cursor-pointer bg-emerald-600 hover:bg-emerald-900" 
+                  onClick={()=>saveFormData()}> 
+            <Save /> 
+            Salvar Transação
+          </Button>
         </div>
       </div>
 

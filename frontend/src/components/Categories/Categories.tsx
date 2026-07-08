@@ -9,6 +9,8 @@ import { notify } from "@/Utils/notify";
 import { insertData } from "@/Utils/insertData";
 import { verifyForm } from "@/Utils/verifyForm";
 import { Toaster } from "react-hot-toast";
+import { defaultIcons } from "@/Utils/icons";
+import { UserSearch } from "lucide-react";
 
 type Category = {
   created_at: string;
@@ -22,6 +24,7 @@ export function CategoriesPage() {
 
     const [cat, setCat] = useState<any>([]);
     const [catName, setCatName] = useState("");
+    const [selectedIcon, setSelectedIcon] = useState("money");
     const userId = localStorage.getItem("userId");
 
     const getAllCategories = async () => {
@@ -53,7 +56,8 @@ export function CategoriesPage() {
                 "Categories",
                 {
                     user_id: userId,
-                    name: catName
+                    name: catName,
+                    icon: selectedIcon
                 },
                 "Inserir categoria"
             );
@@ -90,6 +94,34 @@ export function CategoriesPage() {
                     <Button className="bg-emerald-500 cursor-pointer" onClick={() => saveCategory()}>Salvar</Button>
                 </div>                
             </div>
+            <div className="flex flex-col gap-3 bg-[#1A232F] p-8 rounded-xl">
+            <h3 className="flex gap-2">
+              <span>
+                <UserSearch className="text-blue-500"/>
+              </span>
+              Escolha um ícone
+            </h3>
+            <p className="text-sm text-gray-400">Escolha um ícone que melhor representa sua transação</p>
+            <div>
+              <div className="grid sm:grid-cols-3 lg:grid-cols-8 gap-3">
+                {defaultIcons.map(({ name, icon: Icon }) => (
+                  <button
+                    key={name}
+                    type="button"
+                    onClick={() => setSelectedIcon(name)}
+                    className={`flex items-center justify-center rounded-lg border p-3 cursor-pointer
+                    ${
+                      selectedIcon === name
+                        ? "border-blue-500"
+                        : "border-gray-300"
+                    }`}
+                  >
+                    <Icon size={24} />
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
         </div> 
         <div className="bg-[#111820] p-5 rounded-xl text-white flex flex-col gap-5">
             <div className="flex items-center justify-between">

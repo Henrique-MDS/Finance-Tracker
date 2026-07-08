@@ -17,6 +17,7 @@ import profitIcon from "../assets/profit-icon.svg";
 import { getMonthlyComparativeBalance } from "@/Utils/callGetMonthlyComparative";
 import { getMonthlyComparativeReceitaDespesa } from "@/Utils/callGetMonthlyComparativeReceitaDespesa";
 import RecentTransactions from "./Recent_Transacations/RecentTransactions";
+import { supabase } from "@/services/supabase";
 
 type Transaction = {
   cat_id: string;
@@ -45,6 +46,16 @@ type MonthsComparative = {
   total: number;
 };
 
+type RecentTransaction = {
+  id: string;
+  desc: string;
+  value: number;
+  tran_date: string;
+  type: string;
+  category_name: string;
+  icon: string;
+}
+
 export function MainPage() {
   const userId = localStorage.getItem("userId");
   if(!userId){
@@ -58,6 +69,7 @@ export function MainPage() {
   const [monthsCompartive, setMonthsComparative] = useState<MonthsComparative[]>([{month: '', total: 0}]);
   const [totalReceitaMonth, setTotalReceitaMonth] = useState<MonthsComparative[]>([{month: '', total: 0}]);
   const [totalDespesaMonth, setTotalDespesaMonth] = useState<MonthsComparative[]>([{month: '', total: 0}]);
+  const [recentTransactions, setRecentTransactions] = useState<RecentTransaction[]>([]);
   const defitColor  = "#EF4444";
   const profitColor = "#2763AA";
 
@@ -208,13 +220,29 @@ export function MainPage() {
       }
     }
 
+    const getRecentTransactions = async () => {
+      const { data, error } = await supabase.rpc("get_recent_transactions", {
+        p_user_id: userId,
+      });
+
+      if(!error){
+        if(data && data.length >= 1){
+          setRecentTransactions(data);
+        }
+      } else {
+        notify.error("Erro ao buscar trasações recentes");
+        return;
+      }
+    }
+
+    getRecentTransactions();
     getDespesaComparative();
     getReceitaComparative();
     getMonthComparative();
     getMonthlySummaryForChart();
     getMonthVal();
   }, [transactions])
-
+  //console.log(recentTransactions)
   const sumByType = (data:Transaction[]) => {
     let total = 0;
     if(!data) return 0;
@@ -304,9 +332,9 @@ export function MainPage() {
             <h2 className="text-white">Transações Recentes</h2>
             <p>Ver Todas</p>
           </div>
-          {transactions && transactions.map((transaction, i) => {
+          {recentTransactions && recentTransactions.map((recenTra, i) => {
             if (i > 3) return null;
-            return <RecentTransactions key={transaction.id}/>
+            return <RecentTransactions key={recenTra.id} transaction={recenTra}/>
           })}
         </div>
       </div>
