@@ -8,7 +8,7 @@ function App() {
     <div className="flex">
       <Toaster />
       <Navbar />
-      <div className="p-7 flex-1">
+      <div className="p-7 flex-1 lg:ml-[250px]">
         <Outlet />
       </div>
     </div> 

@@ -106,3 +106,4 @@ get_recent_transactions -> função do banco para trazer os dados abaixo do usua
     value numeric,
     tran_date timestamptz,
     icon text
+returnMonth -> funçao que recebe um numero de 1 a 12 e retorna o mes do número correspondente

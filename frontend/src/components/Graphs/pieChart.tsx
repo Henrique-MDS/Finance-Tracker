@@ -66,54 +66,57 @@ export default function DonutChart() {
     }, [])
 
     return (
-        <div className="bg-[#0E1621] rounded-xl flex items-center p-3 h-full">
-            <div className="relative w-[300px] h-[300px]">
-                <ResponsiveContainer>
-                    <PieChart>
-                    <Pie
-                        data={totalDespesasCat}
-                        dataKey="total"
-                        innerRadius={70}
-                        outerRadius={100}
-                    >
-                        {totalDespesasCat.map((_, index) => (
-                        <Cell key={index} fill={generateColor(index)} />
-                        ))}
-                    </Pie>
-                    </PieChart>
-                </ResponsiveContainer>
-
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-sm text-gray-400">Total</span>
-                    <span className="text-2xl font-bold">R$ {totalDespesa}</span>
-                </div>
-            </div>
-            <div className="flex flex-col gap-2 max-h-66 overflow-y-auto scrollbar-hide">
-                {totalDespesasCat.map((item, index) => {
-                    const percentage = (
-                        (item.total / totalDespesa) * 100
-                    ).toFixed(1);
-
-                    return (
-                        <div
-                            key={item.category_name}
-                            className="flex items-center justify-between gap-3"
+        <div className="bg-[#0E1621] rounded-xl p-5 h-full">
+            <h2 className="text-white text-xl">Resumo das Despesas</h2>
+            <div className="flex items-center h-full flex-col sm:flex-row lg:flex-row">
+                <div className="relative w-[300px] h-[300px]">
+                    <ResponsiveContainer>
+                        <PieChart>
+                        <Pie
+                            data={totalDespesasCat}
+                            dataKey="total"
+                            innerRadius={70}
+                            outerRadius={100}
                         >
-                        <div className="flex items-center gap-2">
+                            {totalDespesasCat.map((_, index) => (
+                            <Cell key={index} fill={generateColor(index)} />
+                            ))}
+                        </Pie>
+                        </PieChart>
+                    </ResponsiveContainer>
+
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <span className="text-sm text-gray-400">Total</span>
+                        <span className="text-2xl font-bold">R$ {totalDespesa}</span>
+                    </div>
+                </div>
+                <div className="flex flex-col gap-2 max-h-66 overflow-y-auto scrollbar-hide">
+                    {totalDespesasCat.map((item, index) => {
+                        const percentage = (
+                            (item.total / totalDespesa) * 100
+                        ).toFixed(1);
+
+                        return (
                             <div
-                                className="w-3 h-3 rounded-full"
-                                style={{
-                                    backgroundColor: generateColor(index),
-                                }}
-                            />
+                                key={item.category_name}
+                                className="flex items-center justify-between gap-3"
+                            >
+                            <div className="flex items-center gap-2">
+                                <div
+                                    className="w-3 h-3 rounded-full"
+                                    style={{
+                                        backgroundColor: generateColor(index),
+                                    }}
+                                />
 
-                            <span>{item.category_name.length > 15 ? item.category_name.slice(0, 15) + "..." : item.category_name}</span>
-                        </div>
+                                <span>{item.category_name.length > 15 ? item.category_name.slice(0, 15) + "..." : item.category_name}</span>
+                            </div>
 
-                        <span>{percentage}%</span>
-                        </div>
-                    );
-                })}
+                            <span>{percentage}%</span>
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
         </div>
     );

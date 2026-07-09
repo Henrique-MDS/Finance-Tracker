@@ -6,7 +6,7 @@ import { notify } from "@/Utils/notify";
 import { Toaster } from "react-hot-toast";
 import { filterDespesaReceita } from "@/Utils/filterDespesaReceita";
 import { getMonthTransactionsValue } from "@/Utils/callGetMonthBalance";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { ChartLegend, ChartLegendContent, ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart"
 import { Bar, BarChart, CartesianGrid,  XAxis} from "recharts";
 import { getMonthlySummary } from "@/Utils/callGetMonthlySummary";
@@ -18,6 +18,7 @@ import { getMonthlyComparativeBalance } from "@/Utils/callGetMonthlyComparative"
 import { getMonthlyComparativeReceitaDespesa } from "@/Utils/callGetMonthlyComparativeReceitaDespesa";
 import RecentTransactions from "./Recent_Transacations/RecentTransactions";
 import { supabase } from "@/services/supabase";
+import { returnMonth } from "@/Utils/returnMonth";
 
 type Transaction = {
   cat_id: string;
@@ -72,7 +73,8 @@ export function MainPage() {
   const [recentTransactions, setRecentTransactions] = useState<RecentTransaction[]>([]);
   const defitColor  = "#EF4444";
   const profitColor = "#2763AA";
-
+  const currentMonth = returnMonth(new Date().getMonth() + 1);
+  
   const chartConfig = {
     receita: {
       label: "Receitas",
@@ -292,17 +294,17 @@ export function MainPage() {
           
         </div>
       </div>      
-      <div className="flex gap-3 lg:flex-nowrap sm:flex-wrap">
+      <div className="flex flex-col gap-3 sm:flex-wrap sm:flex-row lg:flex-nowrap">
         <ResumeCard title="Saldo atual" value={balance == null ? 0 : Number(balance.balance_now)} desc="total de receitas menos despesas" 
                     icon={upArrow} themeColor="#2CAE60" bgColor="#12302F"/>
         <ResumeCard title="Receitas" value={sumByType(filteredType.receitas)} desc={`${receitaPercent}% em relação ao mês anterior`}
                     icon={profitIcon} themeColor="#2763AA" bgColor="#2763AA"/>
         <ResumeCard title="Despesas" value={sumByType(filteredType.despesas)} desc={`${despesaPercent}% em relação ao mês anterior`} 
                     icon={downArrow} themeColor="#EF4444" bgColor="#EF4444"/>
-        <ResumeCard title="Saldo do mês" value={monthTransactionsVal ?? 0} desc={`${saldoPercent}% em relação ao mês anterior`}
+        <ResumeCard title={`Saldo de ${currentMonth}`} value={monthTransactionsVal ?? 0} desc={`${saldoPercent}% em relação ao mês anterior`}
                     icon={walletIcon} themeColor="#3F3663" bgColor="#3F3663"/>
       </div>
-      <div className="flex flex-wrap gap-4">
+      <div className="flex gap-4 flex-col flex-wrap sm:flex-row sm:flex-wrap lg:flex-row lg:flex-nowrap">
         <div className="w-full lg:flex-1">
           <DonutChart />
         </div>
@@ -318,7 +320,7 @@ export function MainPage() {
                 axisLine={false}
                 tickFormatter={(value) => value.slice(0, 3)}
               />
-              <ChartTooltip content={<ChartTooltipContent />} />
+              <ChartTooltip content={<ChartTooltipContent />} cursor={{ fill: "#111820", fillOpacity: 0.3 }}/>
               <ChartLegend content={<ChartLegendContent />} />
               <Bar dataKey="receita" fill="var(--color-receita)" radius={4} />
               <Bar dataKey="despesa" fill="var(--color-despesa)" radius={4} />
@@ -330,7 +332,7 @@ export function MainPage() {
         <div className="bg-[#0E1621] p-4 rounded-xl flex flex-col gap-4">
           <div className="flex justify-between cursor-pointer">
             <h2 className="text-white">Transações Recentes</h2>
-            <p>Ver Todas</p>
+            <Link to="/Categories">Ver Todas</Link>
           </div>
           {recentTransactions && recentTransactions.map((recenTra, i) => {
             if (i > 3) return null;
