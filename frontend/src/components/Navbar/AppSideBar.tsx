@@ -47,7 +47,8 @@ const items = [
 export function AppSidebar() {
   return (
     <Sidebar>
-      <SidebarContent>
+      <SidebarContent className="bg-[#060F18] text-white">
+        <img src="src/assets/logo-tracker.png" alt="finance-tracker-logo" className="h-[150px]"/>
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -56,7 +57,7 @@ export function AppSidebar() {
                   <SidebarMenuButton asChild>
                     <a href={item.url}>
                       <item.icon />
-                      <span>{item.title}</span>
+                      <span className="text-[17px]">{item.title}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
