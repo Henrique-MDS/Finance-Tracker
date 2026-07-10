@@ -16,3 +16,5 @@ placeholder -> placeholder para exibir no campo
 option -> opções para selecionar (enviado em forma de array de strings)
 onValueChange -> serve para pegar o valor do input ex: <SelectInput label="Tipo" placeholder="Tipo" options={["Receita", "Despesa"]} onValueChange={(e) => setType(e)}/>
 value -> serve para colocar a variável de valor, caso precise resetar o campos depois com setValue("") ex: <SelectInput label="Categoria" placeholder="Categoria" options={catOptions} onValueChange={(e) => setCategory(e)} value={category}/>
+ReportResumeCard -> cartão de resumo de finanças para o relatório, aceita titulo, valor, cor do valor, descrição ex:
+<ReportResumeCard title={"Receitas"} value={"R$ 5.000,00"} themeColor={"#009966"}/>
