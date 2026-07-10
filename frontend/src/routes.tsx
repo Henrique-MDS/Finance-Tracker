@@ -6,6 +6,7 @@ import RegisterPage from "./components/Login_Register/Register";
 import LogInPage from "./components/Login_Register/Login";
 import ProtectedRoute from "./Utils/protectedRoute";
 import CategoriesPage from "./components/Categories/Categories";
+import ReportPage from "./components/Reports/ReportPage";
 
 export const router = createBrowserRouter([
   {
@@ -33,6 +34,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <CategoriesPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "Reports",
+        element: (
+          <ProtectedRoute>
+            <ReportPage />
           </ProtectedRoute>
         ),
       }

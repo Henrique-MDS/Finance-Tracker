@@ -14,7 +14,9 @@ import {
   CreditCard,
   ChartColumn,
   Settings,
+  LogOut,
 } from "lucide-react"
+import { useLogout } from "../Login_Register/LogOut";
 
 const items = [
   {
@@ -44,7 +46,10 @@ const items = [
   },
 ]
 
+
+
 export function AppSidebar() {
+  const logout = useLogout();
   return (
     <Sidebar>
       <SidebarContent className="bg-[#060F18] text-white">
@@ -62,6 +67,14 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              <SidebarMenuItem key={'Sair'} className="cursor-pointer" onClick={logout}>
+                <SidebarMenuButton asChild>
+                  <a>
+                    <LogOut />
+                    <span className="text-[17px]">Sair</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
