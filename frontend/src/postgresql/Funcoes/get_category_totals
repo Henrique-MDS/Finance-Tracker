@@ -1,6 +1,8 @@
 CREATE OR REPLACE FUNCTION get_category_totals(
     p_user_id UUID,
-    p_type TEXT
+    p_type TEXT,
+    p_ini_date TIMESTAMPTZ DEFAULT NULL,
+    p_final_date TIMESTAMPTZ DEFAULT NULL
 )
 RETURNS TABLE (
     category_name TEXT,
@@ -14,7 +16,9 @@ AS $$
     LEFT JOIN "Categories" C
         ON T.cat_id = C.id
     WHERE T.user_id = p_user_id
-      AND T.type = p_type
+        AND T.type = p_type
+        AND (p_ini_date IS NULL OR tran_date >= p_ini_date)
+        AND (p_final_date IS NULL OR tran_date <= p_final_date)
     GROUP BY C.name
     ORDER BY total DESC;
 $$ LANGUAGE SQL;

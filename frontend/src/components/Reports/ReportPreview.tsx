@@ -5,6 +5,13 @@ import { Navigate } from "react-router-dom";
 import { getReportData } from "@/Utils/callGetReportData";
 import { notify } from "@/Utils/notify";
 import { formatDate } from "@/Utils/formatDate";
+import { formatCurrencyBR } from "@/Utils/formateToBr";
+import { Bar, BarChart, CartesianGrid,  Cell,  Pie,  PieChart,  ResponsiveContainer,  XAxis} from "recharts";
+import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent, type ChartConfig } from "../ui/chart";
+import { getMonthlySummaryByDate } from "@/Utils/callGetMonthlySummaryByDate";
+import { getCategoryTotals } from "@/Utils/callGetCategoryTotals";
+import { generateColor } from "@/Utils/generateColor";
+import { getTotalByType } from "@/Utils/callGetTotalByType";
 
 type ReportTransaction = {
     desc: string;
@@ -17,11 +24,39 @@ type ReportTransaction = {
     value: number;
 }
 
+type MonthlySummary = {
+    despesa: number;
+    month: string;
+    receita: number;
+}
+
+type TotalByCategory = {
+    category_name: string;
+    total: number;
+}
+
+const chartConfig = {
+    receita: {
+      label: "Receitas",
+      color: "#2CAE60",
+    },
+    despesa: {
+      label: "Despesas",
+      color: "#EF4444",
+    },
+} satisfies ChartConfig
+
 export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, finalDate:string | null}){
 
     const userId = localStorage.getItem("userId");
-    const [transactions, setTransactionsd] = useState<ReportTransaction[]>([]);
-
+    const [transactions, setTransactions] = useState<ReportTransaction[]>([]);
+    const [receitas, setReceitas] = useState<number>(0);
+    const [despesas, setDespesas] = useState<number>(0);
+    const [barChartData, setBarChartData] = useState<MonthlySummary[]>([{despesa: 0, month: "", receita: 0}]);
+    const [totalDespesasByCategory, setTotalDespesasByCategory] = useState<TotalByCategory[]>([{category_name: "", total: 0}]);
+    const [totalDespesa, setTotalDespesa] = useState<any>(0);
+    let saldo = receitas - despesas;
+    
     function formatDateToUS(date: string | null): string {
         if(!date || date == null){
             return "";
@@ -31,6 +66,10 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
         return `${year}/${month}/${day}`;
     }
     
+    const dataBrInicial = iniDate;
+    const dataBrFinal = finalDate;
+    const dataAtual = formatDate(new Date());
+
     const dataInicial = formatDateToUS(iniDate);
     const dataFinal = formatDateToUS(finalDate);
 
@@ -41,10 +80,10 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
     useEffect(() => {
         const getChartData = async () => {
             const response = await getReportData(userId, dataInicial, dataFinal, null);
-            console.log(response)
+
             if(response.success){
                 if(response && response.data){
-                    setTransactionsd(response.data);
+                    setTransactions(response.data);
                 }
             } else {
                 notify.error("Erro ao buscar dados do relatório");
@@ -52,10 +91,106 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
             }
         }
 
-        getChartData();
-    }, [])
-    console.log(transactions)
+        const getCardsDataReceitas = async () => {
+            const response = await getReportData(userId, dataInicial, dataFinal, "Receita");
+            if(response.success){
+                if(response && response.data){
+                    response.data[0] ? setReceitas(response.data[0].total_value) : setReceitas(0);
+                }
+            } else {
+                notify.error("Erro ao buscar dados do relatório");
+                return;
+            }
+        }
 
+        const getCardsDataDespesas = async () => {
+            const response = await getReportData(userId, dataInicial, dataFinal, "Despesa");
+            if(response.success){
+                if(response && response.data){
+                    response.data[0] ? setDespesas(response.data[0].total_value) : setDespesas(0);
+                }
+            } else {
+                notify.error("Erro ao buscar dados do relatório");
+                return;
+            }
+        }
+
+        const getMonthlySummaryForChart = async () => {
+            const response = await getMonthlySummaryByDate(userId, dataInicial, dataFinal);
+            
+            if(!response.success){
+            notify.error("Erro ao buscar balanças mensais");
+            return;
+            } else {
+            if(response && response.data){
+                setBarChartData(response.data);
+                return;
+            } else {
+                notify.error("Nenhum dado mensal a ser exibido");
+                return;
+            }
+            }
+    
+        }
+
+        const getTotalDespesasByCategory = async () => {
+            const response = await getCategoryTotals(
+                userId,
+                "Despesa",
+                dataInicial,
+                dataFinal
+            )
+            
+            if(!response.success){
+                notify.error("Erro ao buscar total por categoria");
+                return;
+            } else {
+                if(response && response.data){
+                    setTotalDespesasByCategory(response.data);
+                    return;
+                } else {
+                    notify.error("Nenhum dado a ser exibido");
+                    return;
+                }
+            }
+        }
+
+        const getTotalDespesas = async () => {
+            const response = await getTotalByType(
+                userId,
+                "Despesa"
+            )
+            
+            if(!response.success){
+                notify.error("Erro ao buscar total por categoria");
+                return;
+            } else {
+                if(response && response.data){
+                    setTotalDespesa(response.data);
+                    return;
+                } else {
+                    notify.error("Nenhum dado a ser exibido");
+                    return;
+                }
+            }
+        }
+
+        getTotalDespesas();
+        getTotalDespesasByCategory();
+        getMonthlySummaryForChart();
+        getCardsDataDespesas();
+        getCardsDataReceitas();
+        getChartData();
+    }, [dataInicial, dataFinal])
+    
+    const calculateEconomy = (receita: number, despesa: number) => {
+        if(!receita && !despesas){
+            return 0;
+        }
+        const economy = ((receita - despesa) / receita) * 100;
+        return economy.toFixed(0)
+    }
+    console.log(totalDespesasByCategory)
   return (
     <div className="bg-white text-black text-[10px] rounded-xl p-4">
         <div className="flex items-center justify-between">
@@ -64,24 +199,92 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
             </div>
             <div>
                 <h3 className="font-semibold">Relatório Financeiro</h3>
-                <p>Período: 01/07/2026 a 31/07/2026</p>
-                <p>Gerado em: 09/10/2026</p>
+                <p>{`Período: ${dataBrInicial} a ${dataBrFinal}`}</p>
+                <p>{`Gerado em: ${dataAtual}`}</p>
             </div>
         </div>
         <Separator  className="bg-gray-200"/>
         <div className="py-4 flex flex-col gap-3">
             <h3 className="font-bold">Resumo do Período</h3>
             <div className="flex items-center gap-3">
-                <ReportResumeCard title={"Receitas"} value={"R$ 5.000,00"} themeColor={"#009966"}/>
-                <ReportResumeCard title={"Despesas"} value={"R$ 1.800,00"} themeColor={"#9E0F18"}/>
-                <ReportResumeCard title={"Saldo"} value={"R$ 3.200,00"} themeColor={"#00A7E1"}/>
-                <ReportResumeCard title={"Economia"} value={"64%"} themeColor={"#000000"}/>
+                <ReportResumeCard title={"Receitas"} value={formatCurrencyBR(receitas)} themeColor={"#009966"}/>
+                <ReportResumeCard title={"Despesas"} value={formatCurrencyBR(despesas)} themeColor={"#9E0F18"}/>
+                <ReportResumeCard title={"Saldo"} value={formatCurrencyBR(saldo)} themeColor={"#00A7E1"}/>
+                <ReportResumeCard title={"Economia"} value={`${calculateEconomy(receitas, despesas)}%`} themeColor={"#000000"}/>
             </div>
-            <div>
-                <div></div>
-                <div></div>
+            <div className="grid grid-cols-2 gap-6 items-stretch">
+                <div className="border rounded-xl p-4 h-[320px] border-gray-200">
+                    <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+                        <BarChart accessibilityLayer data={barChartData}>
+                        <CartesianGrid vertical={false} horizontal={false}/>
+                        <XAxis
+                            dataKey="month"
+                            tickLine={false}
+                            tickMargin={10}
+                            axisLine={false}
+                            tickFormatter={(value) => value.slice(0, 3)}
+                        />
+                        <ChartTooltip content={<ChartTooltipContent />} cursor={{ fill: "#111820", fillOpacity: 0.3 }}/>
+                        <ChartLegend content={<ChartLegendContent />} />
+                        <Bar dataKey="receita" fill="var(--color-receita)" radius={4} />
+                        <Bar dataKey="despesa" fill="var(--color-despesa)" radius={4} />
+                    </BarChart>
+                </ChartContainer>
+                </div>
+                <div className="border rounded-xl p-4 h-[320px] flex items-center border-gray-200">
+                    <div className="relative w-[320px] h-[320px] p-5">
+                        <h2 className="font-semibold">Resumo das Despesas</h2>
+                        <ResponsiveContainer>
+                            <PieChart>
+                            <Pie
+                                data={totalDespesasByCategory}
+                                dataKey="total"
+                                innerRadius={70}
+                                outerRadius={100}
+                            >
+                                {totalDespesasByCategory.map((_, index) => (
+                                <Cell key={index} fill={generateColor(index)} />
+                                ))}
+                            </Pie>
+                            </PieChart>
+                        </ResponsiveContainer>
+
+                        <div className="absolute inset-0 flex flex-col items-center justify-center">
+                            <span className="text-sm text-gray-400">Total</span>
+                            <span className="text-2xl font-bold">R$ {totalDespesa}</span>
+                        </div>
+                    </div>
+
+                    <div className="w-40 flex flex-col gap-2 justify-cente">
+                        {totalDespesasByCategory.map((item, index) => {
+                            const percentage = (
+                                (item.total / totalDespesa) * 100
+                            ).toFixed(1);
+
+                            return (
+                                <div
+                                    key={item.category_name}
+                                    className="flex items-center justify-between gap-3"
+                                >
+                                <div className="flex items-center gap-2">
+                                    <div
+                                        className="w-3 h-3 rounded-full"
+                                        style={{
+                                            backgroundColor: generateColor(index),
+                                        }}
+                                    />
+
+                                    <span>{item.category_name.length > 15 ? item.category_name.slice(0, 15) + "..." : item.category_name}</span>
+                                </div>
+
+                                <span>{percentage}%</span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
             </div>
-            <div>
+            <div className="border-[1px] border-gray-200 rounded-[4px] p-5">
                 <h3 className="font-semibold py-3">Transações Recentes</h3>
                 <div className="grid grid-cols-[100px_2fr_1.5fr_120px_100px] font-semibold border-b pb-2">
                     <p>data</p>
@@ -91,7 +294,7 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
                     <p>valor</p>
                 </div>
                 {transactions && transactions.map((t)=>(
-                    <div key={t.id} className="grid grid-cols-[100px_2fr_1.5fr_120px_100px] py-2 border-b">
+                    <div key={t.id} className="grid grid-cols-[100px_2fr_1.5fr_120px_100px] py-2 border-b border-gray-200">
                         <p>{formatDate(t.tran_date)}</p>
                         <p>{t.desc}</p>
                         <p>{t.category_name}</p>
@@ -100,6 +303,9 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
                     </div>
                 ))}
             </div>
+        </div>
+        <div className="flex w-full items-center justify-center text-gray-500">
+            <p>Relatório Gerado por Finance Tracker</p>
         </div>
     </div>
   );

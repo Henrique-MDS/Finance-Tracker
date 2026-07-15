@@ -12,11 +12,27 @@ import {
 import ReportTypeCard from "./ReportTypeCard"
 import ReportPreviewPage from "./ReportPreview"
 import { formatDate } from "@/Utils/formatDate"
+import { notify } from "@/Utils/notify"
+import { useReactToPrint } from "react-to-print"
 
 export function ReportPage(){
 
     const [firstDate, setFirstDate] = React.useState<Date>();
     const [secondDate, setSecondDate] = React.useState<Date>();
+    const reportRef = React.useRef<HTMLDivElement>(null);
+    const handlePrint = useReactToPrint({
+        contentRef: reportRef,
+        documentTitle: "Relatório Financeiro",
+    });
+
+    React.useEffect(() => {
+        if (firstDate && secondDate && secondDate < firstDate) {
+            notify.error("A data final deve ser maior que a inicial");
+
+            setFirstDate(undefined);
+            setSecondDate(undefined);
+        }
+    }, [firstDate, secondDate]);
 
   return (
     <div>
@@ -102,7 +118,7 @@ export function ReportPage(){
                         </div>
                     </div>
                     <div>
-                        <Button className="bg-[#108163] cursor-pointer hover:bg-[#109963] p-7">
+                        <Button className="bg-[#108163] cursor-pointer hover:bg-[#109963] p-7" onClick={handlePrint}>
                             <Download />
                             Gerar Relatório
                         </Button>
@@ -117,13 +133,15 @@ export function ReportPage(){
                     </div>
                     <div>
                         {firstDate && secondDate ? (
-                            <ReportPreviewPage
-                                iniDate={formatDate(firstDate)}
-                                finalDate={formatDate(secondDate)}
-                            />
+                            <div ref={reportRef}>
+                                <ReportPreviewPage
+                                    iniDate={formatDate(firstDate)}
+                                    finalDate={formatDate(secondDate)}
+                                />
+                            </div>
                         ) : (
                             <p className="text-gray-400">
-                                Selecione um período para visualizar a prévia.
+                                Selecione um período para visualizar a prévia...
                             </p>
                         )}                        
                     </div>

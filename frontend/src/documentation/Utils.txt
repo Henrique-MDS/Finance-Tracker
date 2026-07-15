@@ -115,3 +115,4 @@ getReportData -> funçao para pegar dados dos relatórios. precisa de userid, ti
     value -> valor da transacao
     SUM(value) OVER () AS total_value -> valor da soma das transacoes do tipo
     tran_date -> data
+formatCurrencyBR -> recebe um numero e retorna formatado no tipo brasileiro ex: R$ 5.000,00

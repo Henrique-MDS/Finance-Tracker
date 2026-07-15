@@ -24,7 +24,9 @@ export default function DonutChart() {
         const getTotalDespesasByCategory = async () => {
             const response = await getCategoryTotals(
                 userId,
-                "Despesa"
+                "Despesa",
+                null,
+                null
             )
             
             if(!response.success){

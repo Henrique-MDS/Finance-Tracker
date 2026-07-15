@@ -1,6 +1,6 @@
 import { supabase } from "@/services/supabase";
 
-type GetCategoryTotalsInterface = {
+type getDataInterface = {
     success: boolean;
     message: string;
     data?: any[];
@@ -10,12 +10,12 @@ type GetCategoryTotalsInterface = {
 }
 
 
-export const getCategoryTotals = async (userId:string, type:string, iniDate: string | null, finalDate:string | null):Promise<GetCategoryTotalsInterface> => {
+export const getMonthlySummaryByDate = async (userId:string, iniDate:string | null, finalDate:string | null):Promise<getDataInterface> => {
+    
     const { data, error } = await supabase.rpc(
-        "get_category_totals",
+        "get_monthly_summary_by_date",
         {
             p_user_id: userId,
-            p_type: type,
             p_ini_date: iniDate,
             p_final_date: finalDate
         }

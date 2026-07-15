@@ -10,6 +10,7 @@ RETURNS TABLE (
     user_id uuid,
     type text,
     category_name text,
+    total_value numeric,
     value numeric,
     tran_date timestamptz
 )
@@ -21,6 +22,7 @@ SELECT
     t.user_id,
     t.type,
     c.name AS category_name,
+    SUM(t.value) OVER () AS total_value,
     t.value,
     t.tran_date
 FROM "Transactions" t

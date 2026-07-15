@@ -7,4 +7,6 @@ packs que precisam ser instalados:
 4 - react-hot-toast para popups
 5 - shadcn ui npx shadcn@latest init e npm install -D @types/node
 6 - lucide npm install lucide-react
+7 - jspdf npm install jspdf
+8 - html2canvas npm install html2canvas
 
