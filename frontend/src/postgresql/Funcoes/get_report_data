@@ -1,0 +1,32 @@
+CREATE OR REPLACE FUNCTION get_report_data(
+    p_user_id uuid,
+    p_ini_date timestamptz,
+    p_final_date timestamptz,
+    p_type text DEFAULT NULL
+)
+RETURNS TABLE (
+    id uuid,
+    "desc" text,
+    user_id uuid,
+    type text,
+    category_name text,
+    value numeric,
+    tran_date timestamptz
+)
+LANGUAGE sql
+AS $$
+SELECT
+    t.id,
+    t."desc",
+    t.user_id,
+    t.type,
+    c.name AS category_name,
+    t.value,
+    t.tran_date
+FROM "Transactions" t
+LEFT JOIN "Categories" c
+    ON c.id = t.cat_id
+WHERE t.user_id = p_user_id
+  AND t.tran_date BETWEEN p_ini_date AND p_final_date
+  AND (p_type IS NULL OR t.type = p_type);
+$$;

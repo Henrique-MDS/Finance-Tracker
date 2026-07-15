@@ -1,5 +1,5 @@
 
-export function formatDate(date:string) {
+export function formatDate(date:string | Date) {
     if(!date) return null;
     const dateObj = new Date(date);
 

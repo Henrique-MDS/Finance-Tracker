@@ -107,3 +107,11 @@ get_recent_transactions -> função do banco para trazer os dados abaixo do usua
     tran_date timestamptz,
     icon text
 returnMonth -> funçao que recebe um numero de 1 a 12 e retorna o mes do número correspondente
+getReportData -> funçao para pegar dados dos relatórios. precisa de userid, tipo (receita/despesa), data incial e final. Se passar null em type ele traz todos
+    id -> id da transacao
+    user_id -> id do usuario
+    "desc" -> desc da transacao
+    type -> tipo
+    value -> valor da transacao
+    SUM(value) OVER () AS total_value -> valor da soma das transacoes do tipo
+    tran_date -> data

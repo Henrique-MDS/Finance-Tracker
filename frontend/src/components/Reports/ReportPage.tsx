@@ -11,10 +11,11 @@ import {
 } from "@/components/ui/popover"
 import ReportTypeCard from "./ReportTypeCard"
 import ReportPreviewPage from "./ReportPreview"
+import { formatDate } from "@/Utils/formatDate"
 
 export function ReportPage(){
 
-    const [firsDate, setFirsDate] = React.useState<Date>();
+    const [firstDate, setFirstDate] = React.useState<Date>();
     const [secondDate, setSecondDate] = React.useState<Date>();
 
   return (
@@ -42,15 +43,15 @@ export function ReportPage(){
                                 <PopoverTrigger asChild>
                                     <Button
                                     variant="outline"
-                                    data-empty={!firsDate}
+                                    data-empty={!firstDate}
                                     className="w-[280px] justify-start text-left p-6 font-normal data-[empty=true]:text-muted-foreground bg-[#0B1723]"
                                     >
                                     <CalendarIcon />
-                                    {firsDate ? format(firsDate, "PPP") : <span>Selecione uma data</span>}
+                                    {firstDate ? format(firstDate, "PPP") : <span>Selecione uma data</span>}
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-auto p-0">
-                                    <Calendar mode="single" selected={firsDate} onSelect={setFirsDate}/>
+                                    <Calendar mode="single" selected={firstDate} onSelect={setFirstDate}/>
                                 </PopoverContent>
                             </Popover>
                         </div>
@@ -115,7 +116,16 @@ export function ReportPage(){
                         <p>Prévia do relatório</p>
                     </div>
                     <div>
-                        <ReportPreviewPage />
+                        {firstDate && secondDate ? (
+                            <ReportPreviewPage
+                                iniDate={formatDate(firstDate)}
+                                finalDate={formatDate(secondDate)}
+                            />
+                        ) : (
+                            <p className="text-gray-400">
+                                Selecione um período para visualizar a prévia.
+                            </p>
+                        )}                        
                     </div>
                 </div>
             </div>
