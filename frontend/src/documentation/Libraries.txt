@@ -9,4 +9,5 @@ packs que precisam ser instalados:
 6 - lucide npm install lucide-react
 7 - jspdf npm install jspdf
 8 - html2canvas npm install html2canvas
+9 - react-to-print npm install react-to-print
 

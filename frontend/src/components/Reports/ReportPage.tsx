@@ -35,7 +35,7 @@ export function ReportPage(){
     }, [firstDate, secondDate]);
 
   return (
-    <div>
+    <div className="overflow-x-hidden">
         <div className="pb-5">
             <h1 className="text-2xl text-white pb-1">Relatórios</h1>
             <p>Gere relatórios detalhados para suas finanças</p>
@@ -45,14 +45,14 @@ export function ReportPage(){
             <p className="pb-2">Relatórios Gerados</p>
         </div>
         <Separator />
-        <div className="pt-5 flex gap-5">
-            <div className="text-white flex flex-col gap-5">
-                <div className="bg-[#0B1723] p-7 rounded-xl flex flex-col gap-5">
+        <div className="pt-5 flex gap-5 flex-wrap lg:flex-nowrap">
+            <div className="text-white flex flex-col gap-5 w-full">
+                <div className="bg-[#0B1723] p-7 rounded-xl flex flex-col gap-5 flex-1">
                     <div className="flex items-center gap-3">
                         <CalendarIcon />
                         <p>1. Selecionar Período</p>
                     </div>
-                    <div className="flex items-center gap-5">
+                    <div className="flex items-center gap-5 flex-wrap lg:flex-nowrap">
                         <div>
                             <p>Data Inicial</p>
                             <Popover>
@@ -91,7 +91,7 @@ export function ReportPage(){
                         </div>
                     </div>
                 </div>
-                <div className="bg-[#0B1723] p-7 rounded-xl flex flex-col gap-5">
+                <div className="bg-[#0B1723] p-7 rounded-xl flex flex-col gap-5 flex-1">
                     <div className="flex flex-col gap-3">
                         <div className="flex items-center gap-3">
                             <Database />
@@ -103,7 +103,7 @@ export function ReportPage(){
                         </div>            
                     </div>
                 </div>
-                <div className="bg-[#0B1723] p-7 rounded-xl flex flex-col gap-5">
+                <div className="bg-[#0B1723] p-7 rounded-xl flex flex-col gap-5 flex-1">
                     <div className="flex items-center gap-3">
                         <File />
                         <h2>3. Selecionar Formato</h2>
@@ -133,7 +133,7 @@ export function ReportPage(){
                     </div>
                     <div>
                         {firstDate && secondDate ? (
-                            <div ref={reportRef}>
+                            <div ref={reportRef} className="overflow-y-auto scrollbar-hide max-h-screen print:max-h-none print:overflow-visible">
                                 <ReportPreviewPage
                                     iniDate={formatDate(firstDate)}
                                     finalDate={formatDate(secondDate)}

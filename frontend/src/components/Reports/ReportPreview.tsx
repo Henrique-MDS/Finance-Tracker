@@ -190,7 +190,7 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
         const economy = ((receita - despesa) / receita) * 100;
         return economy.toFixed(0)
     }
-    console.log(totalDespesasByCategory)
+    
   return (
     <div className="bg-white text-black text-[10px] rounded-xl p-4">
         <div className="flex items-center justify-between">
@@ -206,15 +206,15 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
         <Separator  className="bg-gray-200"/>
         <div className="py-4 flex flex-col gap-3">
             <h3 className="font-bold">Resumo do Período</h3>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-wrap lg:flex-nowrap">
                 <ReportResumeCard title={"Receitas"} value={formatCurrencyBR(receitas)} themeColor={"#009966"}/>
                 <ReportResumeCard title={"Despesas"} value={formatCurrencyBR(despesas)} themeColor={"#9E0F18"}/>
                 <ReportResumeCard title={"Saldo"} value={formatCurrencyBR(saldo)} themeColor={"#00A7E1"}/>
                 <ReportResumeCard title={"Economia"} value={`${calculateEconomy(receitas, despesas)}%`} themeColor={"#000000"}/>
             </div>
-            <div className="grid grid-cols-2 gap-6 items-stretch">
+            <div className="grid grid-cols-1 gap-6 items-stretch">
                 <div className="border rounded-xl p-4 h-[320px] border-gray-200">
-                    <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+                    <ChartContainer config={chartConfig} className="h-full w-full">
                         <BarChart accessibilityLayer data={barChartData}>
                         <CartesianGrid vertical={false} horizontal={false}/>
                         <XAxis
@@ -231,10 +231,10 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
                     </BarChart>
                 </ChartContainer>
                 </div>
-                <div className="border rounded-xl p-4 h-[320px] flex items-center border-gray-200">
+                <div className="border rounded-xl p-4 min-h-[320px] flex flex-wrap items-center gap-5 border-gray-200">
                     <div className="relative w-[320px] h-[320px] p-5">
                         <h2 className="font-semibold">Resumo das Despesas</h2>
-                        <ResponsiveContainer>
+                        <ResponsiveContainer width="100%" height={220}>
                             <PieChart>
                             <Pie
                                 data={totalDespesasByCategory}
@@ -249,13 +249,20 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
                             </PieChart>
                         </ResponsiveContainer>
 
-                        <div className="absolute inset-0 flex flex-col items-center justify-center">
-                            <span className="text-sm text-gray-400">Total</span>
-                            <span className="text-2xl font-bold">R$ {totalDespesa}</span>
-                        </div>
+                        {totalDespesa.toString().length > 8 ? (
+                            <div className="flex flex-col items-center justify-center mt-4 static">
+                                <span className="text-sm text-gray-400">Total</span>
+                                <span className="text-xl font-bold">R$ {totalDespesa}</span>
+                            </div>
+                            ) : (
+                            <div className="top-0 left-0 right-0 bottom-6 flex flex-col items-center justify-center absolute">
+                                <span className="text-sm text-gray-400">Total</span>
+                                <span className="text-xl font-bold">R$ {totalDespesa}</span>
+                            </div>
+                        )}
                     </div>
 
-                    <div className="w-40 flex flex-col gap-2 justify-cente">
+                    <div className="w-40 flex flex-col gap-2 justify-center">
                         {totalDespesasByCategory.map((item, index) => {
                             const percentage = (
                                 (item.total / totalDespesa) * 100
@@ -285,7 +292,7 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
                 </div>
             </div>
             <div className="border-[1px] border-gray-200 rounded-[4px] p-5">
-                <h3 className="font-semibold py-3">Transações Recentes</h3>
+                <h3 className="font-semibold py-3">Transações Do Período</h3>
                 <div className="grid grid-cols-[100px_2fr_1.5fr_120px_100px] font-semibold border-b pb-2">
                     <p>data</p>
                     <p>descrição</p>
