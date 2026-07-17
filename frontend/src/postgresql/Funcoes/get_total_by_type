@@ -1,11 +1,15 @@
 CREATE OR REPLACE FUNCTION get_total_by_type(
     p_user_id UUID,
-    p_type TEXT
+    p_type TEXT,
+    p_ini_date TIMESTAMPTZ DEFAULT NULL,
+    p_final_date TIMESTAMPTZ DEFAULT NULL
 )
 RETURNS NUMERIC
 AS $$
     SELECT COALESCE(SUM(value), 0)
     FROM "Transactions"
     WHERE user_id = p_user_id
-      AND type = p_type;
+        AND type = p_type
+        AND (p_ini_date IS NULL OR tran_date >= p_ini_date)
+        AND (p_final_date IS NULL OR tran_date <= p_final_date)
 $$ LANGUAGE SQL;

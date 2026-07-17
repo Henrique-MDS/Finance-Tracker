@@ -10,12 +10,14 @@ type GetTotalByTypeInterface = {
 }
 
 
-export const getTotalByType = async (userId:string, type:string):Promise<GetTotalByTypeInterface> => {
+export const getTotalByType = async (userId:string, type:string, iniDate: string | null, finalDate: string | null):Promise<GetTotalByTypeInterface> => {
     const { data, error } = await supabase.rpc(
         "get_total_by_type",
         {
             p_user_id: userId,
-            p_type: type
+            p_type: type,
+            p_ini_date: iniDate,
+            p_final_date: finalDate
         }
     );
 

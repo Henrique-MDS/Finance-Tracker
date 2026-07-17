@@ -7,6 +7,7 @@ import LogInPage from "./components/Login_Register/Login";
 import ProtectedRoute from "./Utils/protectedRoute";
 import CategoriesPage from "./components/Categories/Categories";
 import ReportPage from "./components/Reports/ReportPage";
+import SettingsPage from "./components/Settings/Settings";
 
 export const router = createBrowserRouter([
   {
@@ -42,6 +43,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <ReportPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "Settings",
+        element: (
+          <ProtectedRoute>
+            <SettingsPage />
           </ProtectedRoute>
         ),
       }

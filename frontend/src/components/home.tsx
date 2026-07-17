@@ -277,7 +277,7 @@ export function MainPage() {
     
     return (((current.total - previous.total) / Math.abs(previous.total)) * 100).toFixed(1);
   }
-
+  console.log(balance)
   const receitaPercent = calculateComparativeSaldoMes(totalReceitaMonth);
   const despesaPercent = calculateComparativeSaldoMes(totalDespesaMonth);
   const saldoPercent = calculateComparativeSaldoMes(monthsCompartive);
@@ -295,7 +295,7 @@ export function MainPage() {
         </div>
       </div>      
       <div className="flex flex-col gap-3 sm:flex-wrap sm:flex-row lg:flex-nowrap">
-        <ResumeCard title="Saldo atual" value={balance == null ? 0 : Number(balance.balance_now)} desc="total de receitas menos despesas" 
+        <ResumeCard title="Saldo atual" value={balance.length == 0 ? 0 : Number(balance.balance_now)} desc="total de receitas menos despesas" 
                     icon={upArrow} themeColor="#2CAE60" bgColor="#12302F"/>
         <ResumeCard title="Receitas" value={sumByType(filteredType.receitas)} desc={`${receitaPercent}% em relação ao mês anterior`}
                     icon={profitIcon} themeColor="#2763AA" bgColor="#2763AA"/>
@@ -332,7 +332,7 @@ export function MainPage() {
         <div className="bg-[#0E1621] p-4 rounded-xl flex flex-col gap-4">
           <div className="flex justify-between cursor-pointer">
             <h2 className="text-white">Transações Recentes</h2>
-            <Link to="/Categories">Ver Todas</Link>
+            <Link to="/Transactions">Ver Todas</Link>
           </div>
           {recentTransactions && recentTransactions.map((recenTra, i) => {
             if (i > 3) return null;

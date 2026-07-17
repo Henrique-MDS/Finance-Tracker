@@ -46,7 +46,9 @@ export default function DonutChart() {
         const fetchTotalByType = async () => {
             const response = await getTotalByType(
                 userId,
-                "Despesa"
+                "Despesa",
+                null,
+                null
             )
             
             if(!response.success){

@@ -158,7 +158,9 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
         const getTotalDespesas = async () => {
             const response = await getTotalByType(
                 userId,
-                "Despesa"
+                "Despesa",
+                dataInicial,
+                dataFinal
             )
             
             if(!response.success){
@@ -306,7 +308,10 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
                         <p>{t.desc}</p>
                         <p>{t.category_name}</p>
                         <p>{t.type}</p>
-                        <p>{t.value}</p>
+                        <p style={t.type == "Receita" ? {color: "#2CAE60"}: {color: "#DD3C3C"}}
+                            className="font-bold">
+                            {t.type == "Receita" ? `+ ${t.value}` : `- ${t.value}`}
+                        </p>
                     </div>
                 ))}
             </div>
