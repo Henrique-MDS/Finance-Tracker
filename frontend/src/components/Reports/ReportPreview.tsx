@@ -148,9 +148,6 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
                 if(response && response.data){
                     setTotalDespesasByCategory(response.data);
                     return;
-                } else {
-                    notify.error("Nenhum dado a ser exibido");
-                    return;
                 }
             }
         }
@@ -169,9 +166,6 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
             } else {
                 if(response && response.data){
                     setTotalDespesa(response.data);
-                    return;
-                } else {
-                    notify.error("Nenhum dado a ser exibido");
                     return;
                 }
             }
