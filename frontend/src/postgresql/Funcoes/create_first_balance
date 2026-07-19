@@ -1,0 +1,11 @@
+CREATE OR REPLACE FUNCTION create_first_balance()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO "Balance" (user_id, balance_now)
+    VALUES (NEW.id, 0);
+
+    RETURN NEW;
+END;
+$$;

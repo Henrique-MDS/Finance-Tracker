@@ -1,0 +1,4 @@
+CREATE TRIGGER trg_create_first_balance
+AFTER INSERT ON "Users"
+FOR EACH ROW
+EXECUTE FUNCTION create_first_balance();

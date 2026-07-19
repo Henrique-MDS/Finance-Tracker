@@ -100,9 +100,9 @@ export function MainPage() {
         return;
       } else {
         if(response && response.data){
-          setBalance(response.data[0]);
+          setBalance(response.data);
         } else {
-          setBalance(null);
+          setBalance(0);
         }   
       }
 
@@ -295,7 +295,7 @@ export function MainPage() {
         </div>
       </div>      
       <div className="flex flex-col gap-3 sm:flex-wrap sm:flex-row lg:flex-nowrap">
-        <ResumeCard title="Saldo atual" value={balance.length == 0 ? 0 : Number(balance.balance_now)} desc="total de receitas menos despesas" 
+        <ResumeCard title="Saldo atual" value={balance && balance[0] ? Number(balance[0].balance_now) : 0} desc="total de receitas menos despesas" 
                     icon={upArrow} themeColor="#2CAE60" bgColor="#12302F"/>
         <ResumeCard title="Receitas" value={sumByType(filteredType.receitas)} desc={`${receitaPercent}% em relação ao mês anterior`}
                     icon={profitIcon} themeColor="#2763AA" bgColor="#2763AA"/>

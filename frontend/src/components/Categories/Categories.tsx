@@ -61,7 +61,7 @@ export function CategoriesPage() {
                 },
                 "Inserir categoria"
             );
-
+            console.log(saveResponse)
             if(saveResponse.success){
                 notify.success("Categoria Adicionada");
                 getAllCategories();
