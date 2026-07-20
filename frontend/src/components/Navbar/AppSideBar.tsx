@@ -54,27 +54,38 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent className="bg-[#060F18] text-white">
         <img src="src/assets/logo-tracker.png" alt="finance-tracker-logo" className="h-[150px]"/>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
+        <SidebarGroup className="flex-1 flex flex-col">
+          <SidebarGroupContent className="flex flex-col flex-1">
+            <SidebarMenu className="flex flex-col h-full">
+              <div className="flex-1">
+                {items.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <a href={item.url}>
+                        <item.icon />
+                        <span className="text-[17px]">{item.title}</span>
+                      </a>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+                <SidebarMenuItem className="cursor-pointer" onClick={logout}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span className="text-[17px]">{item.title}</span>
+                    <a>
+                      <LogOut />
+                      <span className="text-[17px]">Sair</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
-              ))}
-              <SidebarMenuItem key={'Sair'} className="cursor-pointer" onClick={logout}>
-                <SidebarMenuButton asChild>
-                  <a>
-                    <LogOut />
-                    <span className="text-[17px]">Sair</span>
-                  </a>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              </div>
+              <div>
+                <SidebarMenuItem className="cursor-pointer">
+                  <SidebarMenuButton asChild>
+                    <a>
+                      <span className="text-[17px]">Perfil Card</span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              </div>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

@@ -71,8 +71,6 @@ export function MainPage() {
   const [totalReceitaMonth, setTotalReceitaMonth] = useState<MonthsComparative[]>([{month: '', total: 0}]);
   const [totalDespesaMonth, setTotalDespesaMonth] = useState<MonthsComparative[]>([{month: '', total: 0}]);
   const [recentTransactions, setRecentTransactions] = useState<RecentTransaction[]>([]);
-  const defitColor  = "#EF4444";
-  const profitColor = "#2763AA";
   const currentMonth = returnMonth(new Date().getMonth() + 1);
   
   const chartConfig = {
@@ -277,7 +275,7 @@ export function MainPage() {
     
     return (((current.total - previous.total) / Math.abs(previous.total)) * 100).toFixed(1);
   }
-  console.log(balance)
+
   const receitaPercent = calculateComparativeSaldoMes(totalReceitaMonth);
   const despesaPercent = calculateComparativeSaldoMes(totalDespesaMonth);
   const saldoPercent = calculateComparativeSaldoMes(monthsCompartive);
