@@ -17,6 +17,7 @@ import {
   LogOut,
 } from "lucide-react"
 import { useLogout } from "../Login_Register/LogOut";
+import PerfilCard from "./PerfilCard";
 
 const items = [
   {
@@ -81,7 +82,7 @@ export function AppSidebar() {
                 <SidebarMenuItem className="cursor-pointer">
                   <SidebarMenuButton asChild>
                     <a>
-                      <span className="text-[17px]">Perfil Card</span>
+                      <PerfilCard />
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

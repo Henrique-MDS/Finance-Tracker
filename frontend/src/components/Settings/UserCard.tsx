@@ -9,6 +9,8 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
+import AccountOptions from "./AccountOptions";
+import ProfileOptions from "./ProfileOptions";
 
 type UserData = {
     created_at: string;
@@ -44,14 +46,18 @@ export function UserCard({ userData }:{userData:UserData | undefined}) {
                 <Button onClick={() => setOpen(true)} variant="outline" className="w-fit cursor-pointer">
                     Editar Perfil
                 </Button>
-                    <CommandDialog open={open} onOpenChange={setOpen}>
+                <CommandDialog open={open} onOpenChange={setOpen}>
                     <Command>
                         <CommandList>
-                            <CommandEmpty>No results found.</CommandEmpty>
-                            <CommandGroup>
-                                <CommandItem>Calendar</CommandItem>
-                                <CommandItem>Search Emoji</CommandItem>
-                                <CommandItem>Calculator</CommandItem>
+                            <CommandGroup className="p-5">
+                                <div className="flex flex-col gap-4">
+                                    <div>
+                                        <AccountOptions />
+                                    </div>
+                                    <div>
+                                        <ProfileOptions />
+                                    </div>
+                                </div>
                             </CommandGroup>
                         </CommandList>
                     </Command>
