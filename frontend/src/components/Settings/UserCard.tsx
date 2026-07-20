@@ -4,24 +4,16 @@ import { Button } from "@/components/ui/button"
 import {
   Command,
   CommandDialog,
-  CommandEmpty,
   CommandGroup,
-  CommandItem,
   CommandList,
 } from "@/components/ui/command"
 import AccountOptions from "./AccountOptions";
 import ProfileOptions from "./ProfileOptions";
+import type { UserData } from "@/types/user";
 
-type UserData = {
-    created_at: string;
-    email: string;
-    id: string;
-    name: string;
-    password: string;
-    updated_at: string;
-}
 
-export function UserCard({ userData }:{userData:UserData | undefined}) {
+
+export function UserCard({ userData }:{userData:UserData}) {
     const [open, setOpen] = React.useState(false);
 
   return (

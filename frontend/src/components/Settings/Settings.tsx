@@ -3,15 +3,7 @@ import { useEffect, useState } from "react";
 import { getData } from "@/Utils/getData";
 import { notify } from "@/Utils/notify";
 import UserCard from "./UserCard";
-
-type UserData = {
-    created_at: string;
-    email: string;
-    id: string;
-    name: string;
-    password: string;
-    updated_at: string;
-}
+import type { UserData } from "@/types/user";
 
 export function SettingsPage() {
 
@@ -36,10 +28,9 @@ export function SettingsPage() {
 
         getUserData();
     },[])
-    console.log(userData);
   return (
     <div>
-        <UserCard userData={userData}/>
+        {userData && <UserCard userData={userData}/>}
     </div>
   );
 }
