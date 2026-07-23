@@ -26,9 +26,9 @@ export const uploadAvatar = async (file:File, path:string, userId: string):Promi
             "error": error
         }
     }
-
+    
     const { data } = supabase.storage
-        .from("avatars")
+        .from("Avatars")
         .getPublicUrl(path);
 
     return {

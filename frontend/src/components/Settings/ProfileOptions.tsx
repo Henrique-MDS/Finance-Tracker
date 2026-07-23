@@ -20,39 +20,25 @@ type UserInfo = {
 export function ProfileOptions() {
 
     const { user, loading } = useAuth();
+
     if (loading) {
         return <div>Carregando...</div>;
     }
+
     if (!user) {
         return <Navigate to="/Login" replace />;
     }
+
     const userId = user.id;
     const [profilePic, setProfilePic] = useState<File | null>();
     const [preview, setPreview] = useState<string | null>();
-    const [userInfo, setUserInfo] = useState<UserInfo>();
-
-    useEffect(() => {
-
-        const getUserInformation = async () => {
-            const response = await getData("Users", {id: userId}, "Buscar informações do usuário");
-
-            if(response.success){
-                if(response.data && response.data.length > 0){
-                    setUserInfo(response.data[0]);
-                }                
-            } else {
-                notify.error("Erro ao buscar informações do usuário");
-                return;
-            }
-        }
-
-        getUserInformation();
-    }, [])
 
     const salvarFotoDePerfil = async () => {
         const path = `${userId}/profile.png`;
-        const response = await uploadAvatar(profilePic, path, userId);
-        console.log(path, profilePic, response);
+        const response = await uploadAvatar(profilePic!, path, userId);
+        if(!response.success){
+            notify.error(response.message);
+        }
     }
     
   return (
