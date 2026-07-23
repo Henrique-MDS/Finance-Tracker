@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { getData } from "@/Utils/getData";
 import { notify } from "@/Utils/notify";
 import { uploadAvatar } from "@/Utils/uploadAvatar";
+import { useAuth } from "@/Utils/AuthContext";
+import { Navigate } from "react-router-dom";
 
 type UserInfo = {
     avatar_url: string;
@@ -17,7 +19,14 @@ type UserInfo = {
 
 export function ProfileOptions() {
 
-    const userId = localStorage.getItem("userId");
+    const { user, loading } = useAuth();
+    if (loading) {
+        return <div>Carregando...</div>;
+    }
+    if (!user) {
+        return <Navigate to="/Login" replace />;
+    }
+    const userId = user.id;
     const [profilePic, setProfilePic] = useState<File | null>();
     const [preview, setPreview] = useState<string | null>();
     const [userInfo, setUserInfo] = useState<UserInfo>();
@@ -41,9 +50,9 @@ export function ProfileOptions() {
     }, [])
 
     const salvarFotoDePerfil = async () => {
-        // const path = `${userId}/profile.png`;
-        // const response = await uploadAvatar(profilePic, path, userId);
-        // console.log(path, profilePic);
+        const path = `${userId}/profile.png`;
+        const response = await uploadAvatar(profilePic, path, userId);
+        console.log(path, profilePic, response);
     }
     
   return (

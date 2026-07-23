@@ -4,6 +4,7 @@ import { insertUser } from "../../Utils/insertUser";
 import { Toaster } from "react-hot-toast";
 import { verifyEmail } from "../../Utils/verifyEmail";
 import { Navigate, useNavigate } from "react-router-dom";
+import { notify } from "@/Utils/notify";
 
 export function RegisterPage() {
 
@@ -61,7 +62,6 @@ export function RegisterPage() {
 
         let result = await insertUser(name, email, password);
         let getResult = result;
-        
         if(getResult.success){
             toast.dismiss();
             toast.success(getResult.message, {
@@ -71,12 +71,19 @@ export function RegisterPage() {
             navigate("/Login");
             return;
         } else {
-            toast.dismiss();
-            toast.error(getResult.message, {
-                duration: 1500,
-                position: "top-center",
-            });
-            return;
+            if(getResult.error.code == "email_address_invalid"){
+                notify.error("Email inválido");
+                return;
+            } else if(getResult.error.code == "weak_password"){
+                notify.error("Senha deve ter no mínimo 6 caracteres");
+                return;
+            } else if (getResult.error.code == "over_email_send_rate_limit") {
+                notify.error("Muitas tentativas. Aguarde para tentar novamente");
+                return;
+            } else {
+                notify.error("Erro ao registrar conta");
+                return;
+            }
         }
         
     }

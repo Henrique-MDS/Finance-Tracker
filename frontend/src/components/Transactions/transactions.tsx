@@ -22,6 +22,8 @@ import { insertTransactionFormData } from "@/Utils/insertTransactionFormData";
 import { notify } from "@/Utils/notify";
 import TransactionGrid from "../Transaction_Grid/TransactionGrid";
 import { verifyForm } from "@/Utils/verifyForm";
+import { useAuth } from "@/Utils/AuthContext";
+import { Navigate } from "react-router-dom";
 
 interface Category {
   created_at: string;
@@ -39,7 +41,14 @@ export function Transactions() {
   const [category, setCategory] = useState("");
   const [value, setValue] = useState("");
   const [desc, setDesc] = useState("");
-  const userId = localStorage.getItem("userId");
+  const { user, loading } = useAuth();
+  if (loading) {
+    return <div>Carregando...</div>;
+  }
+  if (!user) {
+    return <Navigate to="/Login" replace />;
+  }
+  const userId = user.id;
   const [transactions, setTransactions] = useState<any[]>([]);
   const [nowBalance, setNowBalance] = useState<any[]>([]);
 

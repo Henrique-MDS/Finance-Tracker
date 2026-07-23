@@ -5,6 +5,7 @@ import { getCategoryTotals } from "@/Utils/callGetCategoryTotals";
 import { notify } from "@/Utils/notify";
 import { generateColor } from "@/Utils/generateColor";
 import { getTotalByType } from "@/Utils/callGetTotalByType";
+import { useAuth } from "@/Utils/AuthContext";
 
 type TotalCategory = {
     category_name: string;
@@ -12,10 +13,14 @@ type TotalCategory = {
 }
 
 export default function DonutChart() {
-    const userId = localStorage.getItem("userId");
-    if(!userId){
-        return <Navigate to="/login" replace />;
+    const { user, loading } = useAuth();
+    if (loading) {
+    return <div>Carregando...</div>;
     }
+    if (!user) {
+    return <Navigate to="/Login" replace />;
+    }
+    const userId = user.id;
 
     const [totalDespesasCat, setTotalDespesasCat] = useState<TotalCategory[]>([{category_name: '', total: 0}]);
     const [totalDespesa, setTotalDespesa] = useState<any>(0);

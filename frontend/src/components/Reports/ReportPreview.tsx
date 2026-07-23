@@ -12,6 +12,7 @@ import { getMonthlySummaryByDate } from "@/Utils/callGetMonthlySummaryByDate";
 import { getCategoryTotals } from "@/Utils/callGetCategoryTotals";
 import { generateColor } from "@/Utils/generateColor";
 import { getTotalByType } from "@/Utils/callGetTotalByType";
+import { useAuth } from "@/Utils/AuthContext";
 
 type ReportTransaction = {
     desc: string;
@@ -48,7 +49,14 @@ const chartConfig = {
 
 export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, finalDate:string | null}){
 
-    const userId = localStorage.getItem("userId");
+    const { user, loading } = useAuth();
+    if (loading) {
+    return <div>Carregando...</div>;
+    }
+    if (!user) {
+    return <Navigate to="/Login" replace />;
+    }
+    const userId = user.id;
     const [transactions, setTransactions] = useState<ReportTransaction[]>([]);
     const [receitas, setReceitas] = useState<number>(0);
     const [despesas, setDespesas] = useState<number>(0);

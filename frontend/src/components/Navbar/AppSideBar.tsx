@@ -16,8 +16,8 @@ import {
   Settings,
   LogOut,
 } from "lucide-react"
-import { useLogout } from "../Login_Register/LogOut";
 import PerfilCard from "./PerfilCard";
+import { logout } from "@/Utils/logOutUser";
 
 const items = [
   {
@@ -50,7 +50,6 @@ const items = [
 
 
 export function AppSidebar() {
-  const logout = useLogout();
   return (
     <Sidebar>
       <SidebarContent className="bg-[#060F18] text-white">
@@ -69,7 +68,7 @@ export function AppSidebar() {
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
-                <SidebarMenuItem className="cursor-pointer" onClick={logout}>
+                <SidebarMenuItem className="cursor-pointer" onClick={() => logout()}>
                   <SidebarMenuButton asChild>
                     <a>
                       <LogOut />

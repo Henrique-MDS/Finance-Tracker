@@ -10,25 +10,20 @@ type InsertUserResult = {
 
 export const insertUser = async (name:string, email: string, password:string): Promise<InsertUserResult> => {
     
-    const { data: user, error: errorUser } = await supabase
-    .from("Users")
-    .select("*")
-    .eq("email", email)
-    .single();
+    const { data, error } = await supabase.auth.signUp({
+        email,
+        password
+    });
 
-    if(!user){
-        const {data, error} = await supabase.from("Users").insert({
-            name: name,
-            email: email,
-            password: password
-        })
-
-        if(error){
-            if(error.code == "23505"){
-                return {success: false, message: "Alguém já está utilizando este nome"}
-            }
-        }
-        return {success: true, message: "Email cadastrado com sucesso", name: name, email: email}
+    if(error){
+        return {success: false, message: "Email já está cadastrado", error: error} 
     }
-    return {success: false, message: "Email já está cadastrado", error: errorUser}  
+
+    await supabase.from("Users").insert({
+        auth_user_id: data.user!.id,
+        name,
+        email
+    });
+    
+    return {success: true, message: "Usuário cadastrado com sucesso!"}  
 }

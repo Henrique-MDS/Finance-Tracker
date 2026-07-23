@@ -4,13 +4,18 @@ import { getData } from "@/Utils/getData";
 import { notify } from "@/Utils/notify";
 import UserCard from "./UserCard";
 import type { UserData } from "@/types/user";
+import { useAuth } from "@/Utils/AuthContext";
 
 export function SettingsPage() {
 
-    const userId = localStorage.getItem("userId");
-    if (!userId) {
-        return <Navigate to="/login" replace />;
-    }  
+    const { user, loading } = useAuth();
+    if (loading) {
+    return <div>Carregando...</div>;
+    }
+    if (!user) {
+    return <Navigate to="/Login" replace />;
+    }
+    const userId = user.id; 
     const [userData, setUserData] = useState<UserData>();
 
     useEffect(() => {

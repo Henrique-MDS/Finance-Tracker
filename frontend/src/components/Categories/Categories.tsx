@@ -11,6 +11,8 @@ import { verifyForm } from "@/Utils/verifyForm";
 import { Toaster } from "react-hot-toast";
 import { defaultIcons } from "@/Utils/icons";
 import { UserSearch } from "lucide-react";
+import { useAuth } from "@/Utils/AuthContext";
+import { Navigate } from "react-router-dom";
 
 type Category = {
   created_at: string;
@@ -25,7 +27,14 @@ export function CategoriesPage() {
     const [cat, setCat] = useState<any>([]);
     const [catName, setCatName] = useState("");
     const [selectedIcon, setSelectedIcon] = useState("money");
-    const userId = localStorage.getItem("userId");
+    const { user, loading } = useAuth();
+    if (loading) {
+        return <div>Carregando...</div>;
+    }
+    if (!user) {
+        return <Navigate to="/Login" replace />;
+    }
+    const userId = user.id;
 
     const getAllCategories = async () => {
         const categories = await getData(

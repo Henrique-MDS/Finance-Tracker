@@ -19,6 +19,7 @@ import { getMonthlyComparativeReceitaDespesa } from "@/Utils/callGetMonthlyCompa
 import RecentTransactions from "./Recent_Transacations/RecentTransactions";
 import { supabase } from "@/services/supabase";
 import { returnMonth } from "@/Utils/returnMonth";
+import { useAuth } from "@/Utils/AuthContext";
 
 type Transaction = {
   cat_id: string;
@@ -58,10 +59,14 @@ type RecentTransaction = {
 }
 
 export function MainPage() {
-  const userId = localStorage.getItem("userId");
-  if(!userId){
-    return <Navigate to="/login" replace />;
+  const { user, loading } = useAuth();
+  if (loading) {
+    return <div>Carregando...</div>;
   }
+  if (!user) {
+    return <Navigate to="/Login" replace />;
+  }
+  const userId = user.id;
   const [balance, setBalance] = useState<any>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [filteredType, setFilteredType] = useState<FilteredType>({despesas: [], receitas: []});
@@ -85,7 +90,7 @@ export function MainPage() {
   } satisfies ChartConfig
   
   useEffect(() => {
-    if(!userId) return;
+
     const getNowBalance = async () => {
       const response = await getData(
         "Balance",

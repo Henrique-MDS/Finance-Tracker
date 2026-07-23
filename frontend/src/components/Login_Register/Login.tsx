@@ -6,20 +6,20 @@ import { Link, useNavigate } from "react-router-dom";
 
 export function LogInPage() {
 
-    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     let navigate = useNavigate();
 
     const getCredentials = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if(e.target.placeholder == "Nome") {
-            setName(e.target.value);
+        if(e.target.placeholder == "Email") {
+            setEmail(e.target.value);
         } else if(e.target.placeholder == "Senha") {
             setPassword(e.target.value);
         }
     }
 
     const logFunc = async () => {
-        if(!name  || !password){
+        if(!email  || !password){
             toast.dismiss();
             toast.error("Todos os campos deve estar preenchidos", {
                 duration: 1500,
@@ -29,7 +29,7 @@ export function LogInPage() {
         }
         
 
-        if(name.length < 5){
+        if(email.length < 5){
             toast.dismiss();
             toast.error("Nome deve conter no mínimo 5 digitos", {
                 duration: 1500,
@@ -47,7 +47,7 @@ export function LogInPage() {
             return;
         }
         
-        const returnLogIn = await getUserLogin(name, password);
+        const returnLogIn = await getUserLogin(email, password);
         
         if(returnLogIn.success){
             toast.dismiss();
@@ -73,7 +73,7 @@ export function LogInPage() {
         <Toaster />
         <div className="flex flex-col gap-8 bg-[#060B14] p-10 rounded-xl">
             <h1 className="text-2xl">Entre na sua conta</h1>
-            <input type="text" placeholder="Nome" onChange={(e) => getCredentials(e)} required/>
+            <input type="text" placeholder="Email" onChange={(e) => getCredentials(e)} required/>
             <input type="password" placeholder="Senha" onChange={(e) => getCredentials(e)} required/>
             <div className="flex items-center justify-center">
                 <button className="text-xl cursor-pointer bg-emerald-800 p-2.5 rounded-xl w-full hover:bg-emerald-600 text-amber-50"

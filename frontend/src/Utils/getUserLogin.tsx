@@ -8,27 +8,23 @@ type LogInUserResult = {
     error?: any;
 }
 
-export const getUserLogin = async (name:string, password:string): Promise<LogInUserResult> => {
+export const getUserLogin = async (email:string, password:string): Promise<LogInUserResult> => {
     
-    const { data, error } = await supabase
-    .from("Users")
-    .select("*")
-    .eq("name", name)
-    .eq("password", password)
-    .single();
-    
-    if(data){
-        localStorage.setItem("userId", data.id);
-        return {
-            success: true,
-            message: "Sessão iniciada!"
-        }
-    } else {
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+    });
+    console.log(data, error)
+    if(error){
         return {
             success: false,
             message: "Falha no Login, verifique se o usuário existe",
             error: error
         }
     }
-    console.log(data, error);
+
+    return {
+        success: true,
+        message: "Sessão Iniciada!"
+    }
 }
