@@ -63,11 +63,7 @@ export function RegisterPage() {
         let result = await insertUser(name, email, password);
         let getResult = result;
         if(getResult.success){
-            toast.dismiss();
-            toast.success(getResult.message, {
-                duration: 1500,
-                position: "top-center",
-            });
+            notify.success(getResult.message);
             navigate("/Login");
             return;
         } else {
