@@ -14,16 +14,17 @@ export const insertUser = async (name:string, email: string, password:string): P
         email,
         password
     });
-
+    console.log(data, error);
     if(error){
-        return {success: false, message: "Email já está cadastrado", error: error} 
+        return {
+            success: false, 
+            message: "Erro ao cadastrar email", 
+            error: error
+        } 
     }
 
-    await supabase.from("Users").insert({
-        auth_user_id: data.user!.id,
-        name,
-        email
-    });
-    
-    return {success: true, message: "Usuário cadastrado com sucesso!"}  
+    return {
+        success: true, 
+        message: "Usuário cadastrado com sucesso!"
+    }  
 }

@@ -54,7 +54,7 @@ export function CategoriesPage() {
     useEffect(() => {
         getAllCategories();
     }, [userId])
-    
+    console.log(userId)
     const saveCategory = async () => {
         if(verifyForm([catName])){
             if(catName.length > 20){

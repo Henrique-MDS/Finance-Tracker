@@ -14,7 +14,7 @@ export const getUserLogin = async (email:string, password:string): Promise<LogIn
         email,
         password
     });
-    console.log(data, error)
+    
     if(error){
         return {
             success: false,
