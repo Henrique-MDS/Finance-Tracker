@@ -12,9 +12,16 @@ export const insertUser = async (name:string, email: string, password:string): P
     
     const { data, error } = await supabase.auth.signUp({
         email,
-        password
+        password,
+        options: {
+            data: {
+                name
+            }
+        }
     });
+    
     console.log(data, error);
+    
     if(error){
         return {
             success: false, 
