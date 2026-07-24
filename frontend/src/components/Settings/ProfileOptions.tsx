@@ -23,7 +23,7 @@ export function ProfileOptions() {
     const [preview, setPreview] = useState<string | null>();
 
     const salvarFotoDePerfil = async () => {
-        const path = `${userId}/profile.png`;
+        const path = `${userId}/${crypto.randomUUID()}.png`;
         if (!profilePic || !path || !userId) return;
         const response = await uploadAvatar(profilePic!, path, userId);
         console.log(response)
