@@ -24,9 +24,11 @@ export function ProfileOptions() {
 
     const salvarFotoDePerfil = async () => {
         const path = `${userId}/${crypto.randomUUID()}.png`;
+        
         if (!profilePic || !path || !userId) return;
+
         const response = await uploadAvatar(profilePic!, path, userId);
-        console.log(response)
+        
         if(!response.success){     
             if(response.error == "StorageApiError: The resource already exists"){
                 return;

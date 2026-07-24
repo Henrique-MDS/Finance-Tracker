@@ -15,6 +15,17 @@ export const uploadAvatar = async (file:File, path:string, userId: string):Promi
         };
     };
 
+    const oldUrl = await getUserProfilePic(userId);
+    
+    if(oldUrl){
+        const { error } = await supabase.storage
+            .from("Avatars")
+            .remove([oldUrl]);
+        if (error) {
+            console.error(error);
+        }
+    }
+
     const { error } = await supabase.storage
         .from("Avatars")
         .upload(path, file, {
@@ -28,7 +39,7 @@ export const uploadAvatar = async (file:File, path:string, userId: string):Promi
             "error": error
         }
     }
-    
+
     const { data } = supabase.storage
         .from("Avatars")
         .getPublicUrl(path);
@@ -53,4 +64,25 @@ export const uploadAvatar = async (file:File, path:string, userId: string):Promi
         message: "Upload realizado com sucesso",
         publicUrl: data.publicUrl
     };
+};
+
+const getUserProfilePic = async (userId: string) => {
+    const { data, error } = await supabase
+        .from("profiles")
+        .select("avatar_url")
+        .eq("id", userId)
+        .single();
+
+    if (error || !data?.avatar_url) {
+        return null;
+    }
+
+    const url = new URL(data.avatar_url);
+
+    const path = url.pathname.replace(
+        "/storage/v1/object/public/Avatars/",
+        ""
+    );
+
+    return path;
 };
