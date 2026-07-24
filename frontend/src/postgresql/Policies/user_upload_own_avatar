@@ -1,0 +1,8 @@
+CREATE POLICY "Users upload own avatar"
+ON storage.objects
+FOR INSERT
+TO authenticated
+WITH CHECK (
+    bucket_id = 'Avatars'
+    AND (storage.foldername(name))[1] = auth.uid()::text
+);

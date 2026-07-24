@@ -17,7 +17,9 @@ export const uploadAvatar = async (file:File, path:string, userId: string):Promi
 
     const { error } = await supabase.storage
         .from("Avatars")
-        .upload(path, file);
+        .upload(path, file, {
+            upsert: true,
+        });
 
     if (error) {
         return {

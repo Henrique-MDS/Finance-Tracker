@@ -1,7 +1,0 @@
-create policy "allow anon upload"
-on storage.objects
-for insert
-to anon
-with check (
-    bucket_id = 'Avatars'
-);

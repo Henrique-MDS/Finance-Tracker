@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { insertUser } from "../../Utils/insertUser";
 import { Toaster } from "react-hot-toast";
 import { verifyEmail } from "../../Utils/verifyEmail";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { notify } from "@/Utils/notify";
 
 export function RegisterPage() {
@@ -62,6 +62,7 @@ export function RegisterPage() {
 
         let result = await insertUser(name, email, password);
         let getResult = result;
+        
         if(getResult.success){
             notify.success(getResult.message);
             navigate("/Login");

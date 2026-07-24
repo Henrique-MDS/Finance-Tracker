@@ -1,21 +1,10 @@
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { useEffect, useState } from "react";
-import { getData } from "@/Utils/getData";
+import { useState } from "react";
 import { notify } from "@/Utils/notify";
 import { uploadAvatar } from "@/Utils/uploadAvatar";
 import { useAuth } from "@/Utils/AuthContext";
 import { Navigate } from "react-router-dom";
-
-type UserInfo = {
-    avatar_url: string;
-    email: string;
-    id: string;
-    name: string;
-    password: string;
-    updated_at: string;
-
-}
 
 export function ProfileOptions() {
 
@@ -35,8 +24,13 @@ export function ProfileOptions() {
 
     const salvarFotoDePerfil = async () => {
         const path = `${userId}/profile.png`;
+        if (!profilePic || !path || !userId) return;
         const response = await uploadAvatar(profilePic!, path, userId);
-        if(!response.success){
+        console.log(response)
+        if(!response.success){     
+            if(response.error == "StorageApiError: The resource already exists"){
+                return;
+            }
             notify.error(response.message);
         }
     }
