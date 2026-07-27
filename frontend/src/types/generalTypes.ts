@@ -6,3 +6,10 @@ export type DataResponse = {
     email?: string;
     error?: any;
 }
+
+export type UserProfile = {
+    avatar_url: string;
+    created_at: string;
+    id: string;
+    name: string;
+}

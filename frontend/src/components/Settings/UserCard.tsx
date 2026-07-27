@@ -10,6 +10,9 @@ import {
 import AccountOptions from "./AccountOptions";
 import ProfileOptions from "./ProfileOptions";
 import type { User } from "@supabase/supabase-js";
+import { getData } from "@/Utils/getData";
+import type { UserProfile } from "@/types/generalTypes";
+import { notify } from "@/Utils/notify";
 
 type Props = {
     userData: User;
@@ -17,6 +20,26 @@ type Props = {
 
 export function UserCard({ userData }:Props) {
     const [open, setOpen] = React.useState(false);
+    const [profile, setProfile] = React.useState<UserProfile>();
+
+    React.useEffect(() => {
+        const getUseerProfileData = async () => {
+            const response = await getData("profiles", {id: userData.id}, "Buscar informações do perfil");
+
+            if(response.success){
+                if(response.data && response.data[0]){
+                    setProfile(response.data[0]);
+                }
+            } else {
+                notify.error("Erro ao buscar informações do perfil");
+                return;
+            }
+        }
+
+        getUseerProfileData();
+    }, [])
+
+    
 
   return (
     <div className="bg-[#0B1723] p-5 rounded-xl w-[400px] flex flex-col gap-5">
@@ -28,9 +51,19 @@ export function UserCard({ userData }:Props) {
         </div>
         <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-                <div className="bg-[#5442A2] w-fit p-2 rounded-full">
-                    <UserIcon color="#ffffff"/>
-                </div>                    
+                {profile ? 
+                    (
+                        <div>
+                            <img src={profile.avatar_url} alt="" className="rounded-full w-[50px] h-[50px]"/>
+                        </div>                            
+                    ) 
+                    :
+                    (
+                        <div className="bg-[#5442A2] w-fit p-2 rounded-full">
+                            <UserIcon color="#ffffff"/>
+                        </div>                            
+                    )
+                }                  
                 <div>
                     <p className="text-white">nome</p>
                     <p style={{fontSize: "13px"}}>{userData?.email}</p>

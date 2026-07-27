@@ -35,6 +35,7 @@ export function ProfileOptions() {
             }
             notify.error(response.message);
         }
+        notify.success("Informações atualizadas");
     }
     
   return (
