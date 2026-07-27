@@ -39,10 +39,8 @@ export function UserCard({ userData }:Props) {
         getUseerProfileData();
     }, [])
 
-    
-
   return (
-    <div className="bg-[#0B1723] p-5 rounded-xl w-[400px] flex flex-col gap-5">
+    <div className="bg-[#0B1723] p-5 rounded-xl w-[450px] flex flex-col gap-5">
         <div className="flex items-center gap-3">
             <div className="bg-[#5442A2] w-fit p-1 rounded-full">
                 <UserIcon color="#ffffff"/>
@@ -65,7 +63,7 @@ export function UserCard({ userData }:Props) {
                     )
                 }                  
                 <div>
-                    <p className="text-white">nome</p>
+                    <p className="text-white">{profile?.name}</p>
                     <p style={{fontSize: "13px"}}>{userData?.email}</p>
                 </div>
             </div>                
@@ -73,9 +71,9 @@ export function UserCard({ userData }:Props) {
                 <Button onClick={() => setOpen(true)} variant="outline" className="w-fit cursor-pointer">
                     Editar Perfil
                 </Button>
-                <CommandDialog open={open} onOpenChange={setOpen}>
-                    <Command>
-                        <CommandList>
+                <CommandDialog open={open} onOpenChange={setOpen} className="!max-w-4xl !h-[80vh] top-[10%]">
+                    <Command className="h-full">
+                        <CommandList className="!max-h-full">
                             <CommandGroup className="p-5">
                                 <div className="flex flex-col gap-4">
                                     <div>

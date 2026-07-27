@@ -36,6 +36,9 @@ export function ProfileOptions() {
             notify.error(response.message);
         }
         notify.success("Informações atualizadas");
+        setTimeout(() => {
+            window.location.reload();
+        }, 1500);
     }
     
   return (
@@ -45,12 +48,12 @@ export function ProfileOptions() {
             <h2>Alterar foto de perfil</h2>
             <div className="flex flex-col gap-3">
                 <Input placeholder="Faça o upload" type="file" 
-                       onChange={(e) => {
+                        onChange={(e) => {
                             const file = e.target.files?.[0];
                             if(!file) return;
                             setProfilePic(file);
                             setPreview(URL.createObjectURL(file));
-                       }}
+                        }}
                 />
             </div>
             <div className="flex flex-col gap-5">
