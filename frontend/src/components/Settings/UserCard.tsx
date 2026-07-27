@@ -49,7 +49,7 @@ export function UserCard({ userData }:Props) {
         </div>
         <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-                {profile ? 
+                {profile && profile.avatar_url ? 
                     (
                         <div>
                             <img src={profile.avatar_url} alt="" className="rounded-full w-[50px] h-[50px]"/>
