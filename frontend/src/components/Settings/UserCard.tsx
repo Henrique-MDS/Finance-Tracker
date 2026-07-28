@@ -13,6 +13,7 @@ import type { User } from "@supabase/supabase-js";
 import { getData } from "@/Utils/getData";
 import type { UserProfile } from "@/types/generalTypes";
 import { notify } from "@/Utils/notify";
+import { useAuth } from "@/Utils/AuthContext";
 
 type Props = {
     userData: User;
@@ -21,6 +22,7 @@ type Props = {
 export function UserCard({ userData }:Props) {
     const [open, setOpen] = React.useState(false);
     const [profile, setProfile] = React.useState<UserProfile>();
+    const { user, loading } = useAuth();
 
     React.useEffect(() => {
         const getUseerProfileData = async () => {
@@ -38,7 +40,7 @@ export function UserCard({ userData }:Props) {
 
         getUseerProfileData();
     }, [])
-
+    console.log(user)
   return (
     <div className="bg-[#0B1723] p-5 rounded-xl w-[450px] flex flex-col gap-5">
         <div className="flex items-center gap-3">

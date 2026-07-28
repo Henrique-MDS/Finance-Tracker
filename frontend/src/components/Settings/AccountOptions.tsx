@@ -1,30 +1,43 @@
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useState } from "react";
+import { supabase } from "@/services/supabase";
+import { notify } from "@/Utils/notify";
+import { verifyPassword } from "../ui/verifyPassword";
 
 export function AccountOptions() {
 
-    const [oldPassword, setOldPassword] = useState("");
-    const [newPassword, seNewPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
 
-    const saveFormData = () => {
-        
+    const saveFormData = async () => {
+        if(verifyPassword(newPassword)){
+            const { error } = await supabase.auth.updateUser({
+                password: newPassword
+            });
+            
+            if(error){
+                notify.error("Erro ao atualizar senha");
+                return;
+            }
+
+            notify.success("Senha atualizada");
+            setNewPassword("");
+        }
     }
-   
+
   return (
     <div>
         <h1 className="text-xl">Informações da Conta</h1>
         <div className="flex flex-col gap-3">
             <h2>Alterar Senha</h2>
             <div className="flex flex-col gap-3">
-                <Input placeholder="Senha antiga" name="oldPass" 
-                       onChange={(e) => setOldPassword(e.target.value)}
-                       value={oldPassword}/>
                 <Input placeholder="Senha nova" name="newPass" 
-                       onChange={(e) => seNewPassword(e.target.value)}
+                       onChange={(e) => setNewPassword(e.target.value)}
+                       type="password"
                        value={newPassword}/>
             </div>
-            <Button className="cursor-pointer bg-[#2CAE60] hover:bg-[#207241]">
+            <Button className="cursor-pointer bg-[#2CAE60] hover:bg-[#207241]"
+                    onClick={() => saveFormData()}>
                 Salvar
             </Button>
         </div>
