@@ -15,6 +15,7 @@ import {
   ChartColumn,
   Settings,
   LogOut,
+  Goal,
 } from "lucide-react"
 import PerfilCard from "./PerfilCard";
 import { logout } from "@/Utils/logOutUser";
@@ -39,6 +40,11 @@ const items = [
     title: "Relatórios",
     url: "/reports",
     icon: ChartColumn,
+  },
+  {
+    title: "Metas",
+    url: "/Goals",
+    icon: Goal,
   },
   {
     title: "Configurações",

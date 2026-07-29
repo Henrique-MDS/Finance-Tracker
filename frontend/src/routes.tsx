@@ -9,6 +9,7 @@ import CategoriesPage from "./components/Categories/Categories";
 import ReportPage from "./components/Reports/ReportPage";
 import SettingsPage from "./components/Settings/Settings";
 import NotFoundPage from "./components/NotFound/NotFound";
+import GoalsPage from "./components/Goals/Goas";
 
 export const router = createBrowserRouter([
   {
@@ -44,6 +45,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <ReportPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "Goals",
+        element: (
+          <ProtectedRoute>
+            <GoalsPage />
           </ProtectedRoute>
         ),
       },
