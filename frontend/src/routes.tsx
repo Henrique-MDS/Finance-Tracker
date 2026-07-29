@@ -8,6 +8,7 @@ import ProtectedRoute from "./Utils/protectedRoute";
 import CategoriesPage from "./components/Categories/Categories";
 import ReportPage from "./components/Reports/ReportPage";
 import SettingsPage from "./components/Settings/Settings";
+import NotFoundPage from "./components/NotFound/NotFound";
 
 export const router = createBrowserRouter([
   {
@@ -55,6 +56,12 @@ export const router = createBrowserRouter([
         ),
       }
     ],
+  },
+  {
+    path: "*",
+    element: (
+      <NotFoundPage />
+    ),
   },
   {
     path: "Register",
