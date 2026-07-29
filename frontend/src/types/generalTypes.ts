@@ -21,3 +21,14 @@ export  type Category = {
   updated_at: string;
   user_id: string;
 }
+
+export  type Goal = {
+  creation_date: string;
+  goal_value: number;
+  id: string;
+  limit_date: string;
+  now_value: number;
+  status: string;
+  title: string;
+  user_id: string;
+}

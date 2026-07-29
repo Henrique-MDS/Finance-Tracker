@@ -1,11 +1,19 @@
-import { Calendar, Laptop } from "lucide-react";
+import { Calendar, Laptop, Pen, Plus, Trash } from "lucide-react";
 import { Progress } from "@/components/ui/progress"
 import { useState } from "react";
+import { Button } from "../ui/button";
+import type { Goal } from "@/types/generalTypes";
+import { formatDate } from "@/Utils/formatDate";
+import { formatCurrencyBR } from "@/Utils/formateToBr";
 
+interface GoalCardProps {
+    goal: Goal;
+}
 
-export function GoalCard() {
+export function GoalCard({ goal }: GoalCardProps) {
 
-    const [progress, setProgress] = useState(50);
+    const [progress, setProgress] = useState(10);
+
 
   return (
     <div className="flex gap-3 w-full bg-[#0B1723] p-5 rounded-xl">
@@ -14,21 +22,35 @@ export function GoalCard() {
         </div>
         <div className="w-full flex flex-col gap-3">
             <div className="flex flex-col gap-3 w-full">                                
-                <p className="text-xl text-white">Comprar Notebook</p>                                
+                <p className="text-xl text-white">{goal.title}</p>                                
                 <div className="flex items-center gap-1">
                     <Calendar size={18}/>
-                    <p>Meta até 20/12/2026</p>
+                    <p>Meta até <span>{formatDate(goal.limit_date)}</span></p>
                 </div>
             </div>
             <div className="w-full flex flex-col gap-3">
                 <Progress value={progress} className="w-[100%]" />
                 <div className="flex justify-between w-full">
                     <span>
-                        <p>RS 3.400,00</p>
-                        <p>de 5.000,00</p>
+                        <p className="text-white">{formatCurrencyBR(goal.now_value)}</p>
+                        <p className="text-sm">de <span>{formatCurrencyBR(goal.goal_value)}</span></p>
                     </span>
-                    <p>Faltam: RS 1.600,00</p>
+                    <p>Faltam: <span className="text-white">{formatCurrencyBR(goal.goal_value - goal.now_value)}</span></p>
                 </div>
+            </div>
+            <div className="flex items-center gap-3">                
+                <Button className="cursor-pointer bg-[#2CAE60]">
+                    <Plus />
+                    Adicionar Dinheiro
+                </Button>                
+                <Button className="cursor-pointer">
+                    <Pen />
+                    Editar
+                </Button> 
+                <Button className="cursor-pointer bg-[#EF4444]">
+                    <Trash />
+                    Excluir
+                </Button> 
             </div>
         </div>
     </div>

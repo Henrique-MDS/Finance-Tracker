@@ -1,10 +1,12 @@
 create table public."Goals" (
   id uuid not null default gen_random_uuid (),
   user_id uuid not null default gen_random_uuid (),
-  title character varying not null,
-  goal_value double precision not null,
+  title character varying not null default 'Meta sem nome'::character varying,
+  goal_value double precision not null default '0'::double precision,
   now_value double precision not null default '0'::double precision,
-  limit_date date null,
+  limit_date timestamp with time zone not null default now(),
+  creation_date timestamp with time zone not null default now(),
+  status character varying not null default 'Em andamento'::character varying,
   constraint Goals_pkey primary key (id),
   constraint Goals_user_id_fkey foreign KEY (user_id) references auth.users (id)
 ) TABLESPACE pg_default;
