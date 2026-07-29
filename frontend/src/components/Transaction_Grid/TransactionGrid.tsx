@@ -61,7 +61,7 @@ export function TransactionGrid({transactionProps, onDelete}:TransactionGridProp
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 min-w-0">
             <div className="flex items-center gap-3">
                 <p className="flex items-center gap-2">
-                    <span className="p-1 rounded-full" style={{ backgroundColor: arrowBgColor }}>
+                    <span className="p-1 rounded-full shrink-0" style={{ backgroundColor: arrowBgColor }}>
                         <img src={transactionProps.type == "Receita" ? upArrow : downArrow} alt="arrow icon" className="w-[30px] h-[30px]"/>
                     </span>
                     {transactionProps.type == "Receita" ? "+ " : "- "}
@@ -71,8 +71,8 @@ export function TransactionGrid({transactionProps, onDelete}:TransactionGridProp
                     <p>{transactionProps.specificCat && transactionProps.specificCat.name}</p>
                 </div>
             </div>
-            <div>
-                <p>{transactionProps.desc}</p>
+            <div className="flex-1">
+                <p className="min-w-0 break-words">{transactionProps.desc}</p>
             </div>
         </div>        
         <div className="flex items-center gap-3 justify-end">

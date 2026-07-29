@@ -13,3 +13,11 @@ export type UserProfile = {
     id: string;
     name: string;
 }
+
+export  type Category = {
+  created_at: string;
+  id: string;
+  name: string;
+  updated_at: string;
+  user_id: string;
+}

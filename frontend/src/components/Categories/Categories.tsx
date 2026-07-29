@@ -13,21 +13,16 @@ import { defaultIcons } from "@/Utils/icons";
 import { UserSearch } from "lucide-react";
 import { useAuth } from "@/Utils/AuthContext";
 import { Navigate } from "react-router-dom";
-
-type Category = {
-  created_at: string;
-  id: string;
-  name: string;
-  updated_at: string;
-  user_id: string;
-}
+import type { Category } from "@/types/generalTypes";
 
 export function CategoriesPage() {
 
-    const [cat, setCat] = useState<any>([]);
+    const [cat, setCat] = useState<Category[]>([]);
+    const [filteredCat, setFilteredCat] = useState<Category[]>([]);
     const [catName, setCatName] = useState("");
     const [selectedIcon, setSelectedIcon] = useState("money");
     const { user, loading } = useAuth();
+
     if (loading) {
         return <div>Carregando...</div>;
     }
@@ -45,6 +40,7 @@ export function CategoriesPage() {
 
         if(categories.success){
             setCat(categories.data ?? []);
+            setFilteredCat(categories.data ?? []);
         } else {
             notify.error("Erro ao buscar categorias");
             return;
@@ -59,6 +55,7 @@ export function CategoriesPage() {
         if(verifyForm([catName])){
             if(catName.length > 20){
                 notify.error("Nome deve ter menos que 20 caracteres");
+                return;
             }
 
             const saveResponse = await insertData(
@@ -70,7 +67,7 @@ export function CategoriesPage() {
                 },
                 "Inserir categoria"
             );
-            console.log(saveResponse)
+            
             if(saveResponse.success){
                 notify.success("Categoria Adicionada");
                 getAllCategories();
@@ -84,6 +81,17 @@ export function CategoriesPage() {
             setCatName("");
         }        
     }
+    
+    const filterCategory = (e:any) => {
+        const value = e.target.value.toLowerCase();
+
+        const filtered = cat.filter((c) =>
+            c.name.toLowerCase().includes(value)
+        );
+
+        setFilteredCat(filtered);
+    }
+
 
   return (
     <div className="flex flex-col gap-4">
@@ -136,7 +144,9 @@ export function CategoriesPage() {
             <div className="flex items-center justify-between">
                 <h2 className="text-emerald-300 text-xl">Suas Categorias</h2>
                 <Field className="w-72">
-                    <Input id="input-demo-api-key" type="text" placeholder="Nome da categoria..." />
+                    <Input id="input-demo-api-key" type="text" placeholder="Nome da categoria..." 
+                           onChange={(e) => filterCategory(e)}
+                           />
                 </Field>
             </div>
             <Separator />
@@ -147,7 +157,7 @@ export function CategoriesPage() {
             </div>
             <div className="max-h-96 overflow-y-auto scrollbar-hide">
                 {
-                    cat && cat.map((c:Category) => (
+                    cat && filteredCat.map((c:Category) => (
                         <CategorieGrid key={c.id} categories={c} refreshCategories={getAllCategories}/>
                     ))
                 }
