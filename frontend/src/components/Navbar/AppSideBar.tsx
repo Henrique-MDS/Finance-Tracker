@@ -78,12 +78,8 @@ export function AppSidebar() {
                 </SidebarMenuItem>
               </div>
               <div>
-                <SidebarMenuItem className="cursor-pointer">
-                  <SidebarMenuButton asChild>
-                    <a>
-                      <PerfilCard />
-                    </a>
-                  </SidebarMenuButton>
+                <SidebarMenuItem>
+                  <PerfilCard />
                 </SidebarMenuItem>
               </div>
             </SidebarMenu>
