@@ -57,12 +57,12 @@ export function TransactionGrid({transactionProps, onDelete}:TransactionGridProp
     }
 
   return (
-    <div className={`flex gap-5 p-5 rounded-xl items-center justify-between text-white shadow-2xl cursor-pointer`} style={{ backgroundColor: color }}>
-        <div className="flex gap-5 items-center">
+    <div className={`flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-5 rounded-xl text-white shadow-2xl`} style={{ backgroundColor: color }}>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4 min-w-0">
             <div className="flex items-center gap-3">
                 <p className="flex items-center gap-2">
                     <span className="p-1 rounded-full" style={{ backgroundColor: arrowBgColor }}>
-                        <img src={transactionProps.type == "Receita" ? upArrow : downArrow} alt="arrow icon" />
+                        <img src={transactionProps.type == "Receita" ? upArrow : downArrow} alt="arrow icon" className="w-[30px] h-[30px]"/>
                     </span>
                     {transactionProps.type == "Receita" ? "+ " : "- "}
                     {transactionProps.value}
@@ -75,14 +75,8 @@ export function TransactionGrid({transactionProps, onDelete}:TransactionGridProp
                 <p>{transactionProps.desc}</p>
             </div>
         </div>        
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 justify-end">
             <div className="flex items-center gap-2">
-                <Button className="cursor-pointer flex items-center border-2">
-                    <span>
-                        <img src={editPen} alt="pen icon" className="w-[20px]"/>
-                    </span>
-                    Editar
-                </Button>
                 <Button className="cursor-pointer flex items-center" onClick={() => deleteOnClick()}>
                     <span>
                         <img src={trash} alt="trash icon" className="w-[25px]"/>

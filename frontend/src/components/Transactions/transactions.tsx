@@ -152,7 +152,7 @@ export function Transactions() {
         
 
         <div className="flex gap-5 flex-wrap flex-col">
-          <div className="flex gap-5 sm:flex-wrap lg:flex-nowrap bg-[#1A232F] p-8 rounded-xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-[#1A232F] p-8 rounded-xl">
             <SelectInput label="Tipo" placeholder="Tipo" options={["Receita", "Despesa"]} onValueChange={(e) => setType(e)} value={type}/>
             <SelectInput label="Categoria" placeholder="Categoria" options={catOptions} onValueChange={(e) => setCategory(e)} value={category}/>
             <div className="flex flex-col gap-3">
@@ -162,10 +162,10 @@ export function Transactions() {
                   <Button
                     variant="outline"
                     data-empty={!date}
-                    className="w-[280px] justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-[#111820]"
+                    className="w-full justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-[#1A232F] border-white"
                   >
                     <CalendarIcon />
-                    {date ? format(date, "PPP") : <span>Pick a date</span>}
+                    {date ? format(date, "PPP") : <span>Selecione a data</span>}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
