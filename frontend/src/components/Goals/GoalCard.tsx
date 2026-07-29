@@ -1,23 +1,28 @@
 import { Calendar, Laptop } from "lucide-react";
+import { Progress } from "@/components/ui/progress"
+import { useState } from "react";
 
 
 export function GoalCard() {
+
+    const [progress, setProgress] = useState(50);
+
   return (
-    <div className="flex gap-3 w-[450px] bg-[#0B1723] p-5 rounded-xl">
+    <div className="flex gap-3 w-full bg-[#0B1723] p-5 rounded-xl">
         <div>
             <Laptop size={50}/>
         </div>
-        <div>
-            <div>                                
-                <p>Comprar Notebook</p>                                
+        <div className="w-full flex flex-col gap-3">
+            <div className="flex flex-col gap-3 w-full">                                
+                <p className="text-xl text-white">Comprar Notebook</p>                                
                 <div className="flex items-center gap-1">
-                    <Calendar />
+                    <Calendar size={18}/>
                     <p>Meta até 20/12/2026</p>
                 </div>
             </div>
-            <div>
-                barra
-                <div className="flex justify-between">
+            <div className="w-full flex flex-col gap-3">
+                <Progress value={progress} className="w-[100%]" />
+                <div className="flex justify-between w-full">
                     <span>
                         <p>RS 3.400,00</p>
                         <p>de 5.000,00</p>

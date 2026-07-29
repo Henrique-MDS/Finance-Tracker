@@ -14,10 +14,10 @@ export function GoalsPage() {
             </div>
         </div>
         <Separator />
-        <div className="flex items-center">
-            <div className="w-[50%]">
+        <div className="flex">
+            <div className="w-[50%] flex flex-col gap-3">
                 <h2 className="font-semibold text-xl text-white">Minhas Metas</h2>
-                <div>
+                <div className="flex flex-col gap-3">
                     <GoalCard />
                 </div>
             </div>
