@@ -1,6 +1,5 @@
 import { Calendar, Laptop, Pen, Plus, Trash } from "lucide-react";
 import { Progress } from "@/components/ui/progress"
-import { useState } from "react";
 import { Button } from "../ui/button";
 import type { Goal } from "@/types/generalTypes";
 import { formatDate } from "@/Utils/formatDate";
@@ -8,12 +7,12 @@ import { formatCurrencyBR } from "@/Utils/formateToBr";
 
 interface GoalCardProps {
     goal: Goal;
+    percentage: number;
 }
 
-export function GoalCard({ goal }: GoalCardProps) {
+export function GoalCard({ goal, percentage }: GoalCardProps) {
 
-    const [progress, setProgress] = useState(10);
-
+    const progress = percentage;
 
   return (
     <div className="flex gap-3 w-full bg-[#0B1723] p-5 rounded-xl">
@@ -21,8 +20,14 @@ export function GoalCard({ goal }: GoalCardProps) {
             <Laptop size={50}/>
         </div>
         <div className="w-full flex flex-col gap-3">
-            <div className="flex flex-col gap-3 w-full">                                
-                <p className="text-xl text-white">{goal.title}</p>                                
+            <div className="flex flex-col gap-3 w-full">
+                <div className="flex items-center justify-between">
+                    <p className="text-xl text-white">{goal.title}</p>
+                    <div>
+                        <p className="text-2xl">{percentage}%</p>
+                        <p>{goal.status == "em_andamento" ? "Em Andamento" : "Concluído"}</p>
+                    </div>                    
+                </div>                     
                 <div className="flex items-center gap-1">
                     <Calendar size={18}/>
                     <p>Meta até <span>{formatDate(goal.limit_date)}</span></p>

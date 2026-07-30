@@ -1,0 +1,5 @@
+CREATE TRIGGER trg_update_goal_status
+AFTER UPDATE OF now_value, goal_value
+ON "Goals"
+FOR EACH ROW
+EXECUTE FUNCTION update_goal_status();
