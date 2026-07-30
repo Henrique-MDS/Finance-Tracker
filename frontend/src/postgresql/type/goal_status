@@ -1,0 +1,4 @@
+CREATE TYPE goal_status AS ENUM (
+  'em_andamento',
+  'concluido'
+);

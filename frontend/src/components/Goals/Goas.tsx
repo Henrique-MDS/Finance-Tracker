@@ -1,4 +1,4 @@
-import { Goal as GoalIcon, Plus } from "lucide-react";
+import { Flag, Goal as GoalIcon, Plus, Trophy } from "lucide-react";
 import { Separator } from "@/components/ui/separator"
 import GoalCard from "./GoalCard";
 import { Button } from "../ui/button";
@@ -9,11 +9,17 @@ import { getData } from "@/Utils/getData";
 import { notify } from "@/Utils/notify";
 import type { Goal } from "@/types/generalTypes";
 
+ type GoalInfo = {
+  activeGoals: number;
+  completedGoals: number;
+  totalGoals: number;
+} 
 
 export function GoalsPage() {
 
     const { user, loading } = useAuth();
     const [goals, setGoals] = useState<Goal[]>([]);
+    const [goalInfo, setGoalInfo] = useState<GoalInfo>({activeGoals: 0, completedGoals: 0, totalGoals: 0});
 
     useEffect(() => {
         if(!user) return;
@@ -32,6 +38,39 @@ export function GoalsPage() {
         }
 
         getGoals();
+
+        const getGoalsInfo = (goals:Goal[]) => {
+            if(goals.length == 0){
+                return {
+                    "activeGoals": 0,
+                    "completedGoals": 0,
+                    "totalGoals": 0
+                };
+            }
+
+            let activeGoals = 0;
+            let completedGoals = 0;
+            let totalGoals = 0;
+
+            goals.forEach(goal => {
+                totalGoals += 1;
+                if(goal.status == "em_andamento"){
+                    activeGoals += 1;
+                }
+
+                if(goal.status == "concluido"){
+                    completedGoals += 1;
+                }
+            });
+
+            return {
+                "activeGoals": activeGoals,
+                "completedGoals": completedGoals,
+                "totalGoals": totalGoals
+            };
+        }
+
+        setGoalInfo(getGoalsInfo(goals));
     }, [])
 
     if (loading) {
@@ -51,8 +90,8 @@ export function GoalsPage() {
             </div>
         </div>
         <Separator />
-        <div className="flex">
-            <div className="w-[50%] flex flex-col gap-3 h-full">
+        <div className="flex gap-5">
+            <div className="w-[60%] flex flex-col gap-3 h-full">
                 <h2 className="font-semibold text-xl text-white">Minhas Metas</h2>
                 <div className="flex flex-col gap-3 max-h-96 overflow-y-auto scrollbar-hide">
                     {goals.length > 0 ? (
@@ -72,9 +111,30 @@ export function GoalsPage() {
                     </Button>
                 </div>
             </div>
-            <div>
-                <div>
-                    resumo das metas
+            <div className="w-[30%] flex flex-col gap-3 h-full">
+                <h2 className="font-semibold text-xl text-white">Resumo das Metas</h2>
+                <div className="flex flex-col gap-5 max-h-96 overflow-y-auto scrollbar-hide bg-[#0B1723] p-5 rounded-xl">
+                    <div className="flex items-center gap-4">
+                        <GoalIcon size={40} color="#2C8E34"/>
+                        <div>
+                            <p className="text-sm">Metas Ativas</p>
+                            <span className="text-xl font-semibold">{goalInfo.activeGoals}</span>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <Trophy size={40} color="#1F6FEB"/>
+                        <div>
+                            <p className="text-sm">Metas Concluídas</p>
+                            <span className="text-xl font-semibold">{goalInfo.completedGoals}</span>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <Flag size={40} color="#A970FF"/>
+                        <div>
+                            <p className="text-sm">Total de Metas</p>
+                            <span className="text-xl font-semibold">{goalInfo.totalGoals}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
