@@ -94,8 +94,8 @@ export function GoalsPage() {
                 <h2 className="font-semibold text-xl text-white">Minhas Metas</h2>
                 <div className="flex flex-col gap-3 max-h-96 overflow-y-auto scrollbar-hide">
                     {goals.length > 0 ? (
-                        goals.map((goal) => (
-                            <GoalCard key={goal.id} goal={goal} percentage={calculatePercentage(goal.now_value, goal.goal_value)}/>
+                        goals.map((goal, i) => (
+                            <GoalCard key={goal.id} goal={goal} percentage={calculatePercentage(goal.now_value, goal.goal_value)} index={i}/>
                         ))
                     ) : (
                         <div>

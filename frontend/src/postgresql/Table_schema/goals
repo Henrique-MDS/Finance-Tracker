@@ -6,7 +6,13 @@ create table public."Goals" (
   now_value double precision not null default '0'::double precision,
   limit_date timestamp with time zone not null default now(),
   creation_date timestamp with time zone not null default now(),
-  status public.goal_status null,
+  status public.goal_status null default 'em_andamento'::goal_status,
   constraint Goals_pkey primary key (id),
   constraint Goals_user_id_fkey foreign KEY (user_id) references auth.users (id)
 ) TABLESPACE pg_default;
+
+create trigger trg_update_goal_status
+after
+update OF now_value,
+goal_value on "Goals" for EACH row
+execute FUNCTION update_goal_status ();

@@ -44,6 +44,13 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Cores personalizadas */
+  --bg-dark-padrao: #0E1621;
+  --green-padrao: #2CAE60;
+  --red-padrao: #EF4444;
+
+
 }
 
 html, body {
@@ -96,6 +103,18 @@ html, body {
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Cores personalizadas */
+  --color-dark-padrao: #0E1621;
+  --color-green-padrao: #2CAE60;
+  --color-red-padrao: #EF4444;
+  --color-blue-padrao: #1F6FEB;
+
+  /* Cores personalizadas transparencia*/
+  --color-green-padrao-25: rgb(44 174 96 / 25%);
+  --color-red-padrao-25: rgb(239 68 68 / 25%);
+  --color-blue-padrao-25: rgb(31 111 235 / 25%);
+  --color-dark-padrao-25: rgb(14 22 33 / 25%);
 }
 
 .dark {

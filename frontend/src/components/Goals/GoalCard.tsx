@@ -4,27 +4,39 @@ import { Button } from "../ui/button";
 import type { Goal } from "@/types/generalTypes";
 import { formatDate } from "@/Utils/formatDate";
 import { formatCurrencyBR } from "@/Utils/formateToBr";
+import { generateColor } from "@/Utils/generateColor";
 
 interface GoalCardProps {
     goal: Goal;
     percentage: number;
+    index: number;
 }
 
-export function GoalCard({ goal, percentage }: GoalCardProps) {
+export function GoalCard({ goal, percentage, index }: GoalCardProps) {
 
     const progress = percentage;
+    const mainColor = generateColor(index);
 
   return (
-    <div className="flex gap-3 w-full bg-[#0B1723] p-5 rounded-xl">
+    <div className="flex gap-3 w-full bg-dark-padrao p-5 rounded-xl">
         <div>
-            <Laptop size={50}/>
+            <Laptop size={50} color={mainColor}/>
         </div>
         <div className="w-full flex flex-col gap-3">
             <div className="flex flex-col gap-3 w-full">
                 <div className="flex items-center justify-between">
                     <p className="text-xl text-white">{goal.title}</p>
-                    <div>
-                        <p className="text-2xl">{percentage}%</p>
+                    <div className="flex flex-col">
+                        {goal.status == "em_andamento" ? (
+                            <p className="text-2xl text-blue-padrao self-end bg-blue-padrao-25 p-1 rounded-sm">
+                                {percentage}%
+                            </p>
+                        ) : (
+                            <p className="text-2xl text-green-padrao self-end bg-green-padrao-25 p-1 rounded-sm">
+                                {percentage}%
+                            </p>
+                        )}
+                        
                         <p>{goal.status == "em_andamento" ? "Em Andamento" : "Concluído"}</p>
                     </div>                    
                 </div>                     
@@ -44,7 +56,7 @@ export function GoalCard({ goal, percentage }: GoalCardProps) {
                 </div>
             </div>
             <div className="flex items-center gap-3">                
-                <Button className="cursor-pointer bg-[#2CAE60]">
+                <Button className="cursor-pointer bg-green-padrao">
                     <Plus />
                     Adicionar Dinheiro
                 </Button>                
@@ -52,7 +64,7 @@ export function GoalCard({ goal, percentage }: GoalCardProps) {
                     <Pen />
                     Editar
                 </Button> 
-                <Button className="cursor-pointer bg-[#EF4444]">
+                <Button className="cursor-pointer bg-red-padrao">
                     <Trash />
                     Excluir
                 </Button> 
