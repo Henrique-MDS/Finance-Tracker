@@ -110,6 +110,10 @@ html, body {
   --color-red-padrao: #EF4444;
   --color-blue-padrao: #1F6FEB;
   --color-purple-padrao: #A970FF;
+  --color-text-padrao: #778294;
+  --color-subdiv-padrao: #111820;
+  --color-subdiv2-padrao: #1A232F;
+  --color-app-background: #060F18;
 
   /* Cores personalizadas transparencia*/
   --color-green-padrao-25: rgb(44 174 96 / 25%);

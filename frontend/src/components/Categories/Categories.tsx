@@ -100,25 +100,25 @@ export function CategoriesPage() {
             <h1 className="text-2xl text-white">Categorias</h1>
             <p>Gerencie suas categorias de receitas e despesas</p>
         </div>
-        <div className="bg-[#111820] p-5 rounded-xl text-white flex flex-col gap-5">
-            <h1 className="text-emerald-300 text-xl">Nova Categoria</h1>
+        <div className="bg-subdiv-padrao p-5 rounded-xl text-white flex flex-col gap-5">
+            <h1 className="text-green-padrao text-xl">Nova Categoria</h1>
             <div className="flex flex-col gap-2">
                 <p>Nome da Categoria</p>
                 <div className="flex items-center gap-2">
                     <Field>
                         <Input id="input-demo-api-key" type="text" placeholder="Nome da categoria..." onChange={(e) => setCatName(e.target.value)} value={catName}/>
                     </Field>
-                    <Button className="bg-emerald-500 cursor-pointer" onClick={() => saveCategory()}>Salvar</Button>
+                    <Button className="bg-green-padrao cursor-pointer" onClick={() => saveCategory()}>Salvar</Button>
                 </div>                
             </div>
-            <div className="flex flex-col gap-3 bg-[#1A232F] p-8 rounded-xl">
+            <div className="flex flex-col gap-3 bg-subdiv2-padrao p-8 rounded-xl">
             <h3 className="flex gap-2">
               <span>
-                <UserSearch className="text-blue-500"/>
+                <UserSearch className="text-blue-padrao"/>
               </span>
               Escolha um ícone
             </h3>
-            <p className="text-sm text-gray-400">Escolha um ícone que melhor representa sua transação</p>
+            <p className="text-sm text-text-padrao">Escolha um ícone que melhor representa sua transação</p>
             <div>
               <div className="grid sm:grid-cols-3 lg:grid-cols-8 gap-3">
                 {defaultIcons.map(({ name, icon: Icon }) => (
@@ -140,7 +140,7 @@ export function CategoriesPage() {
             </div>
           </div>
         </div> 
-        <div className="bg-[#111820] p-5 rounded-xl text-white flex flex-col gap-5">
+        <div className="bg-subdiv-padrao p-5 rounded-xl text-white flex flex-col gap-5">
             <div className="flex items-center justify-between">
                 <h2 className="text-emerald-300 text-xl">Suas Categorias</h2>
                 <Field className="w-72">
@@ -150,7 +150,7 @@ export function CategoriesPage() {
                 </Field>
             </div>
             <Separator />
-            <div className="flex items-center justify-between text-sm text-[#777E78]">
+            <div className="flex items-center justify-between text-sm text-text-padrao">
                 <p>Nome</p>
                 <p>Criado em</p>
                 <p>Ações</p>

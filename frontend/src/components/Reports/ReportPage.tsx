@@ -47,7 +47,7 @@ export function ReportPage(){
         <Separator />
         <div className="pt-5 flex gap-5 flex-wrap lg:flex-nowrap">
             <div className="text-white flex flex-col gap-5 w-full">
-                <div className="bg-[#0B1723] p-7 rounded-xl flex flex-col gap-5 flex-1">
+                <div className="bg-dark-padrao p-7 rounded-xl flex flex-col gap-5 flex-1">
                     <div className="flex items-center gap-3">
                         <CalendarIcon />
                         <p>1. Selecionar Período</p>
@@ -91,25 +91,25 @@ export function ReportPage(){
                         </div>
                     </div>
                 </div>
-                <div className="bg-[#0B1723] p-7 rounded-xl flex flex-col gap-5 flex-1">
+                <div className="bg-dark-padrao p-7 rounded-xl flex flex-col gap-5 flex-1">
                     <div className="flex flex-col gap-3">
                         <div className="flex items-center gap-3">
                             <Database />
                             <h2>2. Selecionar Dados</h2> 
                         </div>
-                        <p className="text-[#778294]">Escolha quais informações deseja incluir no relatório</p>
+                        <p className="text-text-padrao">Escolha quais informações deseja incluir no relatório</p>
                         <div className="flex items-center gap-3">
                             <ReportTypeCard />
                         </div>            
                     </div>
                 </div>
-                <div className="bg-[#0B1723] p-7 rounded-xl flex flex-col gap-5 flex-1">
+                <div className="bg-dark-padrao p-7 rounded-xl flex flex-col gap-5 flex-1">
                     <div className="flex items-center gap-3">
                         <File />
                         <h2>3. Selecionar Formato</h2>
                     </div>
                     <div>
-                        <div className="flex gap-3 w-[250px] flex gap-5 border-2 border-emerald-700 rounded-sm p-3 cursor-pointer bg-green-500/10">
+                        <div className="flex gap-3 w-[250px] flex gap-5 border-2 border-green-padrao rounded-sm p-3 cursor-pointer bg-green-500/10">
                             <FileText size={40}/>
                             <div>
                                 <span>PDF</span>
@@ -118,14 +118,14 @@ export function ReportPage(){
                         </div>
                     </div>
                     <div>
-                        <Button className="bg-[#108163] cursor-pointer hover:bg-[#109963] p-7" onClick={handlePrint}>
+                        <Button className="bg-green-padrao cursor-pointer hover:bg-[#109963] p-7" onClick={handlePrint}>
                             <Download />
                             Gerar Relatório
                         </Button>
                     </div>
                 </div>
             </div>
-            <div className="text-white bg-[#0B1723] p-7 rounded-xl w-full">
+            <div className="text-white bg-dark-padrao p-7 rounded-xl w-full">
                 <div className="flex flex-col gap-5">
                     <div className="flex items-center gap-3">
                         <Eye />

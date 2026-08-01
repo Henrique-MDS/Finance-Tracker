@@ -140,10 +140,10 @@ export function Transactions() {
         <h1 className="text-2xl">Cadastrar Transações</h1>
       </div>
 
-      <div className="bg-[#111820] p-5 rounded-xl text-white flex flex-col gap-5">
+      <div className="bg-dark-padrao p-5 rounded-xl text-white flex flex-col gap-5">
         <div>
           <p className="flex gap-2 items-center"> 
-            <span className="bg-[#15472F] p-2 rounded-full">
+            <span className="bg-green-padrao p-2 rounded-full">
               <CreditCard />
             </span> 
             Dados da transação
@@ -152,7 +152,7 @@ export function Transactions() {
         
 
         <div className="flex gap-5 flex-wrap flex-col">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-[#1A232F] p-8 rounded-xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-subdiv2-padrao p-8 rounded-xl">
             <SelectInput label="Tipo" placeholder="Tipo" options={["Receita", "Despesa"]} onValueChange={(e) => setType(e)} value={type}/>
             <SelectInput label="Categoria" placeholder="Categoria" options={catOptions} onValueChange={(e) => setCategory(e)} value={category}/>
             <div className="flex flex-col gap-3">
@@ -162,7 +162,7 @@ export function Transactions() {
                   <Button
                     variant="outline"
                     data-empty={!date}
-                    className="w-full justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-[#1A232F] border-white"
+                    className="w-full justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-subdiv2-padrao border-white"
                   >
                     <CalendarIcon />
                     {date ? format(date, "PPP") : <span>Selecione a data</span>}
@@ -192,7 +192,7 @@ export function Transactions() {
               </Field>
             </div>
           </div>
-          <div className="w-full min-w-0 bg-[#1A232F] p-8 rounded-xl flex flex-col gap-5">
+          <div className="w-full min-w-0 bg-subdiv2-padrao p-8 rounded-xl flex flex-col gap-5">
             <p>Descrição (Opicional)</p>
             <Textarea placeholder="Adicione uma descrição para sua transação" 
             onChange={(e)=>setDesc(e.target.value)} 
@@ -200,7 +200,7 @@ export function Transactions() {
           </div>
         </div>
         <div>
-          <Button className="cursor-pointer bg-emerald-600 hover:bg-emerald-900" 
+          <Button className="cursor-pointer bg-green-padrao hover:bg-emerald-900" 
                   onClick={()=>saveFormData()}> 
             <Save /> 
             Salvar Transação

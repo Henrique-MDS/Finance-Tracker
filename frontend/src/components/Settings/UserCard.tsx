@@ -42,9 +42,9 @@ export function UserCard({ userData }:Props) {
     }, [])
     console.log(user)
   return (
-    <div className="bg-[#0B1723] p-5 rounded-xl w-[450px] flex flex-col gap-5">
+    <div className="bg-dark-padrao p-5 rounded-xl w-[450px] flex flex-col gap-5">
         <div className="flex items-center gap-3">
-            <div className="bg-[#5442A2] w-fit p-1 rounded-full">
+            <div className="bg-purple-padrao w-fit p-1 rounded-full">
                 <UserIcon color="#ffffff"/>
             </div>
             <p className="text-white">Conta</p>
@@ -59,7 +59,7 @@ export function UserCard({ userData }:Props) {
                     ) 
                     :
                     (
-                        <div className="bg-[#5442A2] w-fit p-2 rounded-full">
+                        <div className="bg-purple-padrao w-fit p-2 rounded-full">
                             <UserIcon color="#ffffff"/>
                         </div>                            
                     )

@@ -39,7 +39,7 @@ export function PerfilCard() {
   }
   
   return (
-    <div className="bg-[#0B1723] p-5 rounded-2xl">
+    <div className="bg-dark-padrao p-5 rounded-2xl">
       <div>
         {profile ? (
           <div className="flex items-center gap-3">

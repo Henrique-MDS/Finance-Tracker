@@ -5,7 +5,7 @@ export function ResumeCard({title, value, desc, icon, themeColor, bgColor}:
 {
   
   return (
-    <div className="bg-[#0E1621] py-5 px-10 rounded-xl w-auto shadow-md flex flex-col gap-3 flex-grow">
+    <div className="bg-dark-padrao py-5 px-10 rounded-xl w-auto shadow-md flex flex-col gap-3 flex-grow">
         <div className="flex gap-3">
             <div className="h-fit p-3 rounded-full" style={{ backgroundColor: bgColor}}>
                 <img src={icon} alt="" className="w-[30px]"/>

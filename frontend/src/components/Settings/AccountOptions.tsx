@@ -36,7 +36,7 @@ export function AccountOptions() {
                        type="password"
                        value={newPassword}/>
             </div>
-            <Button className="cursor-pointer bg-[#2CAE60] hover:bg-[#207241]"
+            <Button className="cursor-pointer bg-green-padrao hover:bg-[#207241]"
                     onClick={() => saveFormData()}>
                 Salvar
             </Button>

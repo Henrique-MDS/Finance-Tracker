@@ -58,7 +58,7 @@ const items = [
 export function AppSidebar() {
   return (
     <Sidebar>
-      <SidebarContent className="bg-[#060F18] text-white">
+      <SidebarContent className="bg-app-background text-white">
         <img src="src/assets/logo-tracker.png" alt="finance-tracker-logo" className="h-[150px]"/>
         <SidebarGroup className="flex-1 flex flex-col">
           <SidebarGroupContent className="flex flex-col flex-1">
