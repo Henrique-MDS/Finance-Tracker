@@ -8,12 +8,21 @@ import { Navigate } from "react-router-dom";
 import { getData } from "@/Utils/getData";
 import { notify } from "@/Utils/notify";
 import type { Goal } from "@/types/generalTypes";
+import NewGoalModal from "./newGoal";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 
 export function GoalsPage() {
 
     const { user, loading } = useAuth();
     const [goals, setGoals] = useState<Goal[]>([]);
+    const [newGoalPopUp, setNewGoalPopUp] = useState(false);
 
     useEffect(() => {
         if(!user) return;
@@ -104,7 +113,9 @@ export function GoalsPage() {
                     )}
                 </div>
                 <div className="w-full" style={{border: "3px dashed #2CAE60", borderRadius: "20px"}}>
-                    <Button className="w-full p-10 bg-transparent hover:bg-transparent cursor-pointer text-[#2CAE60]">
+                    <Button className="w-full p-10 bg-transparent hover:bg-transparent cursor-pointer text-[#2CAE60]"
+                            onClick={() => setNewGoalPopUp(true)}
+                    >
                         <Plus />
                         Criar nova meta
                     </Button>
@@ -114,21 +125,27 @@ export function GoalsPage() {
                 <h2 className="font-semibold text-xl text-white">Resumo das Metas</h2>
                 <div className="flex flex-col gap-5 max-h-96 overflow-y-auto scrollbar-hide bg-[#0B1723] p-5 rounded-xl">
                     <div className="flex items-center gap-4">
-                        <GoalIcon size={40} color="#2C8E34"/>
+                        <div className="bg-green-padrao-25 p-1 rounded-sm">
+                            <GoalIcon size={40} color="#2C8E34" />
+                        </div>
                         <div>
                             <p className="text-sm">Metas Ativas</p>
                             <span className="text-xl font-semibold">{goalsInfo.activeGoals}</span>
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
-                        <Trophy size={40} color="#1F6FEB"/>
+                        <div className="bg-blue-padrao-25 p-1 rounded-sm">
+                            <Trophy size={40} color="#1F6FEB"/>
+                        </div>
                         <div>
                             <p className="text-sm">Metas Concluídas</p>
                             <span className="text-xl font-semibold">{goalsInfo.completedGoals}</span>
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
-                        <Flag size={40} color="#A970FF"/>
+                        <div className="bg-purple-padrao-25 p-1 rounded-sm">
+                            <Flag size={40} color="#A970FF"/>
+                        </div>
                         <div>
                             <p className="text-sm">Total de Metas</p>
                             <span className="text-xl font-semibold">{goalsInfo.totalGoals}</span>
@@ -136,7 +153,16 @@ export function GoalsPage() {
                     </div>
                 </div>
             </div>
-        </div>
+        </div> 
+        <Dialog open={newGoalPopUp} onOpenChange={setNewGoalPopUp}>
+            <DialogContent className="!max-w-4xl !h-[80vh] bg-dark-padrao text-white">
+                <DialogHeader className="flex flex-col items-center">
+                <DialogTitle className="text-xl">Nova Meta</DialogTitle>
+                </DialogHeader>
+
+                <NewGoalModal />
+            </DialogContent>
+        </Dialog>
     </div>
   )
 }

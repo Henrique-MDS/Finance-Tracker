@@ -9,7 +9,7 @@ import CategoriesPage from "./components/Categories/Categories";
 import ReportPage from "./components/Reports/ReportPage";
 import SettingsPage from "./components/Settings/Settings";
 import NotFoundPage from "./components/NotFound/NotFound";
-import GoalsPage from "./components/Goals/Goas";
+import GoalsPage from "./components/Goals/Goals";
 
 export const router = createBrowserRouter([
   {

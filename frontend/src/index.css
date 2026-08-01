@@ -109,11 +109,13 @@ html, body {
   --color-green-padrao: #2CAE60;
   --color-red-padrao: #EF4444;
   --color-blue-padrao: #1F6FEB;
+  --color-purple-padrao: #A970FF;
 
   /* Cores personalizadas transparencia*/
   --color-green-padrao-25: rgb(44 174 96 / 25%);
   --color-red-padrao-25: rgb(239 68 68 / 25%);
   --color-blue-padrao-25: rgb(31 111 235 / 25%);
+  --color-purple-padrao-25: rgb(169 112 255 / 25%);
   --color-dark-padrao-25: rgb(14 22 33 / 25%);
 }
 

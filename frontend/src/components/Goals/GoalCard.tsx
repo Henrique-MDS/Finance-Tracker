@@ -16,10 +16,11 @@ export function GoalCard({ goal, percentage, index }: GoalCardProps) {
 
     const progress = percentage;
     const mainColor = generateColor(index);
+    const mainColorTransparent = generateColor(index, 0.25);
 
   return (
     <div className="flex gap-3 w-full bg-dark-padrao p-5 rounded-xl">
-        <div>
+        <div className="h-fit p-3 rounded-sm" style={{backgroundColor: mainColorTransparent}}>
             <Laptop size={50} color={mainColor}/>
         </div>
         <div className="w-full flex flex-col gap-3">
