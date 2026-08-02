@@ -156,10 +156,16 @@ export function GoalsPage() {
         </div> 
         <Dialog open={newGoalPopUp} onOpenChange={setNewGoalPopUp}>
             <DialogContent className="!max-w-4xl !h-[80vh] bg-dark-padrao text-white">
-                <DialogHeader className="flex flex-col items-center">
-                <DialogTitle className="text-xl">Nova Meta</DialogTitle>
+                <DialogHeader>
+                <div className="flex items-center gap-3">
+                    <GoalIcon size={60} color="#2CAE60" className="bg-green-padrao-25 p-2 rounded-full"/>
+                    <DialogTitle className="text-xl">
+                        Nova Meta
+                    </DialogTitle>
+                </div>
                 </DialogHeader>
-
+                <p className="text-text-padrao">Crie uma meta para acompanhar seus objetivos</p>
+                <Separator className="bg-gray-800"/>
                 <NewGoalModal />
             </DialogContent>
         </Dialog>
