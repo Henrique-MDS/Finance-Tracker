@@ -9,13 +9,7 @@ import { getData } from "@/Utils/getData";
 import { notify } from "@/Utils/notify";
 import type { Goal } from "@/types/generalTypes";
 import NewGoalModal from "./newGoal";
-
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 
 export function GoalsPage() {
@@ -23,6 +17,7 @@ export function GoalsPage() {
     const { user, loading } = useAuth();
     const [goals, setGoals] = useState<Goal[]>([]);
     const [newGoalPopUp, setNewGoalPopUp] = useState(false);
+    //const [addMoneyPopUp, setAddMoneyPopUp] = useState(false);
 
     useEffect(() => {
         if(!user) return;

@@ -10,6 +10,8 @@ import { notify } from "@/Utils/notify";
 import { insertData } from "@/Utils/insertData";
 import { useAuth } from "@/Utils/AuthContext";
 import { Navigate } from "react-router-dom";
+import { defaultIcons } from "@/Utils/icons";
+
 
 
 export function NewGoalModal() {
@@ -18,6 +20,7 @@ export function NewGoalModal() {
     const [title, setTitle] = useState("");
     const [goalValue, setGoalValue] = useState("");
     const [date, setDate] = React.useState<Date>();
+    const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
 
     if (loading) {
         return <div>Carregando...</div>;
@@ -36,7 +39,7 @@ export function NewGoalModal() {
 
         const response = await insertData(
             "Goals", 
-            {user_id: user.id, title: title, goal_value: goalValue, limit_date: date}, 
+            {user_id: user.id, title: title, goal_value: goalValue, limit_date: date, icon: selectedIcon}, 
             "Inserir Nova Meta"
         );
 
@@ -46,6 +49,7 @@ export function NewGoalModal() {
         }
 
         notify.success("Meta criada com sucesso!");
+        resetFields();
     }
     
     const validateForm = () => {
@@ -56,7 +60,7 @@ export function NewGoalModal() {
             return "Informe o nome da meta.";
 
         if (trimmedTitle.length > 20)
-            return "O título deve ter no máximo 20 caracteres.";
+            return "O nome da meta deve ter no máximo 20 caracteres.";
 
         if (!goalValue)
             return "Informe o valor da meta.";
@@ -77,6 +81,12 @@ export function NewGoalModal() {
             return "A data deve ser hoje ou futura.";
 
         return null;
+    }
+
+    const resetFields = () => {
+        setTitle("");
+        setGoalValue("");
+        setDate(undefined);
     }
 
     return (
@@ -121,6 +131,26 @@ export function NewGoalModal() {
                             </PopoverContent>
                         </Popover>
                     </div>         
+                </div>
+                <div className="flex flex-col gap-3">
+                    <p className="text-text-padrao">Selecione um ícone que representa sua meta</p>
+                    <div className="grid sm:grid-cols-3 lg:grid-cols-8 gap-3">
+                        {defaultIcons.map(({ name, icon: Icon }) => (
+                            <button
+                                key={name}
+                                type="button"
+                                onClick={() => setSelectedIcon(name)}
+                                className={`flex items-center justify-center rounded-lg border p-3 cursor-pointer
+                            ${
+                                selectedIcon === name
+                                ? "border-blue-500"
+                                : "border-gray-300"
+                            }`}
+                            >
+                            <Icon size={24} />
+                            </button>
+                        ))}
+                    </div>
                 </div>
             </div>
             <div className="flex flex-col gap-4">

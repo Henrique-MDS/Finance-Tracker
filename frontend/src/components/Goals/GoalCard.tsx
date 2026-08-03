@@ -1,10 +1,11 @@
-import { Calendar, Laptop, Pen, Plus, Trash } from "lucide-react";
+import { Calendar, Pen, Plus, Trash } from "lucide-react";
 import { Progress } from "@/components/ui/progress"
 import { Button } from "../ui/button";
 import type { Goal } from "@/types/generalTypes";
 import { formatDate } from "@/Utils/formatDate";
 import { formatCurrencyBR } from "@/Utils/formateToBr";
 import { generateColor } from "@/Utils/generateColor";
+import { defaultIcons } from "@/Utils/icons";
 
 interface GoalCardProps {
     goal: Goal;
@@ -17,11 +18,13 @@ export function GoalCard({ goal, percentage, index }: GoalCardProps) {
     const progress = percentage;
     const mainColor = generateColor(index);
     const mainColorTransparent = generateColor(index, 0.25);
+    const goalIcon = defaultIcons.find( (item) => item.name === goal.icon) ?? defaultIcons[9];
+    const Icon = goalIcon.icon
 
   return (
     <div className="flex gap-3 w-full bg-dark-padrao p-5 rounded-xl">
         <div className="h-fit p-3 rounded-sm" style={{backgroundColor: mainColorTransparent}}>
-            <Laptop size={50} color={mainColor}/>
+            <Icon size={50} color={mainColor}/>
         </div>
         <div className="w-full flex flex-col gap-3">
             <div className="flex flex-col gap-3 w-full">

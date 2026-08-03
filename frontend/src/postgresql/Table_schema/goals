@@ -7,6 +7,7 @@ create table public."Goals" (
   limit_date timestamp with time zone not null default now(),
   creation_date timestamp with time zone not null default now(),
   status public.goal_status null default 'em_andamento'::goal_status,
+  icon character varying null,
   constraint Goals_pkey primary key (id),
   constraint Goals_user_id_fkey foreign KEY (user_id) references auth.users (id)
 ) TABLESPACE pg_default;

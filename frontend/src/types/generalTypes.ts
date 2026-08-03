@@ -25,6 +25,7 @@ export  type Category = {
 export  type Goal = {
   creation_date: string;
   goal_value: number;
+  icon: string | null;
   id: string;
   limit_date: string;
   now_value: number;
