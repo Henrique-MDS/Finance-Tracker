@@ -116,3 +116,10 @@ getReportData -> funçao para pegar dados dos relatórios. precisa de userid, ti
     SUM(value) OVER () AS total_value -> valor da soma das transacoes do tipo
     tran_date -> data
 formatCurrencyBR -> recebe um numero e retorna formatado no tipo brasileiro ex: R$ 5.000,00
+insertData -> Função genérica para inserir dados em tabelas, precisa do nome da tabela, um objeto com os campos/valores e uma descriçao da operação
+Ex:
+const response = await insertData(
+    "Goals", 
+    {user_id: user.id, title: title, goal_value: goalValue, limit_date: date}, 
+    "Inserir Nova Meta"
+);

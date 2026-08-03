@@ -6,14 +6,79 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "../ui/button";
 import { format } from "date-fns"
 import { Separator } from "@/components/ui/separator"
+import { notify } from "@/Utils/notify";
+import { insertData } from "@/Utils/insertData";
+import { useAuth } from "@/Utils/AuthContext";
+import { Navigate } from "react-router-dom";
 
 
 export function NewGoalModal() {
 
+    const { user, loading } = useAuth();
     const [title, setTitle] = useState("");
     const [goalValue, setGoalValue] = useState("");
     const [date, setDate] = React.useState<Date>();
+
+    if (loading) {
+        return <div>Carregando...</div>;
+    }
+
+    if (!user) {
+        return <Navigate to="/Login" replace />;
+    }
     
+    const saveNewGoal = async () => {
+        const error = validateForm();
+        if (error) {
+            notify.error(error);
+            return;
+        }
+
+        const response = await insertData(
+            "Goals", 
+            {user_id: user.id, title: title, goal_value: goalValue, limit_date: date}, 
+            "Inserir Nova Meta"
+        );
+
+        if(!response.success){
+            notify.error("Erro ao criar meta");
+            return;
+        }
+
+        notify.success("Meta criada com sucesso!");
+    }
+    
+    const validateForm = () => {
+        const trimmedTitle = title.trim();
+        const value = Number(goalValue);
+
+        if (!trimmedTitle)
+            return "Informe o nome da meta.";
+
+        if (trimmedTitle.length > 20)
+            return "O título deve ter no máximo 20 caracteres.";
+
+        if (!goalValue)
+            return "Informe o valor da meta.";
+
+        if (isNaN(value))
+            return "Informe um valor válido.";
+
+        if (value <= 0)
+            return "O valor deve ser maior que zero.";
+
+        if (!date)
+            return "Selecione uma data.";
+
+        const today = new Date();
+        today.setHours(0,0,0,0);
+
+        if (date < today)
+            return "A data deve ser hoje ou futura.";
+
+        return null;
+    }
+
     return (
         <div className="h-full flex flex-col gap-5 justify-between">
             <div className="flex flex-col gap-5">
@@ -60,7 +125,10 @@ export function NewGoalModal() {
             </div>
             <div className="flex flex-col gap-4">
                 <Separator className="bg-gray-800"/>
-                <Button className="bg-green-padrao hover:bg-green-padrao-25 p-5 flex items-center gap-4 cursor-pointer">
+                <Button 
+                    className="bg-green-padrao hover:bg-green-padrao-25 p-5 flex items-center gap-4 cursor-pointer"
+                    onClick={() => saveNewGoal()}
+                >
                     <Save />
                     Salvar
                 </Button>

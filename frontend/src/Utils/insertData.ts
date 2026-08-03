@@ -1,12 +1,12 @@
 import { supabase } from "../services/supabase";
 
 type insertDataInterface = {
-    success: boolean;
-    message: string;
-    data?: any[];
-    name?: string;
-    email?: string;
-    error?: any;
+  success: boolean;
+  message: string;
+  data?: any[];
+  name?: string;
+  email?: string;
+  error?: any;
 }
 
 type GenericObject = {
@@ -19,8 +19,16 @@ export async function insertData(tableName:string, fields:GenericObject, operati
   const { error } = await query;
 
   if (error) {
-    return {success: false, message: `Error on getting operation: ${operation}`, error: error};
+    return {
+      success: false, 
+      message: `Error operation: ${operation}`, 
+      error: error
+    };
   }
 
-  return {success: true, message: `Data has been found correctly`, error: error};
+  return {
+    success: true, 
+    message: `Data has been inserted correctly`, 
+    error: error
+  };
 }
