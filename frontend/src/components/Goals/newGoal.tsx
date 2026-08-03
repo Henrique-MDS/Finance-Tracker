@@ -12,9 +12,11 @@ import { useAuth } from "@/Utils/AuthContext";
 import { Navigate } from "react-router-dom";
 import { defaultIcons } from "@/Utils/icons";
 
+interface NewGoalModalProps {
+    refreshGoals: () => Promise<void>;
+}
 
-
-export function NewGoalModal() {
+export function NewGoalModal({ refreshGoals }: NewGoalModalProps) {
 
     const { user, loading } = useAuth();
     const [title, setTitle] = useState("");
@@ -49,6 +51,7 @@ export function NewGoalModal() {
         }
 
         notify.success("Meta criada com sucesso!");
+        await refreshGoals();
         resetFields();
     }
     

@@ -6,14 +6,17 @@ import { formatDate } from "@/Utils/formatDate";
 import { formatCurrencyBR } from "@/Utils/formateToBr";
 import { generateColor } from "@/Utils/generateColor";
 import { defaultIcons } from "@/Utils/icons";
+import { deleteData } from "@/Utils/deleteData";
+import { notify } from "@/Utils/notify";
 
 interface GoalCardProps {
     goal: Goal;
     percentage: number;
     index: number;
+    refreshGoals: () => Promise<void>;
 }
 
-export function GoalCard({ goal, percentage, index }: GoalCardProps) {
+export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProps) {
 
     const progress = percentage;
     const mainColor = generateColor(index);
@@ -21,9 +24,21 @@ export function GoalCard({ goal, percentage, index }: GoalCardProps) {
     const goalIcon = defaultIcons.find( (item) => item.name === goal.icon) ?? defaultIcons[9];
     const Icon = goalIcon.icon
 
+    const deleteGoal = async () => {
+        const response = await deleteData("Goals", {id: goal.id}, "Excluir Meta");
+
+        if(!response.success){
+            notify.error("Erro ao excluir meta");
+            return;
+        }
+
+        notify.success("Meta excluída!");
+        await refreshGoals();
+    }
+
   return (
     <div className="flex gap-3 w-full bg-dark-padrao p-5 rounded-xl">
-        <div className="h-fit p-3 rounded-sm" style={{backgroundColor: mainColorTransparent}}>
+        <div className="h-fit p-3 rounded-xl" style={{backgroundColor: mainColorTransparent}}>
             <Icon size={50} color={mainColor}/>
         </div>
         <div className="w-full flex flex-col gap-3">
@@ -68,7 +83,7 @@ export function GoalCard({ goal, percentage, index }: GoalCardProps) {
                     <Pen />
                     Editar
                 </Button> 
-                <Button className="cursor-pointer bg-red-padrao">
+                <Button className="cursor-pointer bg-red-padrao" onClick={() => deleteGoal()}>
                     <Trash />
                     Excluir
                 </Button> 

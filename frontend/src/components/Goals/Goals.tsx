@@ -1,4 +1,4 @@
-import { Flag, Goal as GoalIcon, Plus, Trophy } from "lucide-react";
+import { Flag, Ghost, Goal as GoalIcon, Plus, Trophy } from "lucide-react";
 import { Separator } from "@/components/ui/separator"
 import GoalCard from "./GoalCard";
 import { Button } from "../ui/button";
@@ -19,23 +19,23 @@ export function GoalsPage() {
     const [newGoalPopUp, setNewGoalPopUp] = useState(false);
     //const [addMoneyPopUp, setAddMoneyPopUp] = useState(false);
 
-    useEffect(() => {
+    const loadGoals = async () => {
         if(!user) return;
 
-        const getGoals = async () => {
-            const response = await getData("Goals", {user_id: user.id}, "Buscar metas do usuário");
+        const response = await getData("Goals", {user_id: user.id}, "Buscar metas do usuário");
 
-            if(response.success){
-                if(response && response.data){
-                    setGoals(response.data);
-                }
-            } else {
-                notify.error("Erro ao buscar metas");
-                return;
+        if(response.success){
+            if(response && response.data){
+                setGoals(response.data);
             }
+        } else {
+            notify.error("Erro ao buscar metas");
+            return;
         }
+    }
 
-        getGoals();
+    useEffect(() => {
+        loadGoals();
     }, [user])
 
     if (loading) {
@@ -99,11 +99,18 @@ export function GoalsPage() {
                 <div className="flex flex-col gap-3 max-h-96 overflow-y-auto scrollbar-hide">
                     {goals.length > 0 ? (
                         goals.map((goal, i) => (
-                            <GoalCard key={goal.id} goal={goal} percentage={calculatePercentage(goal.now_value, goal.goal_value)} index={i}/>
+                            <GoalCard 
+                                key={goal.id} 
+                                goal={goal} 
+                                percentage={calculatePercentage(goal.now_value, goal.goal_value)} 
+                                index={i}
+                                refreshGoals={loadGoals}
+                            />
                         ))
                     ) : (
-                        <div>
-                            sem objetivos
+                        <div className="flex items-center gap-3">
+                            <Ghost />
+                            <p>Sem metas por enquanto...</p>
                         </div>
                     )}
                 </div>
@@ -161,7 +168,7 @@ export function GoalsPage() {
                 </DialogHeader>
                 <p className="text-text-padrao">Crie uma meta para acompanhar seus objetivos</p>
                 <Separator className="bg-gray-800"/>
-                <NewGoalModal />
+                <NewGoalModal refreshGoals={loadGoals}/>
             </DialogContent>
         </Dialog>
     </div>
