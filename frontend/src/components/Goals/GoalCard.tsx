@@ -42,8 +42,8 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
     }
 
   return (
-    <div className="flex gap-3 w-full bg-dark-padrao p-5 rounded-xl">
-        <div className="h-fit p-3 rounded-xl" style={{backgroundColor: mainColorTransparent}}>
+    <div className="flex flex-col lg:flex-row gap-3 w-full bg-dark-padrao p-5 rounded-xl">
+        <div className="h-fit w-fit p-3 rounded-xl" style={{backgroundColor: mainColorTransparent}}>
             <Icon size={50} color={mainColor}/>
         </div>
         <div className="w-full flex flex-col gap-3">
@@ -79,7 +79,7 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
                     <p>Faltam: <span className="text-white">{formatCurrencyBR(goal.goal_value - goal.now_value)}</span></p>
                 </div>
             </div>
-            <div className="flex items-center gap-3">                
+            <div className="flex flex-wrap lg:flex-nowrap items-center gap-3">                
                 <Button 
                     className="cursor-pointer bg-green-padrao" onClick={() => setAddMoneyPopUp(true)}
                     style={goal.status == "em_andamento" ? { display: "flex" } : { display: "none" }}
