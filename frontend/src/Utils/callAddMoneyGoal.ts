@@ -1,13 +1,14 @@
 import { supabase } from "@/services/supabase";
 import type { DataResponse } from "@/types/generalTypes";
 
-export const addMoneyToGoal = async (userId:string, goalId:string, value: number):Promise<DataResponse> => {
+export const addMoneyToGoal = async (userId:string, goalId:string, value: number, date: Date | string):Promise<DataResponse> => {
     const { data, error } = await supabase.rpc(
         "add_money_to_goal",
         {
             p_goal_id: goalId,
             p_user_id: userId,
-            p_value: value
+            p_value: value,
+            p_tran_date: date
         }
     );
 

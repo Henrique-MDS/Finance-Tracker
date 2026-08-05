@@ -35,7 +35,7 @@ export function AddMoneyModal({ goal, refreshGoals }: NewGoalModalProps) {
             return;
         }
 
-       const response = await addMoneyToGoal(user.id, goal.id, Number(value));
+       const response = await addMoneyToGoal(user.id, goal.id, Number(value), new Date());
 
         if(!response.success){
             notify.error("Erro ao adicionar valor a meta");
@@ -45,17 +45,6 @@ export function AddMoneyModal({ goal, refreshGoals }: NewGoalModalProps) {
         notify.success("Quantia adicionada");
         setValue("");
         await refreshGoals();
-
-        const sendData = {
-            "type": "Despesa",
-            "value": value,
-            "tran_date": new Date().toISOString(),
-            "desc": "Aporte de Meta",
-            "user_id": user.id,
-            "cat_id": ""
-        }
-
-        //const newTransaction = await insertTransactionFormData(sendData)
     }
 
     const verifyValue = () => {

@@ -1,0 +1,7 @@
+create table public."Params" (
+  user_id uuid not null,
+  "IDGERTRANAUT" boolean not null default false,
+  created_at timestamp with time zone not null default now(),
+  constraint Params_pkey primary key (user_id),
+  constraint Params_user_id_fkey foreign KEY (user_id) references auth.users (id) on delete CASCADE
+) TABLESPACE pg_default;

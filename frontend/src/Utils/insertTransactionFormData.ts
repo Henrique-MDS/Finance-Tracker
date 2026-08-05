@@ -17,7 +17,7 @@ type TransactionFormData = {
 }
 
 export async function insertTransactionFormData(sentData:TransactionFormData):Promise<InsertTransactionResult> {
-    console.log(sentData);
+    
     const {data, error} = await supabase.from("Transactions").insert({
         user_id: sentData.user_id,
         cat_id: sentData.cat_id,

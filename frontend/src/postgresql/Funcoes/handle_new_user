@@ -29,6 +29,12 @@ BEGIN
         (NEW.id, 'Lazer', 'gamepad-2', 'LEISURE', false),
         (NEW.id, 'Aporte para Metas', 'target', 'GOAL_DEPOSIT', true);
 
+    INSERT INTO public."Params" (
+        user_id
+    )
+    VALUES
+        (NEW.id);
+
     RETURN NEW;
 END;
 $$;
