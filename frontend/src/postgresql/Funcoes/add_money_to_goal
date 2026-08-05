@@ -11,6 +11,8 @@ DECLARE
     v_category_id uuid;
     v_gerar_transacao boolean;
     v_nome_meta varchar;
+    v_now_value numeric;
+    v_goal_value numeric;
 BEGIN
 
     SELECT id
@@ -60,7 +62,24 @@ BEGIN
     UPDATE "Goals"
     SET now_value = now_value + p_value
     WHERE id = p_goal_id
-      AND user_id = p_user_id;
+    AND user_id = p_user_id;
+
+    SELECT 
+        now_value,
+        goal_value
+    INTO
+        v_now_value,
+        v_goal_value
+    FROM "Goals"
+    WHERE id = p_goal_id
+    AND user_id = p_user_id;
+
+    IF v_now_value >= v_goal_value THEN
+        UPDATE "Goals"
+        SET status = 'concluido'
+        WHERE id = p_goal_id
+        AND user_id = p_user_id;
+    END IF;
 
 END;
 $$;
