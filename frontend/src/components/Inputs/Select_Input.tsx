@@ -7,10 +7,15 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
+interface SelectOption {
+  label: string;
+  value: string;
+}
+
 interface SelectInputProps {
   label: string;
   placeholder: string;
-  options: string[];
+  options: SelectOption[];
   value?: string
   onValueChange?: (value: string) => void;
 }
@@ -34,8 +39,11 @@ export function SelectInput({
         <SelectContent>
           <SelectGroup>
             {options.map((option) => (
-              <SelectItem key={option} value={option}>
-                {option}
+              <SelectItem
+                key={option.value}
+                value={option.value}
+              >
+                {option.label}
               </SelectItem>
             ))}
           </SelectGroup>

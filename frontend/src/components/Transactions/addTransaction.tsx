@@ -28,16 +28,26 @@ interface Props {
     onSave: () => Promise<void>;
 }
 
+interface SelectOption {
+    label: string;
+    value: string;
+}
+
+interface SelectInputProps {
+    options: SelectOption[];
+    value: string;
+    onValueChange: (value: string) => void;
+}
+
 export function CreateNewTransaction({ onSave }: Props) {
 
     const [cat, setCat] = useState<Category[]>([]);
-    const [catOptions, setCatOptions] = useState<string[]>([]);
+    const [catOptions, setCatOptions] = useState<SelectOption[]>([]);
     const [date, setDate] = React.useState<Date>();
     const [type, setType] = useState("");
-    const [category, setCategory] = useState("");
+    const [categoryId, setCategoryId] = useState("");
     const [value, setValue] = useState("");
     const [desc, setDesc] = useState("");
-    const [transactions, setTransactions] = useState<any[]>([]);
     const { user, loading } = useAuth();
     
     if (loading) {
@@ -49,27 +59,8 @@ export function CreateNewTransaction({ onSave }: Props) {
     
     const userId = user.id;
 
-    const getTransactionData = async () => {
-        const transctionData = await getData(
-            "Transactions",
-            { user_id: userId },
-            "Buscar transações do usuário no banco"
-        );
-
-        if(transctionData.success == false){
-            notify.error(transctionData.message);
-            return;
-        }
-
-        setTransactions(transctionData.data || []);
-    }
-
     useEffect(() => {
         const getCategories = async () => {
-            if (!userId) {
-                console.error("Usuário não autenticado");
-                return;
-            }
             const categories = await getData(
                 "Categories",
                 { user_id: userId },
@@ -78,35 +69,29 @@ export function CreateNewTransaction({ onSave }: Props) {
             const safeCategories = Array.isArray(categories.data) ? categories.data : [];
             setCat(safeCategories);
 
-            const names = safeCategories.map((c) => c.name);
-            setCatOptions(names);
+            const options = safeCategories.map((c) => ({
+                label: c.name,
+                value: c.id,
+            }));
+            setCatOptions(options);
         };
 
         getCategories();
-        getTransactionData();
     }, [userId]);
 
     const resetForm = () => {
         setType("");
-        setCategory("");
+        setCategoryId("");
         setValue("");
         setDesc("");
         setDate(undefined);
     };
 
     const saveFormData = async () => {
-        if(verifyForm([type, category, value])){
+        if(verifyForm([type, categoryId, value])){
             if(desc && desc.length > 100){
                 notify.error("Descrição deve ter menos que 100 caracteres");
                 return false;
-            }
-            const selectedCategory = cat.find(
-                (c) => c.name === category
-            );
-
-            if (!selectedCategory) {
-                console.error("Categoria não encontrada");
-                return;
             }
 
             const sendData = {
@@ -115,7 +100,7 @@ export function CreateNewTransaction({ onSave }: Props) {
                 "tran_date": date?.toISOString(),
                 "desc": desc,
                 "user_id": userId,
-                "cat_id": selectedCategory.id
+                "cat_id": categoryId
             }
             
             const result = await insertTransactionFormData(sendData);
@@ -143,8 +128,17 @@ export function CreateNewTransaction({ onSave }: Props) {
         </div>
         <div className="flex gap-5 flex-wrap flex-col">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-subdiv2-padrao p-8 rounded-xl">
-            <SelectInput label="Tipo" placeholder="Tipo" options={["Receita", "Despesa"]} onValueChange={(e) => setType(e)} value={type}/>
-            <SelectInput label="Categoria" placeholder="Categoria" options={catOptions} onValueChange={(e) => setCategory(e)} value={category}/>
+            <SelectInput 
+                label="Tipo" placeholder="Tipo" options={[{ label: "Receita", value: "Receita" }, { label: "Despesa", value: "Despesa" }]}
+                onValueChange={(e) => setType(e)} 
+                value={type}
+            />
+            <SelectInput 
+                label="Categoria" 
+                placeholder="Categoria" 
+                options={catOptions} 
+                onValueChange={(e) => setCategoryId(e)} value={categoryId}
+            />
             <div className="flex flex-col gap-3">
               <p>Data da transação</p>
               <Popover>
