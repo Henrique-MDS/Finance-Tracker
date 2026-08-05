@@ -1,7 +1,6 @@
 import { useState } from "react";
 import NewGoalInput from "../Inputs/newGoalInput";
 import { Button } from "../ui/button";
-import { supabase } from "@/services/supabase";
 import { useAuth } from "@/Utils/AuthContext";
 import { Navigate } from "react-router-dom";
 import type { Goal } from "@/types/generalTypes";
