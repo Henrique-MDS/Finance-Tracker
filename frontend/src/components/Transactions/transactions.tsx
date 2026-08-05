@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { getData } from "@/Utils/getData";
 import * as React from "react"
 import { format } from "date-fns"
-import { Calendar as CalendarIcon, CreditCard, Save, UserSearch } from "lucide-react"
+import { Calendar as CalendarIcon, CreditCard, Save, ShieldAlert, UserSearch } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -162,7 +162,8 @@ export function Transactions() {
                   <Button
                     variant="outline"
                     data-empty={!date}
-                    className="w-full justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-subdiv2-padrao border-white"
+                    className="w-full p-5 justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-subdiv2-padrao border-white"
+                    style={{border: "1px solid #1e2939"}}
                   >
                     <CalendarIcon />
                     {date ? format(date, "PPP") : <span>Selecione a data</span>}
@@ -181,6 +182,8 @@ export function Transactions() {
                   id="input-field-username"
                   type="number"
                   placeholder="Valor da transação"
+                  style={{border: "1px solid #1e2939"}}
+                  className="p-5"
                   value={value}
                   onChange={(e) => {
                     const value = e.target.value;
@@ -199,12 +202,18 @@ export function Transactions() {
             className="w-full break-all border-none" value={desc}/>
           </div>
         </div>
-        <div>
-          <Button className="cursor-pointer bg-green-padrao hover:bg-emerald-900" 
-                  onClick={()=>saveFormData()}> 
+        <div className="flex flex-col gap-5">
+          <Button 
+            className="cursor-pointer bg-green-padrao hover:bg-emerald-900 w-fit" 
+            onClick={()=>saveFormData()}
+          > 
             <Save /> 
             Salvar Transação
           </Button>
+          <div className="flex items-center gap-2 text-text-padrao text-sm">
+            <ShieldAlert />
+            <p>Crie novas categorias na página de categoria</p>
+          </div>
         </div>
       </div>
 

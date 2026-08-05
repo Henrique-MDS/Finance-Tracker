@@ -27,7 +27,7 @@ export function SelectInput({
       <p>{label}</p>
 
       <Select onValueChange={onValueChange} value={value}>
-        <SelectTrigger className="w-full">
+        <SelectTrigger className="w-full p-5" style={{border: "1px solid #1e2939"}}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
 

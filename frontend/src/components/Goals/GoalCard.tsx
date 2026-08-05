@@ -80,11 +80,17 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
                 </div>
             </div>
             <div className="flex items-center gap-3">                
-                <Button className="cursor-pointer bg-green-padrao" onClick={() => setAddMoneyPopUp(true)}>
+                <Button 
+                    className="cursor-pointer bg-green-padrao" onClick={() => setAddMoneyPopUp(true)}
+                    style={goal.status == "em_andamento" ? { display: "flex" } : { display: "none" }}
+                >
                     <Plus />
                     Adicionar Dinheiro
                 </Button>                
-                <Button className="cursor-pointer">
+                <Button 
+                    className="cursor-pointer"
+                    style={goal.status == "em_andamento" ? { display: "flex" } : { display: "none" }}
+                >
                     <Pen />
                     Editar
                 </Button> 

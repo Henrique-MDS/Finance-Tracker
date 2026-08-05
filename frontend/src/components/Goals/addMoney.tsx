@@ -8,7 +8,6 @@ import type { Goal } from "@/types/generalTypes";
 import { notify } from "@/Utils/notify";
 import { addMoneyToGoal } from "@/Utils/callAddMoneyGoal";
 import { ShieldAlert } from "lucide-react";
-import { insertTransactionFormData } from "@/Utils/insertTransactionFormData";
 
 interface NewGoalModalProps {
     goal: Goal;

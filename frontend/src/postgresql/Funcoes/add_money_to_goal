@@ -10,6 +10,7 @@ AS $$
 DECLARE
     v_category_id uuid;
     v_gerar_transacao boolean;
+    v_nome_meta varchar;
 BEGIN
 
     SELECT id
@@ -22,10 +23,20 @@ BEGIN
         RAISE EXCEPTION 'Categoria GOAL_DEPOSIT não encontrada.';
     END IF;
 
-    SELECT "IDGERTRANAUT"
+    SELECT COALESCE("IDGERTRANAUT", false)
     INTO v_gerar_transacao
     FROM "Params"
     WHERE user_id = p_user_id;
+
+    SELECT title
+    INTO v_nome_meta
+    FROM "Goals"
+    WHERE user_id = p_user_id
+    AND id = p_goal_id;
+
+    IF v_nome_meta IS NULL THEN
+        v_nome_meta = 'Aporte para Meta';
+    END IF;
 
     IF v_gerar_transacao THEN
         INSERT INTO "Transactions" (
@@ -41,7 +52,7 @@ BEGIN
             v_category_id,
             p_value,
             'Despesa',
-            'Aporte para Meta',
+            v_nome_meta,
             p_tran_date
         );
     END IF;

@@ -92,8 +92,8 @@ export function GoalsPage() {
             </div>
         </div>
         <Separator />
-        <div className="flex gap-5">
-            <div className="w-[60%] flex flex-col gap-3 h-full">
+        <div className="flex gap-5 flex-col lg:flex-row">
+            <div className="w-[100%] lg:w-[60%] flex flex-col gap-3 h-full">
                 <h2 className="font-semibold text-xl text-white">Minhas Metas</h2>
                 <div className="flex flex-col gap-3 max-h-96 overflow-y-auto scrollbar-hide">
                     {goals.length > 0 ? (
@@ -122,7 +122,7 @@ export function GoalsPage() {
                     </Button>
                 </div>
             </div>
-            <div className="w-[30%] flex flex-col gap-3 h-full">
+            <div className="w-[100%] lg:w-[30%] flex flex-col gap-3 h-full">
                 <h2 className="font-semibold text-xl text-white">Resumo das Metas</h2>
                 <div className="flex flex-col gap-5 max-h-96 overflow-y-auto scrollbar-hide bg-[#0B1723] p-5 rounded-xl">
                     <div className="flex items-center gap-4">
