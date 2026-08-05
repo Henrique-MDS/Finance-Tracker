@@ -4,14 +4,7 @@ import { Button } from "../ui/button";
 import { Separator } from "@/components/ui/separator"
 import { deleteData } from "@/Utils/deleteData";
 import { notify } from "@/Utils/notify";
-
-type Category = {
-  created_at: string;
-  id: string;
-  name: string;
-  updated_at: string;
-  user_id: string;
-}
+import type { Category } from "@/types/generalTypes";
 
 type CategorieGridProps = {
   categories: Category;
@@ -46,7 +39,10 @@ export function CategorieGrid({categories, refreshCategories}:CategorieGridProps
             <p>{categories.name}</p>
             <p>{formatDate(categories.created_at)}</p>
 
-            <Button className="cursor-pointer bg-transparent hover:bg-transparent" onClick={() => deleteCategory()}>
+            <Button 
+                className="cursor-pointer bg-transparent hover:bg-transparent" onClick={() => deleteCategory()}
+                style={categories.system ? { display: "none" } : { display: "block" }}
+            >
                 <img src={trash} alt="trash icon" className="w-[30px]" />
             </Button>
         </div>

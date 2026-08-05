@@ -15,6 +15,9 @@ export type UserProfile = {
 }
 
 export  type Category = {
+  code: string;
+  icon: string;
+  system: boolean;
   created_at: string;
   id: string;
   name: string;

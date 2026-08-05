@@ -77,6 +77,9 @@ export function RegisterPage() {
             } else if (getResult.error.code == "over_email_send_rate_limit") {
                 notify.error("Muitas tentativas. Aguarde para tentar novamente");
                 return;
+            }else if (getResult.error.code == "user_already_exists") {
+                notify.error("Usuário já cadastrado");
+                return;
             } else {
                 notify.error("Erro ao registrar conta");
                 return;
