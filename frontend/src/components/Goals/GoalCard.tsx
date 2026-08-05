@@ -1,4 +1,4 @@
-import { Calendar, Pen, Plus, Trash, Banknote } from "lucide-react";
+import { Calendar, Pen, Plus, Trash, Banknote, ShieldAlert } from "lucide-react";
 import { Progress } from "@/components/ui/progress"
 import { Button } from "../ui/button";
 import type { Goal } from "@/types/generalTypes";
@@ -12,6 +12,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Separator } from "@/components/ui/separator"
 import AddMoneyModal from "./addMoney";
 import { useState } from "react";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
 
 interface GoalCardProps {
     goal: Goal;
@@ -28,6 +33,13 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
     const goalIcon = defaultIcons.find( (item) => item.name === goal.icon) ?? defaultIcons[9];
     const Icon = goalIcon.icon
     const [addMoneyPopUp, setAddMoneyPopUp] = useState(false);
+
+    const goalLimitDate = new Date(goal.limit_date);
+    goalLimitDate.setHours(0, 0, 0, 0);
+
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
+
 
     const deleteGoal = async () => {
         const response = await deleteData("Goals", {id: goal.id}, "Excluir Meta");
@@ -61,12 +73,23 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
                             </p>
                         )}
                         
-                        <p>{goal.status == "em_andamento" ? "Em Andamento" : "Concluído"}</p>
+                        <p>
+                            {(() => {
+                                if (todayDate.getTime() > goalLimitDate.getTime()) {
+                                    return "Atrasada";
+                                } else if (goal.status == "em_andamento") {
+                                    return "Em Andamento";
+                                }
+                                return "Concluída";
+                            })()}
+                        </p>
                     </div>                    
                 </div>                     
                 <div className="flex items-center gap-1">
                     <Calendar size={18}/>
-                    <p>Meta até <span>{formatDate(goal.limit_date)}</span></p>
+                    <p>
+                        Meta até <span>{formatDate(goal.limit_date)}</span>
+                    </p>
                 </div>
             </div>
             <div className="w-full flex flex-col gap-3">
@@ -98,6 +121,18 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
                     <Trash />
                     Excluir
                 </Button> 
+            </div>
+            <div 
+                className="cursor-pointer flex items-center gap-1 text-red-padrao"
+                style={todayDate.getTime() > goalLimitDate.getTime() ? {display: "flex"} : {display: "none"}}
+            >
+                <ShieldAlert size={18}/>
+                <HoverCard>
+                    <HoverCardTrigger>Meta Atrasada</HoverCardTrigger>
+                    <HoverCardContent>
+                        <p>sua meta venceu dia {formatDate(goal.limit_date)}</p>
+                    </HoverCardContent>
+                </HoverCard>
             </div>
         </div>
         <Dialog open={addMoneyPopUp} onOpenChange={setAddMoneyPopUp}>
