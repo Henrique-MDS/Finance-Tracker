@@ -39,8 +39,7 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
 
     const todayDate = new Date();
     todayDate.setHours(0, 0, 0, 0);
-
-
+    
     const deleteGoal = async () => {
         const response = await deleteData("Goals", {id: goal.id}, "Excluir Meta");
 
@@ -75,7 +74,7 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
                         
                         <p>
                             {(() => {
-                                if (todayDate.getTime() > goalLimitDate.getTime()) {
+                                if ((todayDate.getTime() > goalLimitDate.getTime()) && (goal.status == "em_andamento") ) {
                                     return "Atrasada";
                                 } else if (goal.status == "em_andamento") {
                                     return "Em Andamento";
@@ -124,7 +123,7 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
             </div>
             <div 
                 className="cursor-pointer flex items-center gap-1 text-red-padrao"
-                style={todayDate.getTime() > goalLimitDate.getTime() ? {display: "flex"} : {display: "none"}}
+                style={(todayDate.getTime() > goalLimitDate.getTime()) && (goal.status == "em_andamento") ? {display: "flex"} : {display: "none"}}
             >
                 <ShieldAlert size={18}/>
                 <HoverCard>
