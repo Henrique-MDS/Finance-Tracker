@@ -1,4 +1,4 @@
-import { Calendar, Pen, Plus, Trash } from "lucide-react";
+import { Calendar, Pen, Plus, Trash, Banknote } from "lucide-react";
 import { Progress } from "@/components/ui/progress"
 import { Button } from "../ui/button";
 import type { Goal } from "@/types/generalTypes";
@@ -8,6 +8,10 @@ import { generateColor } from "@/Utils/generateColor";
 import { defaultIcons } from "@/Utils/icons";
 import { deleteData } from "@/Utils/deleteData";
 import { notify } from "@/Utils/notify";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator"
+import AddMoneyModal from "./addMoney";
+import { useState } from "react";
 
 interface GoalCardProps {
     goal: Goal;
@@ -23,6 +27,7 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
     const mainColorTransparent = generateColor(index, 0.25);
     const goalIcon = defaultIcons.find( (item) => item.name === goal.icon) ?? defaultIcons[9];
     const Icon = goalIcon.icon
+    const [addMoneyPopUp, setAddMoneyPopUp] = useState(false);
 
     const deleteGoal = async () => {
         const response = await deleteData("Goals", {id: goal.id}, "Excluir Meta");
@@ -75,7 +80,7 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
                 </div>
             </div>
             <div className="flex items-center gap-3">                
-                <Button className="cursor-pointer bg-green-padrao">
+                <Button className="cursor-pointer bg-green-padrao" onClick={() => setAddMoneyPopUp(true)}>
                     <Plus />
                     Adicionar Dinheiro
                 </Button>                
@@ -89,6 +94,21 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
                 </Button> 
             </div>
         </div>
+        <Dialog open={addMoneyPopUp} onOpenChange={setAddMoneyPopUp}>
+            <DialogContent className="!max-w-4xl !h-[80vh] bg-dark-padrao text-white">
+                <DialogHeader>
+                <div className="flex items-center gap-3">
+                    <Banknote size={60} color="#2CAE60" className="bg-green-padrao-25 p-2 rounded-full"/>
+                    <DialogTitle className="text-xl">
+                        Adicionar Dinheiro
+                    </DialogTitle>
+                </div>
+                </DialogHeader>
+                <p className="text-text-padrao">Adicione dinheiro em sua meta!</p>
+                <Separator className="bg-gray-800"/>
+                <AddMoneyModal refreshGoals={refreshGoals} goal={goal}/>
+            </DialogContent>
+        </Dialog>
     </div>
   )
 }

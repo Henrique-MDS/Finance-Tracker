@@ -1,0 +1,15 @@
+CREATE OR REPLACE FUNCTION add_money_to_goal(
+    p_goal_id uuid,
+    p_user_id uuid,
+    p_value numeric
+)
+RETURNS void
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE "Goals"
+    SET now_value = now_value + p_value
+    WHERE id = p_goal_id
+    AND user_id = p_user_id;
+END;
+$$;

@@ -17,7 +17,6 @@ export function GoalsPage() {
     const { user, loading } = useAuth();
     const [goals, setGoals] = useState<Goal[]>([]);
     const [newGoalPopUp, setNewGoalPopUp] = useState(false);
-    //const [addMoneyPopUp, setAddMoneyPopUp] = useState(false);
 
     const loadGoals = async () => {
         if(!user) return;
