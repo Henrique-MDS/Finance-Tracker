@@ -8,6 +8,7 @@ import type { Goal } from "@/types/generalTypes";
 import { notify } from "@/Utils/notify";
 import { addMoneyToGoal } from "@/Utils/callAddMoneyGoal";
 import { ShieldAlert } from "lucide-react";
+import { insertTransactionFormData } from "@/Utils/insertTransactionFormData";
 
 interface NewGoalModalProps {
     goal: Goal;
@@ -44,6 +45,17 @@ export function AddMoneyModal({ goal, refreshGoals }: NewGoalModalProps) {
         notify.success("Quantia adicionada");
         setValue("");
         await refreshGoals();
+
+        const sendData = {
+            "type": "Despesa",
+            "value": value,
+            "tran_date": new Date().toISOString(),
+            "desc": "Aporte de Meta",
+            "user_id": user.id,
+            "cat_id": ""
+        }
+
+        //const newTransaction = await insertTransactionFormData(sendData)
     }
 
     const verifyValue = () => {

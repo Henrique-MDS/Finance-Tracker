@@ -9,7 +9,7 @@ create table public."Transactions" (
   created_at timestamp with time zone not null default now(),
   constraint Transactions_pkey primary key (id),
   constraint Transactions_cat_id_fkey foreign KEY (cat_id) references "Categories" (id),
-  constraint Transactions_user_id_fkey foreign KEY (user_id) references auth.users (id)
+  constraint Transactions_user_id_fkey foreign KEY (user_id) references auth.users (id) on delete CASCADE
 ) TABLESPACE pg_default;
 
 create trigger transactions_balance_trigger

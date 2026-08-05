@@ -16,6 +16,19 @@ BEGIN
         NULL
     );
 
+    INSERT INTO public."Categories" (
+        user_id,
+        name,
+        icon,
+        code,
+        system
+    )
+    VALUES
+        (NEW.id, 'Alimentação', 'utensils', 'FOOD', false),
+        (NEW.id, 'Transporte', 'car', 'TRANSPORT', false),
+        (NEW.id, 'Lazer', 'gamepad-2', 'LEISURE', false),
+        (NEW.id, 'Aporte para Metas', 'target', 'GOAL_DEPOSIT', true);
+
     RETURN NEW;
 END;
 $$;

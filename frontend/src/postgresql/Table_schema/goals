@@ -1,19 +1,25 @@
-create table public."Goals" (
+create table public."Transactions" (
   id uuid not null default gen_random_uuid (),
   user_id uuid not null default gen_random_uuid (),
-  title character varying not null default 'Meta sem nome'::character varying,
-  goal_value double precision not null default '0'::double precision,
-  now_value double precision not null default '0'::double precision,
-  limit_date timestamp with time zone not null default now(),
-  creation_date timestamp with time zone not null default now(),
-  status public.goal_status null default 'em_andamento'::goal_status,
-  icon character varying null,
-  constraint Goals_pkey primary key (id),
-  constraint Goals_user_id_fkey foreign KEY (user_id) references auth.users (id)
+  cat_id uuid not null default gen_random_uuid (),
+  "desc" text null,
+  value double precision not null,
+  type character varying not null,
+  tran_date timestamp with time zone not null default now(),
+  created_at timestamp with time zone not null default now(),
+  constraint Transactions_pkey primary key (id),
+  constraint Transactions_cat_id_fkey foreign KEY (cat_id) references "Categories" (id),
+  constraint Transactions_user_id_fkey foreign KEY (user_id) references auth.users (id) on delete CASCADE
 ) TABLESPACE pg_default;
 
-create trigger trg_update_goal_status
-after
-update OF now_value,
-goal_value on "Goals" for EACH row
-execute FUNCTION update_goal_status ();
+create trigger transactions_balance_trigger
+after INSERT
+or DELETE on "Transactions" for EACH row
+execute FUNCTION update_user_balance ();
+
+create trigger transactions_operation_log_trigger
+after INSERT
+or DELETE
+or
+update on "Transactions" for EACH row
+execute FUNCTION log_operation_function ();
