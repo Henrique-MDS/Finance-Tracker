@@ -1,10 +1,10 @@
-import { CalendarIcon, Funnel } from "lucide-react";
+import { BrushCleaning, CalendarIcon, Funnel } from "lucide-react";
 import SelectInput from "../Inputs/Select_Input";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/Utils/AuthContext";
 import { Navigate } from "react-router-dom";
 import { getData } from "@/Utils/getData";
-import type { Category } from "@/types/generalTypes";
+import type { DataResponse, FilterTransactions } from "@/types/generalTypes";
 import {
   Popover,
   PopoverContent,
@@ -19,13 +19,21 @@ interface SelectOption {
     value: string;
 }
 
-export function TransactionFilter() {
+interface Props {
+    onFilter: (filters: FilterTransactions) => Promise<void>;
+}
+
+export function TransactionFilter({ onFilter }: Props) {
 
     const [catOptions, setCatOptions] = useState<SelectOption[]>([]);
+    
+    const { user, loading } = useAuth();
+
+    // filtros das trasações
     const [iniDate, setIniDate] = useState<Date>();
     const [finalDate, setFinalDate] = useState<Date>();
-    const { user, loading } = useAuth();
     const [categoryId, setCategoryId] = useState("");
+    const [tranType, setTranType] = useState("");
     
     if (loading) {
         return <div>Carregando...</div>;
@@ -50,6 +58,26 @@ export function TransactionFilter() {
         setCatOptions(options);
     };
 
+    const callExecuteFilter = async () => {
+
+        const filters = {
+            user_id: user.id,
+            type: tranType || null,
+            iniDate: iniDate ? iniDate.toISOString() : null,
+            finalDate: finalDate ? finalDate.toISOString() : null,
+            catId: categoryId || null
+        }
+    
+        await onFilter(filters);
+    }
+
+    const cleanFilter = () => {
+        setIniDate(undefined);
+        setFinalDate(undefined);
+        setTranType("");
+        setCategoryId("");
+    }
+
     useEffect(() => {
         getCategories();
     }, [user.id])
@@ -70,12 +98,15 @@ export function TransactionFilter() {
                     label="Tipo" 
                     placeholder="Tipo" 
                     options={[{ label: "Receita", value: "Receita" }, { label: "Despesa", value: "Despesa" }]}
+                    onValueChange={(e) => setTranType(e)} 
+                    value={tranType}
                 />
                 <SelectInput 
                     label="Categoria" 
                     placeholder="Categoria"
                     options={catOptions} 
-                    onValueChange={(e) => setCategoryId(e)} value={categoryId}
+                    onValueChange={(e) => setCategoryId(e)} 
+                    value={categoryId}
                 />
                 <div>
                     <p>Data Inicial</p>
@@ -117,9 +148,19 @@ export function TransactionFilter() {
                 </div>
             </div>
         </div>
-        <div>
-            <Button className="cursor-pointer bg-green-padrao">
+        <div className="flex items-center gap-3">
+            <Button 
+                className="cursor-pointer bg-green-padrao"
+                onClick={() => callExecuteFilter()}
+            >
                 Filtrar
+            </Button>
+            <Button 
+                className="cursor-pointer bg-blue-padrao"
+                onClick={() => cleanFilter()}
+            >
+                <BrushCleaning />
+                Limpar Filtro
             </Button>
         </div>
     </div>

@@ -1,0 +1,21 @@
+CREATE OR REPLACE FUNCTION filter_transaction(
+    p_user_id uuid,
+    p_tran_type varchar DEFAULT NULL,
+    p_category_id uuid DEFAULT NULL,
+    p_ini_date timestamp DEFAULT NULL,
+    p_final_date timestamp DEFAULT NULL
+)
+RETURNS SETOF "Transactions"
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT *
+    FROM "Transactions"
+    WHERE user_id = p_user_id
+      AND (p_tran_type IS NULL OR type = p_tran_type)
+      AND (p_category_id IS NULL OR cat_id = p_category_id)
+      AND (p_ini_date IS NULL OR tran_date >= p_ini_date)
+      AND (p_final_date IS NULL OR tran_date <= p_final_date);
+END;
+$$;

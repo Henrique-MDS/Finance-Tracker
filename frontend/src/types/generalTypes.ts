@@ -36,3 +36,11 @@ export  type Goal = {
   title: string;
   user_id: string;
 }
+
+export type FilterTransactions = {
+  user_id: string;
+  type: string | null;
+  iniDate: string | null;
+  finalDate: string | null;
+  catId: string | null;
+}

@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/accordion"
 import { Banknote, FunnelPlus } from "lucide-react";
 import TransactionFilter from "./transactionFilter";
+import { filterTransactions } from "@/Utils/callFilterTransactions";
+import type { FilterTransactions } from "@/types/generalTypes";
 
 interface Category {
   created_at: string;
@@ -37,21 +39,6 @@ export function Transactions() {
   const userId = user.id;
   const [transactions, setTransactions] = useState<any[]>([]);
 
-  const getTransactionData = async () => {
-    const transctionData = await getData(
-      "Transactions",
-      { user_id: userId },
-      "Buscar transações do usuário no banco"
-    );
-
-    if(transctionData.success == false){
-      notify.error(transctionData.message);
-      return;
-    }
-
-    setTransactions(transctionData.data || []);
-  }
-
   const getCategories = async () => {
     const categories = await getData(
       "Categories",
@@ -67,9 +54,30 @@ export function Transactions() {
     setCat(categories.data || []);
   };
 
+  const loadTransactions = async (filters?: FilterTransactions) => {
+    if(!filters){
+      const response = await getData(
+        "Transactions",
+        { user_id: userId },
+        "Buscar transações do usuário no banco"
+      );
+      setTransactions(response.data || []);
+      return;
+    }
+
+    const response = await filterTransactions(filters);
+
+    if (!response.success) {
+      notify.error(response.message);
+      return;
+    }
+
+    setTransactions(response.data || []);
+  }
+
   useEffect(() => {
     getCategories();
-    getTransactionData();
+    loadTransactions();
   }, [userId]);
 
 
@@ -87,7 +95,7 @@ export function Transactions() {
             Adicionar Transação
           </AccordionTrigger>
           <AccordionContent>
-            <CreateNewTransaction onSave={getTransactionData}/>
+            <CreateNewTransaction onSave={loadTransactions}/>
           </AccordionContent>
         </AccordionItem>
 
@@ -97,7 +105,7 @@ export function Transactions() {
             Filtro
           </AccordionTrigger>
           <AccordionContent>
-            <TransactionFilter />
+            <TransactionFilter  onFilter={loadTransactions}/>
           </AccordionContent>
         </AccordionItem>
       </Accordion>
@@ -116,7 +124,7 @@ export function Transactions() {
                     ...transaction,
                     specificCat
                   }}
-                  onDelete={getTransactionData}
+                  onDelete={loadTransactions}
                 />
               );
             })}
