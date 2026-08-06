@@ -1,10 +1,10 @@
-import { BrushCleaning, CalendarIcon, Funnel } from "lucide-react";
+import { BrushCleaning, CalendarIcon, Funnel, X } from "lucide-react";
 import SelectInput from "../Inputs/Select_Input";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/Utils/AuthContext";
 import { Navigate } from "react-router-dom";
 import { getData } from "@/Utils/getData";
-import type { DataResponse, FilterTransactions } from "@/types/generalTypes";
+import type { FilterTransactions } from "@/types/generalTypes";
 import {
   Popover,
   PopoverContent,
@@ -13,6 +13,7 @@ import {
 import { Button } from "../ui/button";
 import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns"
+import { notify } from "@/Utils/notify";
 
 interface SelectOption {
     label: string;
@@ -55,17 +56,30 @@ export function TransactionFilter({ onFilter }: Props) {
             label: c.name,
             value: c.id,
         }));
+
+        options.unshift({
+            label: "Todos",
+            value: "T",
+        })
+
         setCatOptions(options);
     };
 
     const callExecuteFilter = async () => {
-
+        
+        if(iniDate && finalDate){
+            if(iniDate > finalDate){
+                notify.error("Data inicial deve ser menor que a final");
+                return;
+            }
+        }
+        
         const filters = {
             user_id: user.id,
-            type: tranType || null,
+            type: tranType === "T" ? null : tranType || null,
             iniDate: iniDate ? iniDate.toISOString() : null,
             finalDate: finalDate ? finalDate.toISOString() : null,
-            catId: categoryId || null
+            catId: categoryId === "T" ? null : categoryId || null
         }
     
         await onFilter(filters);
@@ -97,7 +111,11 @@ export function TransactionFilter({ onFilter }: Props) {
                 <SelectInput 
                     label="Tipo" 
                     placeholder="Tipo" 
-                    options={[{ label: "Receita", value: "Receita" }, { label: "Despesa", value: "Despesa" }]}
+                    options={[
+                        { label: "Todos", value: "T" },
+                        { label: "Receita", value: "Receita" }, 
+                        { label: "Despesa", value: "Despesa" }
+                    ]}
                     onValueChange={(e) => setTranType(e)} 
                     value={tranType}
                 />
@@ -112,19 +130,24 @@ export function TransactionFilter({ onFilter }: Props) {
                     <p>Data Inicial</p>
                     <Popover>
                         <PopoverTrigger asChild>
-                        <Button
-                            variant="outline"
-                            data-empty={!iniDate}
-                            className="w-full p-5 justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-subdiv2-padrao border-white"
-                            style={{border: "1px solid #1e2939"}}
-                        >
-                            <CalendarIcon />
-                            {iniDate ? format(iniDate, "PPP") : <span>Selecione a data</span>}
-                        </Button>
+                            <Button
+                                variant="outline"
+                                data-empty={!iniDate}
+                                className="w-full p-5 justify-between text-left font-normal data-[empty=true]:text-muted-foreground bg-subdiv2-padrao border-white"
+                                style={{border: "1px solid #1e2939"}}
+                            >   
+                                <div className="flex items-center gap-2">
+                                    <CalendarIcon />
+                                    {iniDate ? format(iniDate, "PPP") : <span>Selecione a data</span>}
+                                </div>
+                                <div className="cursor-pointer" onClick={() => setIniDate(undefined)}>
+                                    <X />
+                                </div>                              
+                            </Button>                            
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0">
                             <Calendar mode="single" selected={iniDate} onSelect={setIniDate}/>
-                        </PopoverContent>
+                        </PopoverContent>                        
                     </Popover>
                 </div>
                 <div>
@@ -134,11 +157,16 @@ export function TransactionFilter({ onFilter }: Props) {
                         <Button
                             variant="outline"
                             data-empty={!finalDate}
-                            className="w-full p-5 justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-subdiv2-padrao border-white"
+                            className="w-full p-5 justify-between text-left font-normal data-[empty=true]:text-muted-foreground bg-subdiv2-padrao border-white"
                             style={{border: "1px solid #1e2939"}}
                         >
-                            <CalendarIcon />
-                            {finalDate ? format(finalDate, "PPP") : <span>Selecione a data</span>}
+                            <div className="flex items-center gap-2">
+                                <CalendarIcon />
+                                {finalDate ? format(finalDate, "PPP") : <span>Selecione a data</span>}
+                            </div>
+                            <div className="cursor-pointer" onClick={() => setFinalDate(undefined)}>
+                                <X />
+                            </div> 
                         </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0">

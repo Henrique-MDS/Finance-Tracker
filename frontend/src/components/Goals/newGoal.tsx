@@ -117,7 +117,7 @@ export function NewGoalModal({ refreshGoals }: NewGoalModalProps) {
                         onChange={(e) => setGoalValue(e.target.value)}                        
                     />
                     <div className="flex flex-col gap-2">
-                        <p>Data da transação</p>
+                        <p>Data limite para atingir a meta</p>
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button

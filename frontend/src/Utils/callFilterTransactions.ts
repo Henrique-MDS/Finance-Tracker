@@ -3,7 +3,7 @@ import type { DataResponse, FilterTransactions } from "@/types/generalTypes";
 
 
 export const filterTransactions = async ({user_id, type, iniDate, finalDate, catId}: FilterTransactions):Promise<DataResponse> => {
-    console.log(user_id, type, iniDate, finalDate, catId);
+    
     const { data, error } = await supabase.rpc(
         "filter_transaction",
         {
