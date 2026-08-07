@@ -7,6 +7,7 @@ import { useAuth } from "@/Utils/AuthContext";
 import { Navigate } from "react-router-dom";
 import { notify } from "@/Utils/notify";
 import { getData } from "@/Utils/getData";
+import { Settings } from "lucide-react";
 
 export function ParamsCard() {
 
@@ -51,7 +52,7 @@ export function ParamsCard() {
 
   return (
     <div className="bg-dark-padrao p-5 rounded-xl w-[450px] flex flex-col gap-5">
-      <SettingsHeader theme="bg-blue-padrao" title="Configurações"/>
+      <SettingsHeader theme="bg-blue-padrao" title="Configurações" icon={Settings}/>
       <div>
         <div className="flex items-center gap-x-3.5">
             <Switch 

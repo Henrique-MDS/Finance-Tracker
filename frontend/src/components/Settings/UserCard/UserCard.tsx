@@ -1,12 +1,6 @@
-import { User as UserIcon } from "lucide-react";
+import { User as UserIcon, UserRound } from "lucide-react";
 import * as React from "react"
 import { Button } from "@/components/ui/button"
-import {
-  Command,
-  CommandDialog,
-  CommandGroup,
-  CommandList,
-} from "@/components/ui/command"
 import type { User } from "@supabase/supabase-js";
 import { getData } from "@/Utils/getData";
 import type { UserProfile } from "@/types/generalTypes";
@@ -15,6 +9,9 @@ import { useAuth } from "@/Utils/AuthContext";
 import AccountOptions from "./AccountOptions";
 import ProfileOptions from "./ProfileOptions";
 import { SettingsHeader } from "../SettingsComponents/SettingsHeader";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator"
+
 
 type Props = {
     userData: User;
@@ -44,7 +41,7 @@ export function UserCard({ userData }:Props) {
     console.log(user)
   return (
     <div className="bg-dark-padrao p-5 rounded-xl w-[450px] flex flex-col gap-5">
-        <SettingsHeader theme="bg-purple-padrao" title="Conta"/>
+        <SettingsHeader theme="bg-purple-padrao" title="Conta" icon={UserIcon}/>
         <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
                 {profile && profile.avatar_url ? 
@@ -69,22 +66,28 @@ export function UserCard({ userData }:Props) {
                 <Button onClick={() => setOpen(true)} variant="outline" className="w-fit cursor-pointer">
                     Editar Perfil
                 </Button>
-                <CommandDialog open={open} onOpenChange={setOpen} className="!max-w-4xl !h-[80vh] top-[10%]">
-                    <Command className="h-full">
-                        <CommandList className="!max-h-full">
-                            <CommandGroup className="p-5">
-                                <div className="flex flex-col gap-4">
-                                    <div>
-                                        <AccountOptions />
-                                    </div>
-                                    <div>
-                                        <ProfileOptions />
-                                    </div>
-                                </div>
-                            </CommandGroup>
-                        </CommandList>
-                    </Command>
-                </CommandDialog>
+                <Dialog open={open} onOpenChange={setOpen}>
+                    <DialogContent className="!max-w-4xl !h-[80vh] bg-dark-padrao text-white">
+                        <DialogHeader>
+                        <div className="flex items-center gap-3">
+                            <UserRound size={60} color="#2CAE60" className="bg-green-padrao-25 p-2 rounded-full"/>
+                            <DialogTitle className="text-xl">
+                                Conta
+                            </DialogTitle>
+                        </div>
+                        </DialogHeader>
+                        <p className="text-text-padrao">Altere informações do seu perfil</p>
+                        <Separator className="bg-gray-800"/>
+                        <div className="flex flex-col gap-4 text-white">
+                            <div>
+                                <AccountOptions />
+                            </div>
+                            <div>
+                                <ProfileOptions />
+                            </div>
+                        </div>
+                    </DialogContent>
+                </Dialog>
             </div>
         </div>
     </div>

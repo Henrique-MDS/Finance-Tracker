@@ -5,6 +5,7 @@ import { notify } from "@/Utils/notify";
 import { uploadAvatar } from "@/Utils/uploadAvatar";
 import { useAuth } from "@/Utils/AuthContext";
 import { Navigate } from "react-router-dom";
+import { Save } from "lucide-react";
 
 export function ProfileOptions() {
 
@@ -45,15 +46,27 @@ export function ProfileOptions() {
     <div>
         <h1 className="text-xl">Informações do Perfil</h1>
         <div className="flex flex-col gap-3">
-            <h2>Alterar foto de perfil</h2>
+            <h2 className="text-text-padrao py-3">Alterar foto de perfil</h2>
             <div className="flex flex-col gap-3">
-                <Input placeholder="Faça o upload" type="file" 
-                        onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if(!file) return;
-                            setProfilePic(file);
-                            setPreview(URL.createObjectURL(file));
-                        }}
+                <Input 
+                    placeholder="Faça o upload" 
+                    type="file" 
+                    onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if(!file) return;
+                        setProfilePic(file);
+                        setPreview(URL.createObjectURL(file));
+                    }}
+                    className=" h-12
+                                flex
+                                items-center
+                                file:mr-4
+                                file:rounded-md
+                                file:border-0
+                                file:px-4
+                                file:py-2
+                                file:text-white"
+                    style={{border: "1px solid #1e2939"}}
                 />
             </div>
             <div className="flex flex-col gap-5">
@@ -64,10 +77,15 @@ export function ProfileOptions() {
                     </div>
                 )}
             </div>
-            <Button className="cursor-pointer bg-green-padrao hover:bg-[#207241]"
-                    onClick={() => salvarFotoDePerfil()}>
-                Salvar
-            </Button>
+            <div className="w-full flex justify-end">
+                <Button 
+                    className="cursor-pointer bg-green-padrao hover:bg-[#207241] w-fit"
+                    onClick={() => salvarFotoDePerfil()}
+                >
+                    <Save />
+                    Salvar
+                </Button>
+            </div>
         </div>
     </div>
   );
