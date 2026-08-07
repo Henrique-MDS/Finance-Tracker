@@ -7,13 +7,14 @@ import {
   CommandGroup,
   CommandList,
 } from "@/components/ui/command"
-import AccountOptions from "./AccountOptions";
-import ProfileOptions from "./ProfileOptions";
 import type { User } from "@supabase/supabase-js";
 import { getData } from "@/Utils/getData";
 import type { UserProfile } from "@/types/generalTypes";
 import { notify } from "@/Utils/notify";
 import { useAuth } from "@/Utils/AuthContext";
+import AccountOptions from "./AccountOptions";
+import ProfileOptions from "./ProfileOptions";
+import { SettingsHeader } from "../SettingsComponents/SettingsHeader";
 
 type Props = {
     userData: User;
@@ -43,12 +44,7 @@ export function UserCard({ userData }:Props) {
     console.log(user)
   return (
     <div className="bg-dark-padrao p-5 rounded-xl w-[450px] flex flex-col gap-5">
-        <div className="flex items-center gap-3">
-            <div className="bg-purple-padrao w-fit p-1 rounded-full">
-                <UserIcon color="#ffffff"/>
-            </div>
-            <p className="text-white">Conta</p>
-        </div>
+        <SettingsHeader theme="bg-purple-padrao" title="Conta"/>
         <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
                 {profile && profile.avatar_url ? 

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { useState } from "react";
 import { supabase } from "@/services/supabase";
 import { notify } from "@/Utils/notify";
-import { verifyPassword } from "../ui/verifyPassword";
+import { verifyPassword } from "@/components/ui/verifyPassword";
 
 export function AccountOptions() {
 
