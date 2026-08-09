@@ -24,9 +24,9 @@ BEGIN
         system
     )
     VALUES
-        (NEW.id, 'Alimentação', 'utensils', 'FOOD', false),
+        (NEW.id, 'Alimentação', 'food', 'FOOD', false),
         (NEW.id, 'Transporte', 'car', 'TRANSPORT', false),
-        (NEW.id, 'Lazer', 'gamepad-2', 'LEISURE', false),
+        (NEW.id, 'Lazer', 'gamepad', 'LEISURE', false),
         (NEW.id, 'Aporte para Metas', 'target', 'GOAL_DEPOSIT', true);
 
     INSERT INTO public."Params" (

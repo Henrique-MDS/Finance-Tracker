@@ -11,6 +11,7 @@ import {
   CircleDollarSign,
   Utensils,
   Laptop,
+  Target
 } from "lucide-react";
 
 export const defaultIcons = [
@@ -25,5 +26,6 @@ export const defaultIcons = [
   { name: "briefcase", icon: BriefcaseBusiness, color: "#64748B" }, 
   { name: "money", icon: CircleDollarSign, color: "#22C55E" }, 
   { name: "food", icon: Utensils, color: "#F97316" },
-  { name: "laptop", icon: Laptop, color: "#6366F1" }
+  { name: "laptop", icon: Laptop, color: "#6366F1" },
+  { name: "target", icon: Target, color: "#00FF7F" }
 ];
