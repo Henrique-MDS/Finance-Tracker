@@ -21,7 +21,6 @@ import { notify } from "@/Utils/notify";
 import { verifyForm } from "@/Utils/verifyForm";
 import { useAuth } from "@/Utils/AuthContext";
 import { Navigate } from "react-router-dom";
-import type { Category } from "@/types/generalTypes";
 import SelectInput from "../Inputs/Select_Input";
 
 interface Props {
@@ -33,15 +32,8 @@ interface SelectOption {
     value: string;
 }
 
-interface SelectInputProps {
-    options: SelectOption[];
-    value: string;
-    onValueChange: (value: string) => void;
-}
-
 export function CreateNewTransaction({ onSave }: Props) {
 
-    const [cat, setCat] = useState<Category[]>([]);
     const [catOptions, setCatOptions] = useState<SelectOption[]>([]);
     const [date, setDate] = React.useState<Date>();
     const [type, setType] = useState("");
@@ -67,7 +59,6 @@ export function CreateNewTransaction({ onSave }: Props) {
                 "Buscar todas as categorias"
             );
             const safeCategories = Array.isArray(categories.data) ? categories.data : [];
-            setCat(safeCategories);
 
             const options = safeCategories.map((c) => ({
                 label: c.name,

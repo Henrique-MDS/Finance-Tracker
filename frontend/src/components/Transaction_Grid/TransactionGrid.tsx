@@ -1,7 +1,6 @@
 import { formatDate } from "@/Utils/formatDate";
 import upArrow from "../../assets/up-arrow-icon.svg";
 import downArrow from "../../assets/down-arrow-icon.svg";
-import editPen from "../../assets/edit-pen-icon.svg";
 import trash from "../../assets/trash-icon.svg";
 import { Button } from "../ui/button";
 import { deleteData } from "@/Utils/deleteData";

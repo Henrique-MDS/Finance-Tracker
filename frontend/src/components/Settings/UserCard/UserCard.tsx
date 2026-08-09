@@ -20,7 +20,7 @@ type Props = {
 export function UserCard({ userData }:Props) {
     const [open, setOpen] = React.useState(false);
     const [profile, setProfile] = React.useState<UserProfile>();
-    const { user, loading } = useAuth();
+    const { user } = useAuth();
 
     React.useEffect(() => {
         const getUseerProfileData = async () => {

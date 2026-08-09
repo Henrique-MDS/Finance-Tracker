@@ -1,4 +1,4 @@
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { getCategoryTotals } from "@/Utils/callGetCategoryTotals";

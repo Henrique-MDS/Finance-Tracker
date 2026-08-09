@@ -10,7 +10,7 @@ type LogInUserResult = {
 
 export const getUserLogin = async (email:string, password:string): Promise<LogInUserResult> => {
     
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
         email,
         password
     });
