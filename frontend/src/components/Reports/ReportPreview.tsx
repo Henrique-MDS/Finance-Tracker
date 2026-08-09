@@ -13,6 +13,7 @@ import { getCategoryTotals } from "@/Utils/callGetCategoryTotals";
 import { generateColor } from "@/Utils/generateColor";
 import { getTotalByType } from "@/Utils/callGetTotalByType";
 import { useAuth } from "@/Utils/AuthContext";
+import logo from "@/assets/logo-tracker.png";
 
 type ReportTransaction = {
     desc: string;
@@ -199,7 +200,7 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
     <div className="bg-white text-black text-[10px] rounded-xl p-4">
         <div className="flex items-center justify-between">
             <div className="w-[100px]">
-                <img src="src/assets/logo-tracker.png" alt="finance-tracker-logo" />
+                <img src={logo} alt="finance-tracker-logo" />
             </div>
             <div>
                 <h3 className="font-semibold">Relatório Financeiro</h3>

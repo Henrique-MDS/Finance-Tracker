@@ -7,7 +7,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-
+import logo from "@/assets/logo-tracker.png";
 import {
   Home,
   Wallet,
@@ -59,7 +59,7 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarContent className="bg-app-background text-white">
-        <img src="src/assets/logo-tracker.png" alt="finance-tracker-logo" className="h-[150px]"/>
+        <img src={logo} alt="finance-tracker-logo" className="h-[150px]"/>
         <SidebarGroup className="flex-1 flex flex-col">
           <SidebarGroupContent className="flex flex-col flex-1">
             <SidebarMenu className="flex flex-col h-full">
