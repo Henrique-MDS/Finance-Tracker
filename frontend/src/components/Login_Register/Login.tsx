@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
 import { getUserLogin } from "../../Utils/getUserLogin";
 import { Link, useNavigate } from "react-router-dom";
+import { notify } from "@/Utils/notify";
 
 export function LogInPage() {
 
@@ -20,50 +21,37 @@ export function LogInPage() {
 
     const logFunc = async () => {
         if(!email  || !password){
-            toast.dismiss();
-            toast.error("Todos os campos deve estar preenchidos", {
-                duration: 1500,
-                position: "top-center",
-            });
+            notify.error("Todos os campos deve estar preenchidos");
             return;
         }
         
 
         if(email.length < 5){
-            toast.dismiss();
-            toast.error("Nome deve conter no mínimo 5 digitos", {
-                duration: 1500,
-                position: "top-center",
-            });
+            notify.error("Nome deve conter no mínimo 5 digitos");
             return;
         }
 
         if(password.length < 5){
-            toast.dismiss();
-            toast.error("Senha deve conter no mínimo 5 digitos", {
-                duration: 1500,
-                position: "top-center",
-            });
+            notify.error("Senha deve conter no mínimo 5 digitos");
             return;
         }
         
         const returnLogIn = await getUserLogin(email, password);
         
         if(returnLogIn.success){
-            toast.dismiss();
-            toast.success(returnLogIn.message, {
-                duration: 1500,
-                position: "top-center",
-            });
+            notify.success(returnLogIn.message);
             navigate("/");
             return;
-        } else {
+        } else if(returnLogIn.error.code == "email_not_confirmed") {
             toast.dismiss();
-            toast.error(returnLogIn.message, {
-                duration: 1500,
+            toast.error(`Um email foi enviado para ${email}, verifique para prosseguir`, {
+                duration: 3500,
                 position: "top-center",
             });
             return;
+        } else {
+            notify.error(returnLogIn.message);
+            returnLogIn;
         }
         
     }
