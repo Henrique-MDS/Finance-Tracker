@@ -39,6 +39,9 @@ export function LogInPage() {
         const returnLogIn = await getUserLogin(email, password);
         
         if(returnLogIn.success){
+            if(returnLogIn.hasMFA == true){
+                return navigate("/mfa");
+            }
             notify.success(returnLogIn.message);
             navigate("/");
             return;

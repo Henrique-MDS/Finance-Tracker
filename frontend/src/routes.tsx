@@ -10,74 +10,77 @@ import ReportPage from "./components/Reports/ReportPage";
 import SettingsPage from "./components/Settings/Settings";
 import NotFoundPage from "./components/NotFound/NotFound";
 import GoalsPage from "./components/Goals/Goals";
+import MFAPage from "./components/Settings/MFA/MFAPage";
 
 export const router = createBrowserRouter([
   {
-    path: "/",
-    element: <App />,
-    children: [
-      {
-        index: true,
-        element: (
-          <ProtectedRoute>
-            <MainPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "Transactions",
-        element: (
-          <ProtectedRoute>
-            <Transactions />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "Categories",
-        element: (
-          <ProtectedRoute>
-            <CategoriesPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "Reports",
-        element: (
-          <ProtectedRoute>
-            <ReportPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "Goals",
-        element: (
-          <ProtectedRoute>
-            <GoalsPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "Settings",
-        element: (
-          <ProtectedRoute>
-            <SettingsPage />
-          </ProtectedRoute>
-        ),
-      }
-    ],
-  },
-  {
-    path: "*",
-    element: (
-      <NotFoundPage />
-    ),
-  },
-  {
-    path: "Register",
-    element: <RegisterPage />,
-  },
-  {
-    path: "Login",
-    element: <LogInPage />,
-  },
+      path: "/",
+      element: <App />,
+      children: [
+        {
+          index: true,
+          element: (
+            <ProtectedRoute>
+              <MainPage />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "Transactions",
+          element: (
+            <ProtectedRoute>
+              <Transactions />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "Categories",
+          element: (
+            <ProtectedRoute>
+              <CategoriesPage />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "Reports",
+          element: (
+            <ProtectedRoute>
+              <ReportPage />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "Goals",
+          element: (
+            <ProtectedRoute>
+              <GoalsPage />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "Settings",
+          element: (
+            <ProtectedRoute>
+              <SettingsPage />
+            </ProtectedRoute>
+          ),
+        },
+      ],
+    },
+    {
+      path: "/Register",
+      element: <RegisterPage />,
+    },
+    {
+      path: "/Login",
+      element: <LogInPage />,
+    },
+    {
+      path: "/mfa",
+      element: <MFAPage />,
+    },
+    {
+      path: "*",
+      element: <NotFoundPage />,
+    },
 ]);
