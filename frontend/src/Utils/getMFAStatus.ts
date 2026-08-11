@@ -21,8 +21,7 @@ export const getMFAStatus = async (): Promise<DataResponse> => {
             error: error
         };
     }
-
-    // Nenhum fator TOTP cadastrado (ex: após unenroll) — isso é um estado válido, não um erro
+    
     return {
         success: true,
         data: [{ verified: false }],
