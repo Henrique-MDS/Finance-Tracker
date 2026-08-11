@@ -61,8 +61,22 @@ export function LogInPage() {
         <Toaster />
         <div className="flex flex-col gap-8 bg-dark-padrao p-10 rounded-xl">
             <h1 className="text-2xl">Entre na sua conta</h1>
-            <input type="text" placeholder="Email" onChange={(e) => getCredentials(e)} required/>
-            <input type="password" placeholder="Senha" onChange={(e) => getCredentials(e)} required/>
+            <input 
+                type="text" 
+                placeholder="Email" 
+                onChange={(e) => getCredentials(e)} 
+                required
+                className="p-3 rounded-sm"
+                style={{border: "1px solid #1e2939"}}
+            />
+            <input 
+                type="password" 
+                placeholder="Senha" 
+                onChange={(e) => getCredentials(e)} 
+                required
+                className="p-3 rounded-sm"
+                style={{border: "1px solid #1e2939"}}
+            />
             <div className="flex items-center justify-center">
                 <button className="text-xl cursor-pointer bg-green-padrao p-2.5 rounded-xl w-full hover:bg-green-padrao-25 text-white"
                 onClick={() => logFunc()}>Log In</button>

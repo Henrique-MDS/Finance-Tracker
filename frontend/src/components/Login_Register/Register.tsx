@@ -91,11 +91,32 @@ export function RegisterPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
         <Toaster />
-        <div className="flex flex-col gap-8 bg-[#060B14] p-10 rounded-xl">
+        <div className="flex flex-col gap-8 bg-dark-padrao p-10 rounded-xl">
             <h1 className="text-2xl">Crie uma conta</h1>
-            <input type="text" placeholder="Nome" onChange={(e) => getCredentials(e)} required/>
-            <input type="text" placeholder="Email" onChange={(e) => getCredentials(e)} required/>
-            <input type="password" placeholder="Senha" onChange={(e) => getCredentials(e)} required/>
+            <input 
+                type="text" 
+                placeholder="Nome" 
+                onChange={(e) => getCredentials(e)} 
+                required
+                className="p-3 rounded-sm"
+                style={{border: "1px solid #1e2939"}}
+            />
+            <input 
+                type="text" 
+                placeholder="Email" 
+                onChange={(e) => getCredentials(e)} 
+                required
+                className="p-3 rounded-sm"
+                style={{border: "1px solid #1e2939"}}
+            />
+            <input 
+                type="password" 
+                placeholder="Senha" 
+                onChange={(e) => getCredentials(e)} 
+                required
+                className="p-3 rounded-sm"
+                style={{border: "1px solid #1e2939"}}
+            />
             <div className="flex items-center justify-center">
                 <button className="text-xl cursor-pointer bg-emerald-800 p-2.5 rounded-xl w-full hover:bg-emerald-600 text-amber-50"
                 onClick={() => registerUser()}>Registrar</button>

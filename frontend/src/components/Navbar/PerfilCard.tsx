@@ -52,7 +52,10 @@ export function PerfilCard() {
             ) : (
               <User className="w-10 h-10 rounded-full bg-gray-700 p-2" />
             )}
-            <p>{profile.name}</p>
+            <div>
+              <p>{profile.name}</p>
+              <span className="text-[12px] text-text-padrao">Finance-Tracker v. 1.0</span>
+            </div>
           </div>
           
         ) : 
