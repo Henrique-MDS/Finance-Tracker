@@ -107,7 +107,7 @@ export function TransactionFilter({ onFilter }: Props) {
           </p>
         </div>
         <div className="bg-subdiv2-padrao p-8 rounded-xl">
-            <div className="grid grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                 <SelectInput 
                     label="Tipo" 
                     placeholder="Tipo" 

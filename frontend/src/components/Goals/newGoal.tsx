@@ -93,7 +93,7 @@ export function NewGoalModal({ refreshGoals }: NewGoalModalProps) {
     }
 
     return (
-        <div className="h-full flex flex-col gap-5 justify-between">
+        <div className="h-full flex flex-col gap-5 justify-between overflow-auto scrollbar-hide">
             <div className="flex flex-col gap-5">
                 <div className="flex items-center gap-2">
                     <FileText color="#2CAE60"/>

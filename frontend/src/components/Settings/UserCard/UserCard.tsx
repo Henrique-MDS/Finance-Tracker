@@ -40,10 +40,10 @@ export function UserCard({ userData }:Props) {
     }, [])
     console.log(user)
   return (
-    <div className="bg-dark-padrao p-5 rounded-xl w-[450px] flex flex-col gap-5">
+    <div className="bg-dark-padrao p-5 rounded-xl min-w-[250px] lg:w-[450px] flex flex-col gap-5">
         <SettingsHeader theme="bg-purple-padrao" title="Conta" icon={UserIcon}/>
-        <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+        <div className="flex flex-col lg:flex-row items-center justify-between">
+            <div className="flex flex-col lg:flex-row items-center gap-3">
                 {profile && profile.avatar_url ? 
                     (
                         <div>
@@ -57,7 +57,7 @@ export function UserCard({ userData }:Props) {
                         </div>                            
                     )
                 }                  
-                <div>
+                <div className="w-full flex flex-col items-center lg:items-baseline">
                     <p className="text-white">{profile?.name}</p>
                     <p style={{fontSize: "13px"}}>{userData?.email}</p>
                 </div>

@@ -51,7 +51,7 @@ export function ParamsCard() {
 
 
   return (
-    <div className="bg-dark-padrao p-5 rounded-xl w-[450px] flex flex-col gap-5">
+    <div className="bg-dark-padrao p-5 rounded-xl min-w-[250px] lg:w-[450px] flex flex-col gap-5">
       <SettingsHeader theme="bg-blue-padrao" title="Configurações" icon={Settings}/>
       <div>
         <div className="flex items-center gap-x-3.5">
