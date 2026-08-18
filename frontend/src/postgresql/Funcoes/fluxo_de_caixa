@@ -1,0 +1,47 @@
+CREATE OR REPLACE FUNCTION public.fluxo_de_caixa(p_user_id uuid, p_data_inicial date, p_data_final date)
+ RETURNS TABLE(tran_date date, receitas numeric, despesas numeric, saldo_acumulado numeric, saldo_diario numeric)
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    RETURN QUERY
+    WITH fluxo_diario AS (
+        SELECT
+            t.tran_date::date AS tran_date,
+
+            SUM(
+                CASE
+                    WHEN t.type = 'Receita' THEN t.value
+                    ELSE 0
+                END
+            )::numeric AS receitas,
+
+            SUM(
+                CASE
+                    WHEN t.type = 'Despesa' THEN t.value
+                    ELSE 0
+                END
+            )::numeric AS despesas
+
+        FROM "Transactions" t
+
+        WHERE t.user_id = p_user_id
+          AND t.tran_date::date >= p_data_inicial
+          AND t.tran_date::date <= p_data_final
+
+        GROUP BY t.tran_date::date
+    )
+
+    SELECT
+        f.tran_date,
+        f.receitas,
+        f.despesas,
+
+        SUM(f.receitas - f.despesas)
+            OVER (ORDER BY f.tran_date)::numeric AS saldo_acumulado,
+
+        f.receitas - f.despesas AS saldo_diario
+
+    FROM fluxo_diario f
+    ORDER BY f.tran_date;
+END;
+$function$

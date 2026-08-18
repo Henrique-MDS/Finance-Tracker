@@ -47,7 +47,7 @@ export function UserCard({ userData }:Props) {
                 {profile && profile.avatar_url ? 
                     (
                         <div>
-                            <img src={profile.avatar_url} alt="" className="rounded-full w-[50px] h-[50px]"/>
+                            <img src={profile.avatar_url} alt="" className="rounded-full w-[50px] h-[50px] lg:h-[40px]"/>
                         </div>                            
                     ) 
                     :

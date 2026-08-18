@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator"
-import ReportResumeCard from "./ReportResumeCards";
+import ReportResumeCard from "../ReportResumeCards";
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { getReportData } from "@/Utils/callGetReportData";
@@ -7,7 +7,7 @@ import { notify } from "@/Utils/notify";
 import { formatDate } from "@/Utils/formatDate";
 import { formatCurrencyBR } from "@/Utils/formateToBr";
 import { Bar, BarChart, CartesianGrid,  Cell,  Pie,  PieChart,  ResponsiveContainer,  XAxis} from "recharts";
-import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent, type ChartConfig } from "../ui/chart";
+import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent, type ChartConfig } from "../../ui/chart";
 import { getMonthlySummaryByDate } from "@/Utils/callGetMonthlySummaryByDate";
 import { getCategoryTotals } from "@/Utils/callGetCategoryTotals";
 import { generateColor } from "@/Utils/generateColor";
@@ -52,10 +52,10 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
 
     const { user, loading } = useAuth();
     if (loading) {
-    return <div>Carregando...</div>;
+        return <div>Carregando...</div>;
     }
     if (!user) {
-    return <Navigate to="/Login" replace />;
+        return <Navigate to="/Login" replace />;
     }
     const userId = user.id;
     const [transactions, setTransactions] = useState<ReportTransaction[]>([]);
