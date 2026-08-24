@@ -155,6 +155,10 @@ export function CashFlowReport({iniDate, finalDate}:{iniDate:string | null, fina
                 />
 
                 <Tooltip
+                    labelFormatter={(value) => {
+                        const [year, month, day] = String(value).split("-");
+                        return `${day}/${month}/${year}`;
+                    }}
                     formatter={(value) =>
                     `R$ ${Number(value).toFixed(2)}`
                     }
@@ -162,7 +166,12 @@ export function CashFlowReport({iniDate, finalDate}:{iniDate:string | null, fina
 
                 <Legend />
 
-                <XAxis dataKey="tran_date" />
+                <XAxis dataKey="tran_date" 
+                    tickFormatter={(value) => {
+                        const [year, month, day] = value.split("-");
+                        return `${day}/${month}/${year.slice(2)}`;
+                    }}
+                />
 
                     <Line
                         type="monotone"
