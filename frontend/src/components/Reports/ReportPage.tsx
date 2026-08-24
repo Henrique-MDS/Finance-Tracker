@@ -100,7 +100,7 @@ export function ReportPage(){
                             <h2>2. Selecionar Dados</h2> 
                         </div>
                         <p className="text-text-padrao">Escolha quais informações deseja incluir no relatório</p>
-                        <div className="flex items-center gap-3">
+                        <div className="flex flex-wrap items-center gap-3">
                             <ReportTypeCard
                                 title="Resumo Financeiro"
                                 desc="Receitas, despesas, saldo e economia do período"

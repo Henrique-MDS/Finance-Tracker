@@ -1,4 +1,4 @@
-export function formatDate(date: string | Date) {
+export function formatDate(date: string | Date | null) {
     if (!date) return null;
     const dateObj = new Date(date);
     const day = String(dateObj.getUTCDate()).padStart(2, "0");

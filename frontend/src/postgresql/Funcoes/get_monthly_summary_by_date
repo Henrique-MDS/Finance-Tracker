@@ -1,0 +1,19 @@
+CREATE OR REPLACE FUNCTION public.get_monthly_summary_by_date(p_user_id uuid, p_ini_date timestamp with time zone DEFAULT NULL::timestamp with time zone, p_final_date timestamp with time zone DEFAULT NULL::timestamp with time zone)
+ RETURNS TABLE(month text, receita numeric, despesa numeric)
+ LANGUAGE sql
+AS $function$
+SELECT
+    TO_CHAR(tran_date, 'Mon') AS month,
+    COALESCE(SUM(value) FILTER (WHERE type = 'Receita'), 0) AS receita,
+    COALESCE(SUM(value) FILTER (WHERE type = 'Despesa'), 0) AS despesa
+FROM "Transactions"
+WHERE
+    user_id = p_user_id
+    AND (p_ini_date IS NULL OR tran_date >= p_ini_date)
+    AND (p_final_date IS NULL OR tran_date <= p_final_date)
+GROUP BY
+    EXTRACT(MONTH FROM tran_date),
+    TO_CHAR(tran_date, 'Mon')
+ORDER BY
+    EXTRACT(MONTH FROM tran_date);
+$function$
