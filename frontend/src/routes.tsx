@@ -11,6 +11,7 @@ import SettingsPage from "./components/Settings/Settings";
 import NotFoundPage from "./components/NotFound/NotFound";
 import GoalsPage from "./components/Goals/Goals";
 import MFAPage from "./components/Settings/MFA/MFAPage";
+import RecurrentPage from "./components/Recurrent/RecurrentPage";
 
 export const router = createBrowserRouter([
   {
@@ -38,6 +39,14 @@ export const router = createBrowserRouter([
           element: (
             <ProtectedRoute>
               <CategoriesPage />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "Recurrent",
+          element: (
+            <ProtectedRoute>
+              <RecurrentPage />
             </ProtectedRoute>
           ),
         },

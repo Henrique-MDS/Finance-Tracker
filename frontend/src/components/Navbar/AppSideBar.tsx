@@ -16,6 +16,7 @@ import {
   Settings,
   LogOut,
   Goal,
+  RotateCcw,
 } from "lucide-react"
 import PerfilCard from "./PerfilCard";
 import { logout } from "@/Utils/logOutUser";
@@ -35,6 +36,11 @@ const items = [
     title: "Categorias",
     url: "/categories",
     icon: CreditCard,
+  },
+  {
+    title: "Recorrencias",
+    url: "/Recurrent",
+    icon: RotateCcw,
   },
   {
     title: "Relatórios",
