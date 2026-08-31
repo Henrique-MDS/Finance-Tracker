@@ -19,12 +19,17 @@ import {
 } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns";
+import { notify } from "@/Utils/notify";
 
 interface SelectOption {
     label: string;
     value: string;
 }
 
+interface VerifyData {
+    error: boolean;
+    message: string;
+}
 
 export function RecurrentPage() {
 
@@ -33,18 +38,22 @@ export function RecurrentPage() {
     const { user, loading } = useAuth();
     const [freq, setFreq] = useState("");
     const [day, setDay] = useState("");
+    const [iniDate, setIniDate] = React.useState<Date>();
+    const [finalDate, setFinalDate] = React.useState<Date>();
+    const [desc, setDesc] = useState("");
+    const [type, setType] = useState("");
+    const [recurrentValue, setRecurrentValue] = useState("");
     const frequencyOptions = [
         {label: "Diária", value: "Diaria"},
         {label: "Semanal", value: "Semanal"},
         {label: "Mensal", value: "Mensal"},
         {label: "Anual", value: "Anual"}
     ]
-    const [iniDate, setIniDate] = React.useState<Date>();
-    const [finalDate, setFinalDate] = React.useState<Date>();
-    console.log(freq);
+
     if (loading) {
         return <div>Carregando...</div>;
     }
+
     if (!user) {
         return <Navigate to="/Login" replace />;
     }
@@ -65,10 +74,104 @@ export function RecurrentPage() {
         setCatOptions(options);
     };
 
+    const clearForm = () => {
+        setDesc("");
+        setDay("");
+        setCategoryId("");
+        setType("");
+        setRecurrentValue("");
+        setFreq("");
+        setIniDate(undefined);
+        setFinalDate(undefined);
+    }
+
+    const verifyFormData = (): VerifyData => {
+        const fields = {
+            "Descrição": desc,
+            "Categoria": categoryId,
+            "Tipo (Receita/Despesa)": type,
+            "Valor": recurrentValue,
+            "Frequência": freq,
+            "Dia de execução": day,
+            "Data de início": iniDate,
+            "Data Final": finalDate,
+        };
+
+        for (const [key, val] of Object.entries(fields)) {
+            if ((!val || val === "") && key !== "Data Final") {
+                return {
+                    error: true,
+                    message: `Campo ${key} não pode ficar vazio`,
+                };
+            }
+        }
+
+        const numericValue = Number(recurrentValue);
+
+        if (isNaN(numericValue) || numericValue <= 0) {
+            return {
+                error: true,
+                message: "O valor deve ser maior que zero",
+            };
+        }
+
+        const executionDay = Number(day);
+
+        if (
+            !Number.isInteger(executionDay) ||
+            executionDay < 1 ||
+            executionDay > 31
+        ) {
+            return {
+                error: true,
+                message: "O dia de execução deve estar entre 1 e 31",
+            };
+        }
+
+        if (finalDate && iniDate && finalDate < iniDate) {
+            return {
+                error: true,
+                message: "A data final não pode ser anterior à data de início",
+            };
+        }
+
+        if (freq === "Mensal") {
+            if (executionDay > 31) {
+                return {
+                    error: true,
+                    message: "O dia mensal deve estar entre 1 e 31",
+                };
+            }
+        }
+
+        if (freq === "Anual") {
+            if (executionDay > 31) {
+                return {
+                    error: true,
+                    message: "O dia anual deve estar entre 1 e 31",
+                };
+            }
+        }
+
+        return {
+            error: false,
+            message: "",
+        };
+    };
+
+    const insertRecurrentData = () => {
+        const verify = verifyFormData();
+        console.log(verify)
+        if(verify.error){
+            notify.error(verify.message);
+            return;
+        }
+    }
+
     useEffect(() => {
         getCategories();
     }, [user.id])
-
+    
   return (
     <div className="flex flex-col gap-5">
         <div>
@@ -105,8 +208,8 @@ export function RecurrentPage() {
                 icon={ArrowDownIcon}
             />
         </div>
-        <div className="flex gap-5">
-            <div className="w-[70%] flex flex-col gap-5 p-3 rounded-xl" style={{border: "1px solid #111820"}}>
+        <div className="flex flex-wrap lg:flex-nowrap gap-5">
+            <div className="w-full lg:w-[70%] flex flex-col gap-5 p-3 rounded-xl" style={{border: "1px solid #111820"}}>
                 <div className="flex items-center justify-between">
                     <h2 className="text-xl font-bold text-white">Suas transações recentes</h2>
                     <div className="flex gap-3">
@@ -136,13 +239,18 @@ export function RecurrentPage() {
                     </div>
                 </div>
             </div>
-            <div className="w-[30%] flex flex-col gap-5 p-3 rounded-xl" style={{border: "1px solid #111820"}}>
+            <div className="w-full lg:w-[30%] flex flex-col gap-5 p-3 rounded-xl" style={{border: "1px solid #111820"}}>
                 <div className="flex flex-col gap-3">
                     <h2 className="text-xl font-bold text-white">Nova transação recorrente</h2>
                     <div className="flex flex-col gap-3">
                         <div className="flex flex-col gap-3">
                             <p>Descrição</p>
-                            <Input  className="p-5" style={{border: "1px solid #1e2939"}}/>
+                            <Input  
+                                className="p-5" 
+                                style={{border: "1px solid #1e2939"}}
+                                value={desc}
+                                onChange={(e) => setDesc(e.target.value)}
+                            />
                         </div>
                         <div className="flex flex-col gap-3">
                             <SelectInput 
@@ -153,9 +261,15 @@ export function RecurrentPage() {
                             />
                         </div>
                         <div className="flex flex-col gap-3">
-                            <ToggleGroup type="single" variant="outline" defaultValue="all" className="w-full">
+                            <ToggleGroup
+                                type="single"
+                                variant="outline"
+                                value={type}
+                                className="w-full"
+                                onValueChange={(value) => setType(value)}
+                            >
                                 <ToggleGroupItem 
-                                    value="all" 
+                                    value="Receita" 
                                     aria-label="Toggle all" 
                                     className="w-[50%] p-5 cursor-pointer"                                
                                 >
@@ -163,7 +277,7 @@ export function RecurrentPage() {
                                     Receita
                                 </ToggleGroupItem>
                                 <ToggleGroupItem 
-                                    value="missed" 
+                                    value="Despesa" 
                                     aria-label="Toggle missed" 
                                     className="w-[50%] p-5 cursor-pointer"
                                 >
@@ -178,6 +292,8 @@ export function RecurrentPage() {
                                 type="number" 
                                 className="p-5" 
                                 style={{border: "1px solid #1e2939"}}
+                                value={recurrentValue}
+                                onChange={(e) => setRecurrentValue(e.target.value)}
                             />
                         </div>
                         <div>
@@ -226,7 +342,7 @@ export function RecurrentPage() {
                                         style={{border: "1px solid #1e2939"}}
                                     >
                                         <CalendarIcon />
-                                        {iniDate ? format(iniDate, "PPP") : <span>Selecione a data</span>}
+                                        {iniDate ? format(iniDate, "PPP") : <span>Data de início</span>}
                                     </Button>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-auto p-0">
@@ -245,7 +361,7 @@ export function RecurrentPage() {
                                         style={{border: "1px solid #1e2939"}}
                                     >
                                         <CalendarIcon />
-                                        {finalDate ? format(finalDate, "PPP") : <span>Selecione a data</span>}
+                                        {finalDate ? format(finalDate, "PPP") : <span>Data Final</span>}
                                     </Button>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-auto p-0">
@@ -254,10 +370,16 @@ export function RecurrentPage() {
                                 </Popover>
                             </div>
                             <div className="flex items-center gap-3">
-                                <Button className="bg-red-padrao cursor-pointer p-5 w-[50%]">
+                                <Button 
+                                    className="bg-red-padrao cursor-pointer p-5 w-[50%]"
+                                    onClick={() => clearForm()}
+                                >
                                     Limpar
                                 </Button>
-                                <Button className="bg-green-padrao cursor-pointer p-5 w-[50%]">
+                                <Button 
+                                    className="bg-green-padrao cursor-pointer p-5 w-[50%]"
+                                    onClick={() => insertRecurrentData()}
+                                >
                                     Salvar Recorrente
                                 </Button>
                             </div>
