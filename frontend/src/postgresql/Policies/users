@@ -110,10 +110,10 @@ using (auth.uid() = user_id)
 
 -------------Categories
 
-create policy "select categorias proprias ou do sistema"
+create policy "select categorias proprias"
 on "Categories" for select
 to authenticated
-using (auth.uid() = user_id or system = true);
+using (auth.uid() = user_id);
 
 create policy "insert categoria propria"
 on "Categories" for insert
