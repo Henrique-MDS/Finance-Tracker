@@ -1,0 +1,11 @@
+create extension if not exists pg_cron;
+
+select cron.schedule(
+    'process-recurrent-transactions',
+    '5 0 * * *',                                    -- todo dia às 00:05
+    $$select public.process_recurrent_transactions();$$
+);
+
+select * from cron.job;
+
+select cron.unschedule('process-recurrent-transactions');

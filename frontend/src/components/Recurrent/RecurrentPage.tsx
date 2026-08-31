@@ -5,6 +5,8 @@ import RecurrentGrid from "./RecurrentComponents/RecurrentGrid";
 import { Input } from "../ui/input";
 import SelectInput from "../Inputs/Select_Input";
 import { getData } from "@/Utils/getData";
+import { insertData } from "@/Utils/insertData";
+import { buildExecutionTime } from "@/Utils/buildExecutionTime";
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/Utils/AuthContext";
@@ -85,6 +87,8 @@ export function RecurrentPage() {
         setFinalDate(undefined);
     }
 
+    const requiresDay = freq === "Mensal" || freq === "Anual";
+
     const verifyFormData = (): VerifyData => {
         const fields = {
             "Descrição": desc,
@@ -92,7 +96,6 @@ export function RecurrentPage() {
             "Tipo (Receita/Despesa)": type,
             "Valor": recurrentValue,
             "Frequência": freq,
-            "Dia de execução": day,
             "Data de início": iniDate,
             "Data Final": finalDate,
         };
@@ -115,17 +118,20 @@ export function RecurrentPage() {
             };
         }
 
-        const executionDay = Number(day);
+        if (requiresDay) {
+            const executionDay = Number(day);
 
-        if (
-            !Number.isInteger(executionDay) ||
-            executionDay < 1 ||
-            executionDay > 31
-        ) {
-            return {
-                error: true,
-                message: "O dia de execução deve estar entre 1 e 31",
-            };
+            if (
+                !day ||
+                !Number.isInteger(executionDay) ||
+                executionDay < 1 ||
+                executionDay > 31
+            ) {
+                return {
+                    error: true,
+                    message: "O dia de execução deve estar entre 1 e 31",
+                };
+            }
         }
 
         if (finalDate && iniDate && finalDate < iniDate) {
@@ -135,37 +141,44 @@ export function RecurrentPage() {
             };
         }
 
-        if (freq === "Mensal") {
-            if (executionDay > 31) {
-                return {
-                    error: true,
-                    message: "O dia mensal deve estar entre 1 e 31",
-                };
-            }
-        }
-
-        if (freq === "Anual") {
-            if (executionDay > 31) {
-                return {
-                    error: true,
-                    message: "O dia anual deve estar entre 1 e 31",
-                };
-            }
-        }
-
         return {
             error: false,
             message: "",
         };
     };
 
-    const insertRecurrentData = () => {
+    const insertRecurrentData = async () => {
         const verify = verifyFormData();
-        console.log(verify)
-        if(verify.error){
+        if (verify.error) {
             notify.error(verify.message);
             return;
         }
+
+        const executionTime = buildExecutionTime(freq, day, iniDate as Date);
+
+        const result = await insertData(
+            "Recurrent",
+            {
+                user_id: user.id,
+                desc: desc,
+                category_id: categoryId,
+                value: Number(recurrentValue),
+                type: type,
+                frequency: freq,
+                execution_time: executionTime.toISOString(),
+                next_execution: executionTime.toISOString(),
+                end_date: finalDate ? finalDate.toISOString() : null,
+            },
+            "Cadastrar transação recorrente"
+        );
+
+        if (!result.success) {
+            notify.error("Erro ao cadastrar transação recorrente");
+            return;
+        }
+
+        notify.success("Transação recorrente cadastrada");
+        clearForm();
     }
 
     useEffect(() => {
@@ -305,40 +318,42 @@ export function RecurrentPage() {
                             />
                         </div>
                         <div className="flex flex-col gap-3">
-                            <p>Dia da execução</p>
+                            {requiresDay && <p>Dia da execução</p>}
                             <div className="flex gap-3">
-                                <Input
-                                    type="text"
-                                    inputMode="numeric"
-                                    maxLength={2}
-                                    value={day}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-                                        if (!/^\d*$/.test(value)) {
-                                            return;
-                                        }
+                                {requiresDay && (
+                                    <Input
+                                        type="text"
+                                        inputMode="numeric"
+                                        maxLength={2}
+                                        value={day}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            if (!/^\d*$/.test(value)) {
+                                                return;
+                                            }
 
-                                        if (value === "") {
-                                            setDay("");
-                                            return;
-                                        }
+                                            if (value === "") {
+                                                setDay("");
+                                                return;
+                                            }
 
-                                        const number = Number(value);
+                                            const number = Number(value);
 
-                                        if (number >= 1 && number <= 31) {
-                                            setDay(value);
-                                        }
-                                    }}
-                                    placeholder="1 a 31"
-                                    className="p-5 w-[50%]"
-                                    style={{ border: "1px solid #1e2939" }}
-                                />
+                                            if (number >= 1 && number <= 31) {
+                                                setDay(value);
+                                            }
+                                        }}
+                                        placeholder="1 a 31"
+                                        className="p-5 w-[50%]"
+                                        style={{ border: "1px solid #1e2939" }}
+                                    />
+                                )}
                                 <Popover>
                                     <PopoverTrigger asChild>
                                     <Button
                                         variant="outline"
                                         data-empty={!iniDate}
-                                        className="w-[50%] p-5 justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-main-bg border-white"
+                                        className={`${requiresDay ? "w-[50%]" : "w-full"} p-5 justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-main-bg border-white`}
                                         style={{border: "1px solid #1e2939"}}
                                     >
                                         <CalendarIcon />

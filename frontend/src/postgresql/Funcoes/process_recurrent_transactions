@@ -1,0 +1,83 @@
+CREATE OR REPLACE FUNCTION public.process_recurrent_transactions()
+ RETURNS void
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+declare
+    rec record;
+    anchor_day int;
+    anchor_month int;
+    time_part time;
+    target_month timestamptz;
+    days_in_month int;
+    clamped_day int;
+    new_next timestamptz;
+begin
+
+    for rec in
+        select *
+        from public."Recurrent"
+        where active = true
+          and auto_generate = true
+          and next_execution <= now()
+          and (
+              end_date is null
+              or next_execution <= end_date
+          )
+    loop
+
+        insert into public."Transactions" (
+            user_id,
+            "desc",
+            value,
+            type,
+            category_id,
+            tran_date,
+            recurrent_id
+        )
+        values (
+            rec.user_id,
+            rec."desc",
+            rec.value,
+            rec.type,
+            rec.category_id,
+            rec.next_execution::date,
+            rec.id
+        );
+
+        anchor_day := extract(day from rec.execution_time)::int;
+        anchor_month := extract(month from rec.execution_time)::int;
+        time_part := rec.next_execution::time;
+
+        case rec.frequency
+            when 'Diaria' then
+                new_next := rec.next_execution + interval '1 day';
+
+            when 'Semanal' then
+                new_next := rec.next_execution + interval '1 week';
+
+            when 'Mensal' then
+                target_month := date_trunc('month', rec.next_execution) + interval '1 month';
+                days_in_month := extract(day from (target_month + interval '1 month' - interval '1 day'));
+                clamped_day := least(anchor_day, days_in_month);
+                new_next := target_month + ((clamped_day - 1) || ' days')::interval + time_part;
+
+            when 'Anual' then
+                target_month := date_trunc('year', rec.next_execution)
+                                 + interval '1 year'
+                                 + ((anchor_month - 1) || ' months')::interval;
+                days_in_month := extract(day from (target_month + interval '1 month' - interval '1 day'));
+                clamped_day := least(anchor_day, days_in_month);
+                new_next := target_month + ((clamped_day - 1) || ' days')::interval + time_part;
+        end case;
+
+        update public."Recurrent"
+        set
+            last_execution = rec.next_execution,
+            next_execution = new_next
+        where id = rec.id;
+
+    end loop;
+
+end;
+$function$
