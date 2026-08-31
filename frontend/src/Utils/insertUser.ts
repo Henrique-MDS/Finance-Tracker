@@ -20,8 +20,6 @@ export const insertUser = async (name:string, email: string, password:string): P
         }
     });
     
-    console.log(data, error);
-    
     if(error){
         return {
             success: false, 

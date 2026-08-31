@@ -108,7 +108,6 @@ export function ActivateMFA({ setOpen, mfaStatusCard }: Props) {
         notify.success("MFA desativado com sucesso");
         setIsVerified(false);
         setOpen(false);
-        console.log(await mfaStatusCard())
         await mfaStatusCard();
     }
 

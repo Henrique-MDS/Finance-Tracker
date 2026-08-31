@@ -38,7 +38,7 @@ export function UserCard({ userData }:Props) {
 
         getUseerProfileData();
     }, [])
-    console.log(user)
+    
   return (
     <div className="bg-dark-padrao p-5 rounded-xl min-w-[250px] lg:w-[450px] flex flex-col gap-5">
         <SettingsHeader theme="bg-purple-padrao" title="Conta" icon={UserIcon}/>

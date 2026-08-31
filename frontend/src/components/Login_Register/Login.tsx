@@ -47,7 +47,7 @@ export function LogInPage() {
             return;
         } else if(returnLogIn.error.code == "email_not_confirmed") {
             toast.dismiss();
-            toast.error(`Um email foi enviado para ${email}, verifique para prosseguir`, {
+            toast.error("Uma verificação foi enviada para seu email, verifique para prosseguir", {
                 duration: 3500,
                 position: "top-center",
             });

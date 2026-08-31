@@ -107,7 +107,7 @@ export function CashFlowReport({iniDate, finalDate}:{iniDate:string | null, fina
         getReceitas();
         getCashFlow();
     }, [user])
-    console.log(reportData)
+    
   return (
     <div className="bg-white text-black text-[10px] rounded-xl p-4">
         <div>

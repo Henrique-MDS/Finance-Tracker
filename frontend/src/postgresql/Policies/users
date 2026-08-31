@@ -1,0 +1,173 @@
+-------------Transactions
+create policy "usuarios podem inserir seus proprios dados"
+on "Transactions"
+for insert
+to authenticated
+with check (auth.uid() = user_id);
+
+
+create policy "usuarios podem ver seus proprios dados"
+on "Transactions"
+for select
+to authenticated
+using (auth.uid() = user_id);
+
+
+create policy "usuarios podem atualizar seus proprios dados"
+on "Transactions"
+for update
+to authenticated
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
+
+create policy "usuarios podem deletar os proprios dados"
+on "Transactions"
+for delete
+to authenticated
+using (auth.uid() = user_id)
+
+-------------Logoperation
+
+create policy "usuarios podem inserir seus proprios dados"
+on "logoperation"
+for insert
+to authenticated
+with check (auth.uid() = user_id);
+
+-------------Profiles
+
+create policy "usuarios podem inserir seus proprios dados"
+on "profiles"
+for insert
+to authenticated
+with check (auth.uid() = id);
+
+
+create policy "usuarios podem ver seus proprios dados"
+on "profiles"
+for select
+to authenticated
+using (auth.uid() = id);
+
+
+create policy "usuarios podem atualizar seus proprios dados"
+on "profiles"
+for update
+to authenticated
+using (auth.uid() = id)
+with check (auth.uid() = id);
+
+-------------Balance
+
+create policy "usuarios podem inserir seus proprios dados"
+on "Balance"
+for insert
+to authenticated
+with check (auth.uid() = user_id);
+
+
+create policy "usuarios podem ver seus proprios dados"
+on "Balance"
+for select
+to authenticated
+using (auth.uid() = user_id);
+
+
+create policy "usuarios podem atualizar seus proprios dados"
+on "Balance"
+for update
+to authenticated
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
+
+-------------Goals
+
+create policy "usuarios podem inserir seus proprios dados"
+on "Goals"
+for insert
+to authenticated
+with check (auth.uid() = user_id);
+
+
+create policy "usuarios podem ver seus proprios dados"
+on "Goals"
+for select
+to authenticated
+using (auth.uid() = user_id);
+
+create policy "usuarios podem atualizar seus proprios dados"
+on "Goals"
+for update
+to authenticated
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
+
+create policy "usuarios podem deletar os proprios dados"
+on "Goals"
+for delete
+to authenticated
+using (auth.uid() = user_id)
+
+-------------Categories
+
+create policy "select categorias proprias ou do sistema"
+on "Categories" for select
+to authenticated
+using (auth.uid() = user_id or system = true);
+
+create policy "insert categoria propria"
+on "Categories" for insert
+to authenticated
+with check (auth.uid() = user_id and system = false);
+
+create policy "update categoria propria"
+on "Categories" for update
+to authenticated
+using (auth.uid() = user_id and system = false)
+with check (auth.uid() = user_id and system = false);
+
+create policy "delete categoria propria"
+on "Categories" for delete
+to authenticated
+using (auth.uid() = user_id and system = false);
+
+-------------Recurrent
+
+create policy "select recorrentes proprias"
+on "Recurrent" for select
+to authenticated
+using (auth.uid() = user_id);
+
+create policy "insert recorrente propria"
+on "Recurrent" for insert
+to authenticated
+with check (auth.uid() = user_id);
+
+create policy "update recorrente propria"
+on "Recurrent" for update
+to authenticated
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
+
+create policy "delete recorrente propria"
+on "Recurrent" for delete
+to authenticated
+using (auth.uid() = user_id);
+
+-------------Params
+
+create policy "select parametros proprios"
+on "Params" for select
+to authenticated
+using (auth.uid() = user_id);
+
+create policy "insert parametros proprios"
+on "Params" for insert
+to authenticated
+with check (auth.uid() = user_id);
+
+create policy "update parametros proprios"
+on "Params" for update
+to authenticated
+using (auth.uid() = user_id)
+with check (auth.uid() = user_id);
