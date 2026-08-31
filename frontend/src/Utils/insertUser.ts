@@ -10,7 +10,7 @@ type InsertUserResult = {
 
 export const insertUser = async (name:string, email: string, password:string): Promise<InsertUserResult> => {
     
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {

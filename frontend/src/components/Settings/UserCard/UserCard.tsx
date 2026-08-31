@@ -11,6 +11,7 @@ import ProfileOptions from "./ProfileOptions";
 import { SettingsHeader } from "../SettingsComponents/SettingsHeader";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator"
+import { Navigate } from "react-router-dom";
 
 
 type Props = {
@@ -21,6 +22,10 @@ export function UserCard({ userData }:Props) {
     const [open, setOpen] = React.useState(false);
     const [profile, setProfile] = React.useState<UserProfile>();
     const { user } = useAuth();
+
+    if (!user) {
+        return <Navigate to="/Login" replace />;
+    }
 
     React.useEffect(() => {
         const getUseerProfileData = async () => {
@@ -37,7 +42,7 @@ export function UserCard({ userData }:Props) {
         }
 
         getUseerProfileData();
-    }, [])
+    }, [user.id])
     
   return (
     <div className="bg-dark-padrao p-5 rounded-xl min-w-[250px] lg:w-[450px] flex flex-col gap-5">

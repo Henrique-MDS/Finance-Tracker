@@ -41,7 +41,7 @@ export function RecurrentPage() {
     ]
     const [iniDate, setIniDate] = React.useState<Date>();
     const [finalDate, setFinalDate] = React.useState<Date>();
-    
+    console.log(freq);
     if (loading) {
         return <div>Carregando...</div>;
     }
