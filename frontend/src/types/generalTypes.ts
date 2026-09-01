@@ -44,3 +44,20 @@ export type FilterTransactions = {
   finalDate: string | null;
   catId: string | null;
 }
+
+export type RecurrentTable = {
+  active: boolean;
+  auto_generate: boolean;
+  category_id: string;
+  created_at: string;
+  desc: string;
+  end_date: string | null;
+  execution_time: string | null;
+  frequency: string;
+  id: string
+  last_execution: string | null
+  next_execution: string | null
+  type: string
+  user_id: string;
+value: number;
+}

@@ -22,6 +22,7 @@ import {
 import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns";
 import { notify } from "@/Utils/notify";
+import type { RecurrentTable } from "@/types/generalTypes";
 
 interface SelectOption {
     label: string;
@@ -45,6 +46,7 @@ export function RecurrentPage() {
     const [desc, setDesc] = useState("");
     const [type, setType] = useState("");
     const [recurrentValue, setRecurrentValue] = useState("");
+    const [recurrent, setRecurrent] = useState<RecurrentTable[]>([]);
     const frequencyOptions = [
         {label: "Diária", value: "Diaria"},
         {label: "Semanal", value: "Semanal"},
@@ -59,7 +61,6 @@ export function RecurrentPage() {
     if (!user) {
         return <Navigate to="/Login" replace />;
     }
-
 
     const getCategories = async () => {
         const categories = await getData(
@@ -181,12 +182,27 @@ export function RecurrentPage() {
         clearForm();
     }
 
+    const getRecurrent = async () => {
+        const response = await getData("Recurrent", {user_id: user.id}, "buscar dados de recorrencias do usuário");
+        console.log(response)
+        if(response.success){
+            if(response.data && response.data.length > 0){
+                setRecurrent(response.data);
+            }
+        } else {
+            notify.error("Erro ao buscar recorrências");
+            return;
+        }
+
+    }
+
     useEffect(() => {
+        getRecurrent();
         getCategories();
     }, [user.id])
     
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 h-full">
         <div>
             <h1 className="text-2xl text-white">Transações Recorrentes</h1>
             <p>Gerencie suas despesas e receitas que repetem automaticamente</p>
@@ -221,8 +237,8 @@ export function RecurrentPage() {
                 icon={ArrowDownIcon}
             />
         </div>
-        <div className="flex flex-wrap lg:flex-nowrap gap-5">
-            <div className="w-full lg:w-[70%] flex flex-col gap-5 p-3 rounded-xl" style={{border: "1px solid #111820"}}>
+        <div className="flex flex-wrap lg:flex-nowrap gap-5 flex-1 min-h-0">
+            <div className="w-full lg:w-[70%] h-full flex flex-col gap-5 p-3 rounded-xl" style={{border: "1px solid #111820"}}>
                 <div className="flex items-center justify-between">
                     <h2 className="text-xl font-bold text-white">Suas transações recentes</h2>
                     <div className="flex gap-3">
@@ -236,7 +252,7 @@ export function RecurrentPage() {
                         </Button>
                     </div>
                 </div>
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-3 flex-1 min-h-0">
                     <div className="grid grid-cols-6 bg-subdiv-padrao p-3 rounded-sm">
                         <p>Descrição</p>
                         <p>Categoria</p>
@@ -245,14 +261,14 @@ export function RecurrentPage() {
                         <p>Próxima execução</p>
                         <p>Status</p>
                     </div>
-                    <div className="flex flex-col gap-3">
-                        <RecurrentGrid />
-                        <RecurrentGrid />
-                        <RecurrentGrid />
+                    <div className="flex flex-col gap-3 scrollbar-hide overflow-y-auto flex-1 min-h-0">
+                        { recurrent && recurrent.length > 0 ? recurrent.map((recurrent) => (
+                            <RecurrentGrid {...recurrent} key={recurrent.id} />
+                        )) : <div>sem recor</div>}
                     </div>
                 </div>
             </div>
-            <div className="w-full lg:w-[30%] flex flex-col gap-5 p-3 rounded-xl" style={{border: "1px solid #111820"}}>
+            <div className="w-full lg:w-[30%] h-full flex flex-col gap-5 p-3 rounded-xl overflow-y-auto scrollbar-hide" style={{border: "1px solid #111820"}}>
                 <div className="flex flex-col gap-3">
                     <h2 className="text-xl font-bold text-white">Nova transação recorrente</h2>
                     <div className="flex flex-col gap-3">

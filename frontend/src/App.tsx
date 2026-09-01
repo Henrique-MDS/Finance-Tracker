@@ -8,7 +8,7 @@ function App() {
   
   return (
     <AuthProvider>
-      <div className="flex">
+      <div className="flex h-screen">
         <SidebarProvider>
           <Toaster />
           <AppSidebar />
@@ -16,12 +16,12 @@ function App() {
             <header className="flex h-16 items-center border-b px-6">
               <SidebarTrigger />
             </header>
-            <main className="p-7">
+            <main className="p-7 flex-1 min-h-0 overflow-y-auto">
               <Outlet />
             </main>
           </SidebarInset>
         </SidebarProvider>
-      </div> 
+      </div>
     </AuthProvider>
   );
 }
