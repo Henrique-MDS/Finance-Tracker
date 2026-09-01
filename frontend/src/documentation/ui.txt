@@ -1,1 +1,3 @@
-contem os componentes baixados do shadcdui
+contem os componentes baixados do shadcn/ui (accordion, button, calendar, chart, checkbox, combobox, command, dialog, drawer, field, hover-card, input-group, input, label, popover, progress, select, separator, sheet, sidebar, skeleton, switch, textarea, toggle-group, toggle, tooltip)
+
+verifyPassword.ts -> não é do shadcn, é uma validação simples usada no cadastro/login: recebe a senha (string) e retorna false se estiver vazia, não for string ou tiver menos de 6 caracteres

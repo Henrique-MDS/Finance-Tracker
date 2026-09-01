@@ -1,20 +1,63 @@
-RESUMECARD
+RESUMECARD (components/ResumeCards/ResumeCard.tsx)
 
 Card exibido na página principal para resumo de valores
 argumentos que devem ser enviados ao usar
 title -> título
-valor -> valor em dinheiro
+value -> valor em dinheiro (number)
 desc -> descrição curta do resumo financeiro
-emoji -> ícone para exibição
-themeColor -> cor para texto e customizações em hexadecimal
+icon -> caminho/import de uma imagem (svg/png) para exibição, não é emoji
+themeColor -> cor do valor em hexadecimal
 bgColor -> cor de fundo do ícone em hexadecimal
+ex: <ResumeCard title="Saldo atual" value={1500} desc="total de receitas menos despesas" icon={upArrow} themeColor="#2CAE60" bgColor="#12302F"/>
 
-SELECT_INPUTS
+SELECT_INPUT (components/Inputs/Select_Input.tsx)
 um input select com um label, suas propriedades são
 label -> texto de exibiçao do input
 placeholder -> placeholder para exibir no campo
-option -> opções para selecionar (enviado em forma de array de strings)
-onValueChange -> serve para pegar o valor do input ex: <SelectInput label="Tipo" placeholder="Tipo" options={["Receita", "Despesa"]} onValueChange={(e) => setType(e)}/>
-value -> serve para colocar a variável de valor, caso precise resetar o campos depois com setValue("") ex: <SelectInput label="Categoria" placeholder="Categoria" options={catOptions} onValueChange={(e) => setCategory(e)} value={category}/>
-ReportResumeCard -> cartão de resumo de finanças para o relatório, aceita titulo, valor, cor do valor, descrição ex:
-<ReportResumeCard title={"Receitas"} value={"R$ 5.000,00"} themeColor={"#009966"}/>
+options -> opções para selecionar (array de {label, value})
+onValueChange -> serve para pegar o valor do input ex: <SelectInput label="Tipo" placeholder="Tipo" options={[{label:"Receita", value:"Receita"}]} onValueChange={(e) => setType(e)}/>
+value -> serve para colocar a variável de valor, caso precise resetar o campo depois com setValue("") ex: <SelectInput label="Categoria" placeholder="Categoria" options={catOptions} onValueChange={(e) => setCategory(e)} value={category}/>
+
+NEW_GOAL_INPUT (components/Inputs/newGoalInput.tsx)
+input de texto genérico reutilizado em formulários (ex: nova meta), propriedades:
+title -> label exibido acima do campo
+type -> tipo do input (text, number, date, etc.)
+placeholder -> placeholder do campo
+desc -> texto de ajuda exibido abaixo do campo
+value / onChange -> controle do valor do input
+
+REPORT_RESUME_CARD (components/Reports/ReportResumeCards.tsx)
+cartão de resumo de finanças para o relatório, aceita título, valor, cor do valor, descrição ex:
+<ReportResumeCard title={"Receitas"} value={"R$ 5.000,00"} themeColor={"#009966"} desc="opcional"/>
+
+REPORT_TYPE_CARD (components/Reports/ReportTypeCard.tsx)
+card selecionável usado na tela de relatórios para escolher o tipo de dado a incluir (ex: receitas, despesas). Propriedades:
+title, desc -> título e descrição do card
+isSelected -> controla o estado visual (checkbox marcado/fundo destacado)
+onSelect -> callback chamado ao clicar/marcar o checkbox
+
+GOAL_CARD (components/Goals/GoalCard.tsx)
+card de uma meta financeira na tela de Goals, exibe progresso, prazo e ações (adicionar dinheiro, editar, excluir). Propriedades:
+goal -> objeto da meta (tipo Goal, de types/generalTypes)
+percentage -> percentual já atingido da meta (0-100)
+index -> usado para gerar a cor do ícone via generateColor
+refreshGoals -> função assíncrona para recarregar a lista de metas após uma ação (excluir/adicionar dinheiro)
+Abre um modal (AddMoneyModal) para adicionar dinheiro à meta e sinaliza visualmente metas atrasadas (data limite vencida e status "em_andamento").
+
+CATEGORIE_GRID (components/Categorie_Grid/Categorie_Grid.tsx)
+linha de uma categoria na listagem de Categorias, com botão de exclusão (oculto para categorias do sistema, campo "system"). Propriedades:
+categories -> objeto da categoria
+refreshCategories -> função assíncrona para recarregar a lista após excluir
+
+TRANSACTION_GRID (components/Transaction_Grid/TransactionGrid.tsx)
+linha de uma transação na listagem de Transações/Transações recentes, com ícone de seta (receita/despesa), categoria, descrição, data e botão de exclusão. Propriedades:
+transactionProps -> objeto da transação (com a categoria já resolvida em "specificCat", quando disponível)
+onDelete -> função assíncrona chamada após excluir a transação, para recarregar a lista
+
+DONUT_CHART / PieChart (components/Graphs/pieChart.tsx)
+gráfico de rosca (Recharts) que exibe o total de despesas por categoria do usuário logado, com legenda e percentual por categoria. Busca os dados sozinho via getCategoryTotals e getTotalByType (sem receber props), usando o usuário do AuthContext.
+
+PERFIL_CARD (components/Navbar/PerfilCard.tsx)
+card exibido na barra lateral com o avatar e nome do usuário logado (busca em "profiles" pelo id do usuário do AuthContext). Não recebe props.
+
+ui/ -> contém os componentes baixados do shadcn/ui

@@ -1,73 +1,106 @@
-# React + TypeScript + Vite
+# Finance Tracker — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend do **Finance Tracker**, uma aplicação de gerenciamento financeiro pessoal construída com **React**, **TypeScript** e **Vite**, utilizando **Supabase** (Auth, Storage e PostgreSQL) como backend.
 
-Currently, two official plugins are available:
+Para uma visão geral completa do projeto (funcionalidades, arquitetura, conceitos aplicados), veja o [README principal](../README.md).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🛠️ Stack
 
-## React Compiler
+* React 19 + TypeScript
+* Vite
+* React Router DOM
+* Tailwind CSS + Shadcn/UI (Radix UI, `cmdk`, `vaul`)
+* Recharts (gráficos)
+* Supabase JS (`@supabase/supabase-js`)
+* jsPDF + html2canvas + react-to-print (exportação de relatórios em PDF)
+* date-fns (manipulação de datas)
+* react-hot-toast (notificações)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ⚙️ Configuração
 
-## Expanding the ESLint configuration
+### Pré-requisitos
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+* Node.js
+* Um projeto Supabase (URL e chave publicável)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Variáveis de ambiente
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Crie um arquivo `.env` na raiz do frontend com:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```env
+VITE_SUPABASE_URL=<url-do-projeto-supabase>
+VITE_SUPABASE_PUBLISHABLE_KEY=<chave-publicavel-do-supabase>
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Instalação e execução
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
+
+### Scripts disponíveis
+
+| Script            | Descrição                                  |
+| ------------------ | ------------------------------------------- |
+| `npm run dev`     | Inicia o servidor de desenvolvimento (Vite) |
+| `npm run build`   | Type-check (`tsc -b`) e build de produção   |
+| `npm run lint`    | Executa o ESLint                            |
+| `npm run preview` | Serve o build de produção localmente        |
+
+## 📁 Estrutura do projeto
+
+```text
+src/
+├── App.tsx            # Layout raiz (rotas filhas + navbar)
+├── routes.tsx          # Definição das rotas (React Router)
+├── components/         # Componentes e páginas, organizados por domínio
+│   ├── Login_Register/ # Login, cadastro
+│   ├── Transactions/    # Transações
+│   ├── Categories/      # Categorias
+│   ├── Recurrent/       # Transações recorrentes
+│   ├── Goals/           # Metas financeiras
+│   ├── Reports/         # Relatórios e exportação em PDF
+│   ├── Settings/        # Configurações e MFA
+│   ├── Graphs/          # Gráficos (Recharts)
+│   ├── ResumeCards/     # Cards de resumo (dashboard)
+│   └── ui/              # Componentes gerados pelo Shadcn/UI
+├── Utils/               # Funções utilitárias (acesso a dados via Supabase, formatação, validação, auth)
+├── hooks/               # Hooks customizados
+├── services/            # Cliente do Supabase (services/supabase.ts)
+├── types/               # Tipos TypeScript compartilhados
+├── postgresql/          # Referência do schema do banco (não executado pelo app)
+│   ├── Table_schema/    # Definições das tabelas
+│   ├── Funcoes/          # Funções/RPCs em PL/pgSQL
+│   ├── Triggers/         # Triggers
+│   ├── Policies/         # Políticas de Row Level Security
+│   ├── cron/             # Agendamento (pg_cron) das transações recorrentes
+│   └── type/             # Tipos customizados do PostgreSQL
+└── documentation/       # Anotações internas sobre componentes e utilitários
+```
+
+## 🧭 Rotas
+
+| Rota           | Página                       | Protegida |
+| -------------- | ----------------------------- | :-------: |
+| `/`            | Dashboard (`components/home`) | ✅ |
+| `/Transactions`| Transações                    | ✅ |
+| `/Categories`  | Categorias                    | ✅ |
+| `/Recurrent`   | Transações recorrentes        | ✅ |
+| `/Reports`     | Relatórios                    | ✅ |
+| `/Goals`       | Metas financeiras             | ✅ |
+| `/Settings`    | Configurações                 | ✅ |
+| `/Login`       | Login                         | — |
+| `/Register`    | Cadastro                      | — |
+| `/mfa`         | Verificação MFA               | — |
+| `*`            | 404                            | — |
+
+Rotas protegidas usam o componente `Utils/protectedRoute.tsx`, que valida a sessão via `AuthContext`.
+
+## 🗄️ Banco de dados
+
+O schema do PostgreSQL (tabelas, funções, triggers, policies de RLS e o job de `pg_cron` que processa as transações recorrentes diariamente) é mantido, para referência, em [`src/postgresql`](src/postgresql). Esses arquivos documentam a estrutura provisionada no projeto Supabase — eles não são executados automaticamente pela aplicação; qualquer alteração precisa ser aplicada manualmente no editor SQL do Supabase.
+
+## 🚀 Deploy
+
+O projeto está configurado para deploy na **Vercel**. O arquivo [`vercel.json`](vercel.json) reescreve todas as rotas para `index.html`, necessário para o roteamento client-side do React Router funcionar corretamente em uma SPA.

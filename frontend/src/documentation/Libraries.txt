@@ -10,4 +10,9 @@ packs que precisam ser instalados:
 7 - jspdf npm install jspdf
 8 - html2canvas npm install html2canvas
 9 - react-to-print npm install react-to-print
+10 - date-fns (manipulação/formatação de datas)
+11 - tailwindcss + @tailwindcss/vite (v4, plugin direto no vite.config.ts)
+12 - radix-ui / cmdk / vaul (instalados junto com os componentes do shadcn, usados em select, command, drawer, etc.)
+13 - @fontsource-variable/geist (fonte usada no projeto)
+14 - @base-ui/react (usado por alguns componentes de UI)
 

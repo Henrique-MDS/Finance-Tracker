@@ -1,3 +1,5 @@
+-- Acesso genérico a dados (services/supabase.ts) --
+
 getData -> Função para pegar um dado específico com base nos parametros enviados em forma de objeto
 -> A variável "operation" é um breve resumo do que será buscado no banco. É utilizado para retornar um log, caso haja erro
 para utilizar forneça o nome da tabela, um objeto contendo o nome do campo e o valor para inserir no WHERE e o ultimo argumento é um resumo do que voce está buscando no banco, observe o exemplo abaixo:
@@ -15,25 +17,24 @@ type getDataInterface = {
     email?: string;
     error?: any;
 }
-verifyEmail -> Função com uma regex para testar se o email é valido (apenas os caracteres, não envia token)
-getUserLogin -> Pega as credenciais do usuario e faz uma consulta, se tiver grava o id no localStorage para poder entrar em rotas protegidas
-notify -> aceita uma mensagem como parametro para exibir um popup na tela, pode ser de erro ou sucesso. ex: notify.error("Campos obrigatórios não preenchidos")
+
+insertData -> Função genérica para inserir dados em tabelas, precisa do nome da tabela, um objeto com os campos/valores e uma descriçao da operação
+Ex:
+const response = await insertData(
+    "Goals",
+    {user_id: user.id, title: title, goal_value: goalValue, limit_date: date},
+    "Inserir Nova Meta"
+);
+
 deleteData -> Funciona como a função getData, usando os mesmos parametros, mas delete o registro no banco de acordo com o parametro passado. ex:
 const categories = await deleteData(
     "Categories",
     { user_id: "101a0389-8f55-4467-afca-29bcc93a723a" },
     "Deletar categoria do usuário"
 );
-get data retorna um objeto com essas propriedades:
-type deleteDataInterface = {
-    success: boolean;
-    message: string;
-    data?: any[];
-    name?: string;
-    email?: string;
-    error?: any;
-}
-getIntervalData -> Funciona para pegar dados dentro de um intervalo, podendo ser data, numero, etc. Para usar passe a tabela, valor1 e valor2, o campo que quer filtrar e a operaçaoa ex:
+retorna o mesmo formato de objeto que getData
+
+getIntervalData -> Funciona para pegar dados dentro de um intervalo, podendo ser data, numero, etc. Para usar passe a tabela, o campo que quer filtrar, valor1, valor2 e a operação ex:
 const response = await getIntervalData(
     "Transactions",
     "tran_date",
@@ -42,7 +43,78 @@ const response = await getIntervalData(
     "buscar valores dentro do mês atual"
 );
 lembrando que se usar data o supabase aceita só no formato usando toISOString
-filterDespesaReceita -> funçao que filtra e devolve um objeto com as operaçoes separadas entre "Despesa" e "Receita". Só aceita um array de dados do tipo Transactions ex:
+
+insertTransactionFormData -> insere uma transação diretamente na tabela "Transactions" (usado no formulário de nova transação), recebe um objeto {user_id, cat_id, value, type, desc, tran_date}
+
+insertUser -> cadastra um novo usuário via supabase.auth.signUp (nome, email, senha), o nome é salvo nos metadados do usuário
+
+uploadAvatar -> faz upload do avatar do usuário para o bucket "Avatars" do Supabase Storage, remove o avatar antigo (se existir) e atualiza o campo avatar_url em "profiles". Recebe o arquivo (File), o path de destino e o userId. Retorna publicUrl em caso de sucesso.
+
+logout -> encerra a sessão do usuário (supabase.auth.signOut) e dispara um toast de sucesso
+
+-- Funções RPC (chamam funções PL/pgSQL do Supabase, ver src/postgresql/Funcoes) --
+
+getMonthTransactionsValue -> chama a função do postgre "get_month_balance", que retorna o valor do mes calculado por receitas - despesas. Retorna o mesmo objeto de getData. Deve passar userId, primeiro dia e ultimo dia do mes que deseja
+ex:
+    const now = new Date();
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastDayMonth = new Date(now.getFullYear(), now.getMonth() + 1, -1);
+    const response = await getMonthTransactionsValue(userId, firstDay, lastDayMonth);
+
+getMonthlySummary -> chama "get_monthly_summary", que retorna a balança das transaçoes mensais (receitas - despesas), separado pelos meses que existem transaçoes
+const response = await getMonthlySummary(userId);
+retorna algo como:
+[
+  { month: "Jan", receita: 186, despesa: 80 },
+  { month: "Fev", receita: 250, despesa: 120 },
+  { month: "Mar", receita: 300, despesa: 150 }
+]
+
+getMonthlySummaryByDate -> igual a getMonthlySummary, mas aceita um intervalo de datas (iniDate, finalDate podem ser null para trazer tudo). Chama "get_monthly_summary_by_date"
+const response = await getMonthlySummaryByDate(userId, iniDate, finalDate);
+
+getMonthlyComparativeBalance -> chama "get_monthly_comparative_balance", retorna o comparativo de saldo mês a mês do usuário
+const response = await getMonthlyComparativeBalance(userId);
+
+getMonthlyComparativeReceitaDespesa -> chama "get_monthly_comparative_receita_despesa", retorna o comparativo mensal de um tipo específico (Receita/Despesa)
+const response = await getMonthlyComparativeReceitaDespesa(userId, "Despesa");
+
+getCategoryTotals -> chama "get_category_totals", busca o valor total das transações agrupado por categoria, filtrando por tipo (Receita/Despesa) e, opcionalmente, por intervalo de datas (iniDate/finalDate podem ser null)
+const response = await getCategoryTotals(userId, "Despesa", null, null);
+retorna algo como:
+[{category_name: 'Alimentação', total: 2257}]
+
+getTotalByType -> chama "get_total_by_type", retorna o valor total somado de um tipo (Receita/Despesa), opcionalmente filtrado por intervalo de datas (iniDate/finalDate podem ser null)
+const response = await getTotalByType(userId, "Despesa", null, null);
+
+filterTransactions -> chama "filter_transaction", filtra transações por tipo, categoria e intervalo de datas. Recebe um objeto {user_id, type, iniDate, finalDate, catId} (tipo FilterTransactions)
+const response = await filterTransactions({user_id, type, iniDate, finalDate, catId});
+
+getReportData -> chama "get_report_data", usado na tela de Relatórios. Precisa de userId, data inicial, data final e tipo (Receita/Despesa). Se passar null em type, traz todos os tipos
+const response = await getReportData(userId, iniDate, finalDate, type);
+retorna, por transação: id, user_id, desc, type, value, tran_date e total_value (soma de todas as transações do tipo filtrado, via SUM(value) OVER())
+
+addMoneyToGoal -> chama "add_money_to_goal", adiciona um valor ao progresso de uma meta e registra a transação correspondente
+const response = await addMoneyToGoal(userId, goalId, value, date);
+
+getMFAStatus -> consulta os fatores MFA do usuário (supabase.auth.mfa.listFactors) e retorna se já existe um TOTP verificado: {data: [{ verified: boolean }]}
+
+-- Formatação e validação --
+
+verifyEmail -> Função com uma regex para testar se o email é valido (apenas os caracteres, não envia token)
+
+verifyForm -> recebe um array de strings (valores de campos obrigatórios) e retorna true se todos estiverem preenchidos; caso contrário dispara notify.error e retorna false
+ex: if (!verifyForm([title, value, category])) return;
+
+formatCurrencyBR -> (arquivo formateToBr.ts) recebe um numero e retorna formatado no padrão brasileiro ex: R$ 5.000,00
+
+formatDate -> recebe uma data (string | Date | null) e retorna formatada como DD/MM/AAAA (ou null se a data for vazia)
+
+returnMonth -> funçao que recebe um numero de 1 a 12 e retorna o mes do número correspondente (abreviado, ex: "Jan")
+
+buildExecutionTime -> usado nas transações recorrentes. Recebe a frequência (Diaria/Semanal/Mensal/Anual), o dia desejado (string) e a data inicial; para frequência Mensal/Anual, ajusta ("clampa") o dia para o último dia válido do mês (ex: dia 31 em fevereiro vira o último dia de fevereiro)
+
+filterDespesaReceita -> funçao que filtra e devolve um objeto com as operaçoes separadas entre "Despesa" e "Receita". Só aceita um array de dados do tipo Transaction ex:
 setFilteredType(filterDespesaReceita(transactions));
 type Transaction = {
   cat_id: string;
@@ -54,72 +126,19 @@ type Transaction = {
   user_id: string;
   value: number;
 };
-Transaction[]
-getMonthTransactionsValue -> funçao para chamar funçao do postgre que retorna o valor do mes calculado por receitas - despesas retorna o mesmo objeto de getData. Deve passar o primeiro dia e o ultimo dia do mes que deseja
-ex:
-    const now = new Date();
 
-    const firstDay = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        1
-    );
-
-    const lastDayMonth = new Date(
-        now.getFullYear(),
-        now.getMonth() + 1,
-        -1
-    );
-
-    const response = await getMonthTransactionsValue(userId, firstDay, firstDayNextMonth);
-type getDataInterface = {
-    success: boolean;
-    message: string;
-    data?: any[];
-    name?: string;
-    email?: string;
-    error?: any;
-}
-getMonthlySummary -> Funçao que chama outra funçao do postgre que retorna a balança das transaçoes mensais (receitas - despesas), retorna dados da balança separado pelos meses que existem transaçoes
-const response = await getMonthlySummary(userId);
-retorna algo como:
-[
-  { month: "Jan", receita: 186, despesa: 80 },
-  { month: "Fev", receita: 250, despesa: 120 },
-  { month: "Mar", receita: 300, despesa: 150 }
-]
-getCategoryTotals -> busca o valor total das categorias, seja em despesa ou receita. Para user passe o userId e o tipo (receita e despesa)
-const response = await getCategoryTotals(
-    userId,
-    "Despesa"
-)
-retorna algo como:
-{category_name: 'Alimentação', total: 2257}
-generateColor -> retorna uma cor aleatoria em hsl, gera o tanto de cor de acordo com o parametro enviado (numero)
+generateColor -> retorna uma cor aleatoria em hsl, determinística pelo índice enviado (mesma cor sempre para o mesmo índice). Aceita um segundo parâmetro opcional "alpha" (0-1, padrão 1) para transparência
 generateColor(index)
-getMonthlyComparativeReceitaDespesa -> retorna todos os valores totais de receita ou despesa, recebe o userId e o tipo
-get_recent_transactions -> função do banco para trazer os dados abaixo do usuario, é um join entre categorias e transacoes, usa o userId como parametro
-    id uuid,
-    "desc" text,
-    type text,
-    category_name text,
-    value numeric,
-    tran_date timestamptz,
-    icon text
-returnMonth -> funçao que recebe um numero de 1 a 12 e retorna o mes do número correspondente
-getReportData -> funçao para pegar dados dos relatórios. precisa de userid, tipo (receita/despesa), data incial e final. Se passar null em type ele traz todos
-    id -> id da transacao
-    user_id -> id do usuario
-    "desc" -> desc da transacao
-    type -> tipo
-    value -> valor da transacao
-    SUM(value) OVER () AS total_value -> valor da soma das transacoes do tipo
-    tran_date -> data
-formatCurrencyBR -> recebe um numero e retorna formatado no tipo brasileiro ex: R$ 5.000,00
-insertData -> Função genérica para inserir dados em tabelas, precisa do nome da tabela, um objeto com os campos/valores e uma descriçao da operação
-Ex:
-const response = await insertData(
-    "Goals", 
-    {user_id: user.id, title: title, goal_value: goalValue, limit_date: date}, 
-    "Inserir Nova Meta"
-);
+generateColor(index, 0.25) // versão translúcida, usada em fundos de ícone
+
+icons -> exporta "defaultIcons", um array fixo de ícones (lucide-react) + cor usados em categorias e metas: {name, icon, color}. Usado para resolver o ícone salvo (campo "icon"/"code") de uma categoria ou meta
+
+notify -> objeto com notify.success(msg) e notify.error(msg) para exibir popups (react-hot-toast). ex: notify.error("Campos obrigatórios não preenchidos")
+
+-- Autenticação e rotas --
+
+AuthContext / AuthProvider / useAuth -> Context de autenticação. AuthProvider deve envolver a aplicação (ver App.tsx) e carrega a sessão atual do Supabase (supabase.auth.getSession) e escuta mudanças de sessão (onAuthStateChange). useAuth() retorna {user, loading} para ser usado em qualquer componente
+
+protectedRoute (ProtectedRoute) -> componente usado nas rotas do routes.tsx para proteger páginas que exigem login. Usa useAuth() para checar se há usuário logado e também verifica se o usuário precisa completar o MFA (Authenticator Assurance Level aal1 -> aal2); se precisar, redireciona para "/mfa". Se não estiver logado, redireciona para "/login"
+
+getUserLogin -> Pega as credenciais do usuario e faz login via Supabase Auth (supabase.auth.signInWithPassword). Se tiver sucesso o usuário passa a ter sessão válida (usada pelo AuthContext) para poder entrar em rotas protegidas. Retorna também "hasMFA" (true se o usuário precisa completar o segundo fator antes de liberar o acesso), usado para redirecionar para "/mfa" após o login
