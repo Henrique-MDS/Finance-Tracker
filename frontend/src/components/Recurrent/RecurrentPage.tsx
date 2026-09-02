@@ -195,16 +195,14 @@ export function RecurrentPage() {
 
         notify.success("Transação recorrente cadastrada");
         await getRecurrent();
+        await callGetRecurrentResume();
         clearForm();
     }
 
     const getRecurrent = async () => {
         const response = await getData("Recurrent", {user_id: user.id}, "buscar dados de recorrencias do usuário");
-        console.log(response)
         if(response.success){
-            if(response.data && response.data.length > 0){
-                setRecurrent(response.data);
-            }
+            setRecurrent(response.data ?? []);
         } else {
             notify.error("Erro ao buscar recorrências");
             return;
@@ -294,7 +292,12 @@ export function RecurrentPage() {
                     </div>
                     <div className="flex flex-col gap-3 scrollbar-hide overflow-y-auto flex-1 min-h-0">
                         { recurrent && recurrent.length > 0 ? recurrent.map((recurrent) => (
-                            <RecurrentGrid recurrentData={recurrent} onRefresh={getRecurrent} onRefreshRecurrentResume={callGetRecurrentResume} key={recurrent.id} />
+                            <RecurrentGrid 
+                                recurrentData={recurrent} 
+                                onRefresh={getRecurrent} 
+                                onRefreshRecurrentResume={callGetRecurrentResume}
+                                key={recurrent.id}
+                            />
                         )) : 
                             <div className="w-full flex items-center justify-center gap-3">
                                 Cadastre uma transação recorrente para começar!

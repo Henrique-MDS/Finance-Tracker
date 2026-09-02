@@ -7,7 +7,7 @@ import { deleteData } from "@/Utils/deleteData";
 import { notify } from "@/Utils/notify";
 import { defaultIcons } from "@/Utils/icons";
 import { supabase } from "@/services/supabase";
-import { Dot, EllipsisVertical, Trash, RefreshCw } from "lucide-react";
+import { ArrowDownIcon, ArrowUpIcon, Dot, EllipsisVertical, Trash, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -93,6 +93,14 @@ export function RecurrentGrid({ recurrentData, onRefresh, onRefreshRecurrentResu
         await onRefreshRecurrentResume();
     }
 
+    const typeBadge = (
+        <span title={recurrentData.type}>
+            {recurrentData.type === "Receita"
+                ? <ArrowUpIcon size={14} color="#2CAE60" className="shrink-0"/>
+                : <ArrowDownIcon size={14} color="#EF4444" className="shrink-0"/>}
+        </span>
+    );
+
     const statusBadge = (
         <p className={`${recurrentData.active ? "bg-green-padrao-25 w-fit px-3 rounded-sm truncate max-w-full" : "bg-red-padrao-25 w-fit px-3 rounded-sm truncate max-w-full"}`}>
             {recurrentData.active ? "Ativa" : "Inativa"}
@@ -133,7 +141,8 @@ export function RecurrentGrid({ recurrentData, onRefresh, onRefreshRecurrentResu
                 <Dot size={40} className="shrink-0"/>
                 <p className="truncate">{catName}</p>
             </div>
-            <div className="min-w-0">
+            <div className="min-w-0 flex items-center gap-1">
+                {typeBadge}
                 <p className="truncate">{formatCurrencyBR(recurrentData.value)}</p>
             </div>
             <div className="min-w-0">
@@ -167,7 +176,10 @@ export function RecurrentGrid({ recurrentData, onRefresh, onRefreshRecurrentResu
             <div className="grid grid-cols-2 gap-3 text-sm">
                 <div className="min-w-0">
                     <p className="text-text-padrao">Valor</p>
-                    <p className="truncate">{formatCurrencyBR(recurrentData.value)}</p>
+                    <p className="truncate flex items-center gap-1">
+                        {typeBadge}
+                        {formatCurrencyBR(recurrentData.value)}
+                    </p>
                 </div>
                 <div className="min-w-0">
                     <p className="text-text-padrao">Frequência</p>

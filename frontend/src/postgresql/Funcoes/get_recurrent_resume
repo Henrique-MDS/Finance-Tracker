@@ -7,36 +7,80 @@ RETURNS TABLE(
   total_value_executed_this_month numeric,
   value_to_be_executed_next_30_days numeric
 )
-LANGUAGE sql
+LANGUAGE plpgsql
 AS $$
-  SELECT
-    (
-      SELECT COUNT(*)
-      FROM "Recurrent"
-      WHERE user_id = p_user_id
-        AND active = true
-    ),
-    (
-      SELECT COUNT(*)
-      FROM "Transactions"
-      WHERE user_id = p_user_id
-        AND recurrent_id IS NOT NULL
-        AND tran_date >= date_trunc('month', current_date)
-        AND tran_date < date_trunc('month', current_date) + interval '1 month'
-    ),
-    (
-      SELECT COALESCE(SUM(value), 0)
-      FROM "Transactions"
-      WHERE user_id = p_user_id
-        AND recurrent_id IS NOT NULL
-        AND tran_date >= date_trunc('month', current_date)
-        AND tran_date < date_trunc('month', current_date) + interval '1 month'
-    ),
-    (
-      SELECT COALESCE(SUM(value), 0)
-      FROM "Recurrent"
-      WHERE user_id = p_user_id
-        AND active = true
-        AND next_execution BETWEEN current_date AND current_date + interval '30 days'
-    );
+DECLARE
+  v_total_active bigint;
+  v_executed_this_month bigint;
+  v_total_value_executed_this_month numeric;
+  v_next_30_days numeric := 0;
+  window_end timestamptz := now() + interval '30 days';
+  rec record;
+  cursor_date timestamptz;
+  anchor_day int;
+  anchor_month int;
+  time_part time;
+  target_month timestamptz;
+  days_in_month int;
+  clamped_day int;
+BEGIN
+  SELECT COUNT(*)
+  INTO v_total_active
+  FROM "Recurrent"
+  WHERE user_id = p_user_id
+    AND active = true;
+
+  SELECT COUNT(*), COALESCE(SUM(CASE WHEN type = 'Receita' THEN value ELSE -value END), 0)
+  INTO v_executed_this_month, v_total_value_executed_this_month
+  FROM "Transactions"
+  WHERE user_id = p_user_id
+    AND recurrent_id IS NOT NULL
+    AND tran_date >= date_trunc('month', current_date)
+    AND tran_date < date_trunc('month', current_date) + interval '1 month';
+
+  FOR rec IN
+    SELECT *
+    FROM "Recurrent"
+    WHERE user_id = p_user_id
+      AND active = true
+      AND next_execution <= window_end
+      AND (end_date IS NULL OR next_execution <= end_date)
+  LOOP
+    cursor_date := rec.next_execution;
+    anchor_day := extract(day from rec.execution_time)::int;
+    anchor_month := extract(month from rec.execution_time)::int;
+    time_part := cursor_date::time;
+
+    WHILE cursor_date <= window_end
+      AND (rec.end_date IS NULL OR cursor_date <= rec.end_date)
+    LOOP
+      v_next_30_days := v_next_30_days + (CASE WHEN rec.type = 'Receita' THEN rec.value ELSE -rec.value END);
+
+      CASE rec.frequency
+        WHEN 'Diaria' THEN
+          cursor_date := cursor_date + interval '1 day';
+
+        WHEN 'Semanal' THEN
+          cursor_date := cursor_date + interval '1 week';
+
+        WHEN 'Mensal' THEN
+          target_month := date_trunc('month', cursor_date) + interval '1 month';
+          days_in_month := extract(day from (target_month + interval '1 month' - interval '1 day'));
+          clamped_day := least(anchor_day, days_in_month);
+          cursor_date := target_month + ((clamped_day - 1) || ' days')::interval + time_part;
+
+        WHEN 'Anual' THEN
+          target_month := date_trunc('year', cursor_date)
+                           + interval '1 year'
+                           + ((anchor_month - 1) || ' months')::interval;
+          days_in_month := extract(day from (target_month + interval '1 month' - interval '1 day'));
+          clamped_day := least(anchor_day, days_in_month);
+          cursor_date := target_month + ((clamped_day - 1) || ' days')::interval + time_part;
+      END CASE;
+    END LOOP;
+  END LOOP;
+
+  RETURN QUERY
+  SELECT v_total_active, v_executed_this_month, v_total_value_executed_this_month, v_next_30_days;
+END;
 $$;
