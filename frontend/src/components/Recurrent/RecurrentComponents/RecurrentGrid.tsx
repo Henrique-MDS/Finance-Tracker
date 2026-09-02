@@ -21,9 +21,10 @@ import {
 type RecurrentGridProps = {
     recurrentData: RecurrentTable;
     onRefresh: () => Promise<void>;
+    onRefreshRecurrentResume: () => Promise<void>;
 };
 
-export function RecurrentGrid({ recurrentData, onRefresh }:RecurrentGridProps) {
+export function RecurrentGrid({ recurrentData, onRefresh, onRefreshRecurrentResume }:RecurrentGridProps) {
 
     const { user, loading } = useAuth();
     const [catName, setCatName] = useState("");
@@ -70,6 +71,7 @@ export function RecurrentGrid({ recurrentData, onRefresh }:RecurrentGridProps) {
         if(response.success){
             notify.success("Recorrência excluída");
             await onRefresh();
+            await onRefreshRecurrentResume();
         } else {
             notify.error("Erro ao excluir recorrência");
         }
@@ -88,6 +90,7 @@ export function RecurrentGrid({ recurrentData, onRefresh }:RecurrentGridProps) {
 
         notify.success(recurrentData.active ? "Recorrência desativada" : "Recorrência ativada");
         await onRefresh();
+        await onRefreshRecurrentResume();
     }
 
     const statusBadge = (

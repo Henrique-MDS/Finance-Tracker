@@ -32,7 +32,8 @@ begin
             value,
             type,
             cat_id,
-            tran_date
+            tran_date,
+            recurrent_id
         )
         values (
             rec.user_id,
@@ -40,7 +41,8 @@ begin
             rec.value,
             rec.type,
             rec.category_id,
-            rec.next_execution::date
+            rec.next_execution::date,
+            rec.id
         );
 
         anchor_day := extract(day from rec.execution_time)::int;

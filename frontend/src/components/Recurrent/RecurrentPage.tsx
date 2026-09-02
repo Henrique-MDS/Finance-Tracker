@@ -23,6 +23,8 @@ import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns";
 import { notify } from "@/Utils/notify";
 import type { RecurrentTable } from "@/types/generalTypes";
+import { getRecurrentResume } from "@/Utils/callGetRecurrentResume";
+import { formatCurrencyBR } from "@/Utils/formateToBr";
 
 interface SelectOption {
     label: string;
@@ -32,6 +34,13 @@ interface SelectOption {
 interface VerifyData {
     error: boolean;
     message: string;
+}
+
+interface GetRecurrentResume {
+    executed_this_month: number;
+    total_active: number;
+    total_value_executed_this_month: number;
+    value_to_be_executed_next_30_days: number;
 }
 
 export function RecurrentPage() {
@@ -47,6 +56,12 @@ export function RecurrentPage() {
     const [type, setType] = useState("");
     const [recurrentValue, setRecurrentValue] = useState("");
     const [recurrent, setRecurrent] = useState<RecurrentTable[]>([]);
+    const [recurrentResume, setRecurrentResume] = useState<GetRecurrentResume>({
+        executed_this_month: 0,
+        total_active: 0,
+        total_value_executed_this_month: 0,
+        value_to_be_executed_next_30_days: 0
+    });
     const frequencyOptions = [
         {label: "Diária", value: "Diaria"},
         {label: "Semanal", value: "Semanal"},
@@ -197,7 +212,21 @@ export function RecurrentPage() {
 
     }
 
+    const callGetRecurrentResume = async () => {
+        const response = await getRecurrentResume(user.id);
+        
+        if(response.success){
+            if(response.data && response.data.length > 0){
+                setRecurrentResume(response.data[0]);
+            }
+        } else {
+            notify.error("Erro ao buscar resumo de recorrências");
+            return;
+        }
+    }
+
     useEffect(() => {
+        callGetRecurrentResume();
         getRecurrent();
         getCategories();
     }, [user.id])
@@ -211,28 +240,28 @@ export function RecurrentPage() {
         <div className="flex items-center gap-3 flex-wrap lg:flex-nowrap w-full">
             <RecurrentCard
                 title="Ativas" 
-                desc="12" 
+                desc={recurrentResume.total_active} 
                 info="Transações Recorrentes"
                 color="bg-green-padrao"
                 icon={RefreshCcw}
             />
             <RecurrentCard
                 title="Próximos 30 Dias" 
-                desc="R$ 3283" 
+                desc={formatCurrencyBR(recurrentResume.value_to_be_executed_next_30_days)} 
                 info="Total Previsto"
                 color="bg-blue-padrao"
                 icon={CalendarIcon}
             />
             <RecurrentCard
                 title="Este Mês" 
-                desc="R$ 3283" 
+                desc={formatCurrencyBR(recurrentResume.total_value_executed_this_month)}
                 info="Total Executado"
                 color="bg-salmon-padrao"
                 icon={Wallet}
             />
             <RecurrentCard
                 title="Executadas este Mês" 
-                desc="4" 
+                desc={recurrentResume.executed_this_month}
                 info="Transações"
                 color="bg-purple-padrao"
                 icon={CircleCheck}
@@ -265,7 +294,7 @@ export function RecurrentPage() {
                     </div>
                     <div className="flex flex-col gap-3 scrollbar-hide overflow-y-auto flex-1 min-h-0">
                         { recurrent && recurrent.length > 0 ? recurrent.map((recurrent) => (
-                            <RecurrentGrid recurrentData={recurrent} onRefresh={getRecurrent} key={recurrent.id} />
+                            <RecurrentGrid recurrentData={recurrent} onRefresh={getRecurrent} onRefreshRecurrentResume={callGetRecurrentResume} key={recurrent.id} />
                         )) : 
                             <div className="w-full flex items-center justify-center gap-3">
                                 Cadastre uma transação recorrente para começar!
@@ -337,7 +366,7 @@ export function RecurrentPage() {
                                 label="Frequência" 
                                 placeholder="Frequência" 
                                 options={frequencyOptions} 
-                                onValueChange={(e) => setFreq(e)} value={categoryId}
+                                onValueChange={(e) => setFreq(e)} value={freq}
                             />
                         </div>
                         <div className="flex flex-col gap-3">

@@ -1,0 +1,42 @@
+CREATE OR REPLACE FUNCTION get_recurrent_resume(
+  p_user_id uuid
+)
+RETURNS TABLE(
+  total_active bigint,
+  executed_this_month bigint,
+  total_value_executed_this_month numeric,
+  value_to_be_executed_next_30_days numeric
+)
+LANGUAGE sql
+AS $$
+  SELECT
+    (
+      SELECT COUNT(*)
+      FROM "Recurrent"
+      WHERE user_id = p_user_id
+        AND active = true
+    ),
+    (
+      SELECT COUNT(*)
+      FROM "Transactions"
+      WHERE user_id = p_user_id
+        AND recurrent_id IS NOT NULL
+        AND tran_date >= date_trunc('month', current_date)
+        AND tran_date < date_trunc('month', current_date) + interval '1 month'
+    ),
+    (
+      SELECT COALESCE(SUM(value), 0)
+      FROM "Transactions"
+      WHERE user_id = p_user_id
+        AND recurrent_id IS NOT NULL
+        AND tran_date >= date_trunc('month', current_date)
+        AND tran_date < date_trunc('month', current_date) + interval '1 month'
+    ),
+    (
+      SELECT COALESCE(SUM(value), 0)
+      FROM "Recurrent"
+      WHERE user_id = p_user_id
+        AND active = true
+        AND next_execution BETWEEN current_date AND current_date + interval '30 days'
+    );
+$$;
