@@ -236,8 +236,8 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
                     </BarChart>
                 </ChartContainer>
                 </div>
-                <div className="border rounded-xl p-4 min-h-[320px] flex flex-wrap items-center gap-5 border-gray-200">
-                    <div className="relative w-[320px] h-[320px] p-5">
+                <div className="border rounded-xl p-4 min-h-[320px] flex flex-wrap items-center justify-center gap-5 border-gray-200">
+                    <div className="relative w-full max-w-[320px] h-[320px] p-5 mx-auto sm:mx-0">
                         <h2 className="font-semibold">Resumo das Despesas</h2>
                         <ResponsiveContainer width="100%" height={220}>
                             <PieChart>
@@ -298,25 +298,29 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
             </div>
             <div className="border-[1px] border-gray-200 rounded-[4px] p-5">
                 <h3 className="font-semibold py-3">Transações Do Período</h3>
-                <div className="grid grid-cols-[100px_2fr_1.5fr_120px_100px] font-semibold border-b pb-2">
-                    <p>data</p>
-                    <p>descrição</p>
-                    <p>categoria</p>
-                    <p>tipo</p>
-                    <p>valor</p>
-                </div>
-                {transactions && transactions.map((t)=>(
-                    <div key={t.id} className="grid grid-cols-[100px_2fr_1.5fr_120px_100px] py-2 border-b border-gray-200">
-                        <p>{formatDate(t.tran_date)}</p>
-                        <p>{t.desc}</p>
-                        <p>{t.category_name}</p>
-                        <p>{t.type}</p>
-                        <p style={t.type == "Receita" ? {color: "#2CAE60"}: {color: "#DD3C3C"}}
-                            className="font-bold">
-                            {t.type == "Receita" ? `+ ${t.value}` : `- ${t.value}`}
-                        </p>
+                <div className="overflow-x-auto print:overflow-visible">
+                    <div className="min-w-[560px] print:min-w-0">
+                        <div className="grid grid-cols-[100px_2fr_1.5fr_120px_100px] gap-3 font-semibold border-b pb-2">
+                            <p>data</p>
+                            <p>descrição</p>
+                            <p>categoria</p>
+                            <p>tipo</p>
+                            <p>valor</p>
+                        </div>
+                        {transactions && transactions.map((t)=>(
+                            <div key={t.id} className="grid grid-cols-[100px_2fr_1.5fr_120px_100px] gap-3 py-2 border-b border-gray-200">
+                                <p>{formatDate(t.tran_date)}</p>
+                                <p>{t.desc}</p>
+                                <p>{t.category_name}</p>
+                                <p>{t.type}</p>
+                                <p style={t.type == "Receita" ? {color: "#2CAE60"}: {color: "#DD3C3C"}}
+                                    className="font-bold">
+                                    {t.type == "Receita" ? `+ ${t.value}` : `- ${t.value}`}
+                                </p>
+                            </div>
+                        ))}
                     </div>
-                ))}
+                </div>
             </div>
         </div>
         <div className="flex w-full items-center justify-center text-gray-500">
