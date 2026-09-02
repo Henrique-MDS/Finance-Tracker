@@ -30,15 +30,8 @@ export function RecurrentGrid({ recurrentData, onRefresh, onRefreshRecurrentResu
     const [catName, setCatName] = useState("");
     const [catIcon, setCatIcon] = useState("");
 
-    if (loading) {
-        return <div>Carregando...</div>;
-    }
-
-    if (!user) {
-        return <Navigate to="/Login" replace />;
-    }
-
     const getCategoryName = async () => {
+        if (!user) return;
         const response = await getData("Categories", {user_id: user.id, id: recurrentData.category_id}, "buscar nome categoria");
 
         if(response.success){
@@ -56,7 +49,15 @@ export function RecurrentGrid({ recurrentData, onRefresh, onRefreshRecurrentResu
 
     useEffect(() => {
         getCategoryName();
-    }, [user.id])
+    }, [user?.id])
+
+    if (loading) {
+        return <div>Carregando...</div>;
+    }
+
+    if (!user) {
+        return <Navigate to="/Login" replace />;
+    }
 
     const icon = defaultIcons.find((item) => item.name === catIcon) ?? defaultIcons[9];
     const Icon = icon.icon;

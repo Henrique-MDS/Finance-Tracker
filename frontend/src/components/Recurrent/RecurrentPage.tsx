@@ -1,6 +1,6 @@
 import { Button } from "../ui/button";
 import RecurrentCard from "./RecurrentCard/RecurrentCard";
-import { ArrowDownIcon, ArrowUpIcon, CalendarIcon, ChevronDown, CircleCheck, ListFilter, RefreshCcw, Sparkle, Wallet } from "lucide-react";
+import { ArrowDownIcon, ArrowUpIcon, CalendarIcon, CircleCheck, RefreshCcw, Sparkle, Wallet } from "lucide-react";
 import RecurrentGrid from "./RecurrentComponents/RecurrentGrid";
 import { Input } from "../ui/input";
 import SelectInput from "../Inputs/Select_Input";
@@ -69,15 +69,8 @@ export function RecurrentPage() {
         {label: "Anual", value: "Anual"}
     ]
 
-    if (loading) {
-        return <div>Carregando...</div>;
-    }
-
-    if (!user) {
-        return <Navigate to="/Login" replace />;
-    }
-
     const getCategories = async () => {
+        if (!user) return;
         const categories = await getData(
             "Categories",
             { user_id: user.id },
@@ -164,6 +157,7 @@ export function RecurrentPage() {
     };
 
     const insertRecurrentData = async () => {
+        if (!user) return;
         const verify = verifyFormData();
         if (verify.error) {
             notify.error(verify.message);
@@ -200,6 +194,7 @@ export function RecurrentPage() {
     }
 
     const getRecurrent = async () => {
+        if (!user) return;
         const response = await getData("Recurrent", {user_id: user.id}, "buscar dados de recorrencias do usuário");
         if(response.success){
             setRecurrent(response.data ?? []);
@@ -211,6 +206,7 @@ export function RecurrentPage() {
     }
 
     const callGetRecurrentResume = async () => {
+        if (!user) return;
         const response = await getRecurrentResume(user.id);
         
         if(response.success){
@@ -227,8 +223,16 @@ export function RecurrentPage() {
         callGetRecurrentResume();
         getRecurrent();
         getCategories();
-    }, [user.id])
-    
+    }, [user?.id])
+
+    if (loading) {
+        return <div>Carregando...</div>;
+    }
+
+    if (!user) {
+        return <Navigate to="/Login" replace />;
+    }
+
   return (
     <div className="flex flex-col gap-5 lg:h-full">
         <div>
@@ -269,16 +273,6 @@ export function RecurrentPage() {
             <div className="w-full lg:w-[70%] h-130 lg:h-full flex flex-col gap-5 p-3 rounded-xl" style={{border: "1px solid #111820"}}>
                 <div className="flex items-center justify-between">
                     <h2 className="text-xl font-bold text-white">Suas transações recentes</h2>
-                    <div className="flex gap-3">
-                        <Button className="p-5 bg-transparent cursor-pointer" style={{border: "1px solid #111820"}}>
-                            Todos Status
-                            <ChevronDown />
-                        </Button>
-                        <Button className="p-5 bg-transparent cursor-pointer" style={{border: "1px solid #111820"}}>
-                            Filtros
-                            <ListFilter />
-                        </Button>
-                    </div>
                 </div>
                 <div className="flex flex-col gap-3 flex-1 min-h-0">
                     <div className="hidden md:grid gap-2 items-center grid-cols-[minmax(0,2fr)_minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1fr)_44px] bg-subdiv-padrao p-3 rounded-sm">
