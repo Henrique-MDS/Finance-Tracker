@@ -65,7 +65,7 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarContent className="bg-app-background text-white">
-        <img src={logo} alt="finance-tracker-logo" className="h-[150px]"/>
+        <img src={logo} alt="finance-tracker-logo" className="h-[150px] w-auto self-center object-contain"/>
         <SidebarGroup className="flex-1 flex flex-col">
           <SidebarGroupContent className="flex flex-col flex-1">
             <SidebarMenu className="flex flex-col h-full">
