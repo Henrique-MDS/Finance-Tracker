@@ -230,7 +230,7 @@ export function RecurrentPage() {
     }, [user.id])
     
   return (
-    <div className="flex flex-col gap-5 h-full">
+    <div className="flex flex-col gap-5 lg:h-full">
         <div>
             <h1 className="text-2xl text-white">Transações Recorrentes</h1>
             <p>Gerencie suas despesas e receitas que repetem automaticamente</p>
@@ -265,7 +265,7 @@ export function RecurrentPage() {
                 icon={CircleCheck}
             />
         </div>
-        <div className="flex flex-col lg:flex-row gap-5 flex-1 min-h-0">
+        <div className="flex flex-col lg:flex-row gap-5 lg:flex-1 lg:min-h-0">
             <div className="w-full lg:w-[70%] h-130 lg:h-full flex flex-col gap-5 p-3 rounded-xl" style={{border: "1px solid #111820"}}>
                 <div className="flex items-center justify-between">
                     <h2 className="text-xl font-bold text-white">Suas transações recentes</h2>

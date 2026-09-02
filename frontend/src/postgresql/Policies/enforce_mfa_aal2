@@ -1,0 +1,114 @@
+
+create or replace function public.user_has_verified_mfa()
+returns boolean
+language sql
+security definer
+set search_path = auth, pg_temp
+stable
+as $$
+    select exists (
+        select 1
+        from auth.mfa_factors
+        where user_id = auth.uid()
+          and status = 'verified'
+    );
+$$;
+
+revoke all on function public.user_has_verified_mfa() from public;
+grant execute on function public.user_has_verified_mfa() to authenticated;
+
+-------------Transactions
+
+create policy "restringe acesso sem MFA"
+on "Transactions"
+as restrictive
+for all
+to authenticated
+using (
+    not public.user_has_verified_mfa()
+    or (select auth.jwt()->>'aal') = 'aal2'
+);
+
+-------------Balance
+
+create policy "restringe acesso sem MFA"
+on "Balance"
+as restrictive
+for all
+to authenticated
+using (
+    not public.user_has_verified_mfa()
+    or (select auth.jwt()->>'aal') = 'aal2'
+);
+
+-------------Goals
+
+create policy "restringe acesso sem MFA"
+on "Goals"
+as restrictive
+for all
+to authenticated
+using (
+    not public.user_has_verified_mfa()
+    or (select auth.jwt()->>'aal') = 'aal2'
+);
+
+-------------Categories
+
+create policy "restringe acesso sem MFA"
+on "Categories"
+as restrictive
+for all
+to authenticated
+using (
+    not public.user_has_verified_mfa()
+    or (select auth.jwt()->>'aal') = 'aal2'
+);
+
+-------------Recurrent
+
+create policy "restringe acesso sem MFA"
+on "Recurrent"
+as restrictive
+for all
+to authenticated
+using (
+    not public.user_has_verified_mfa()
+    or (select auth.jwt()->>'aal') = 'aal2'
+);
+
+-------------Params
+
+create policy "restringe acesso sem MFA"
+on "Params"
+as restrictive
+for all
+to authenticated
+using (
+    not public.user_has_verified_mfa()
+    or (select auth.jwt()->>'aal') = 'aal2'
+);
+
+-------------Profiles
+
+create policy "restringe acesso sem MFA"
+on "profiles"
+as restrictive
+for all
+to authenticated
+using (
+    not public.user_has_verified_mfa()
+    or (select auth.jwt()->>'aal') = 'aal2'
+);
+
+-------------Avatars (storage.objects)
+create policy "restringe acesso avatar sem MFA"
+on storage.objects
+as restrictive
+for all
+to authenticated
+using (
+    bucket_id != 'Avatars'
+    or not public.user_has_verified_mfa()
+    or (select auth.jwt()->>'aal') = 'aal2'
+);
