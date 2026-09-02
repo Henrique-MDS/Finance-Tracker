@@ -1,6 +1,6 @@
 import { Button } from "../ui/button";
 import RecurrentCard from "./RecurrentCard/RecurrentCard";
-import { ArrowDownIcon, ArrowUpIcon, CalendarIcon, ChevronDown, ListFilter } from "lucide-react";
+import { ArrowDownIcon, ArrowUpIcon, CalendarIcon, ChevronDown, CircleCheck, ListFilter, RefreshCcw, Sparkle, Wallet } from "lucide-react";
 import RecurrentGrid from "./RecurrentComponents/RecurrentGrid";
 import { Input } from "../ui/input";
 import SelectInput from "../Inputs/Select_Input";
@@ -179,6 +179,7 @@ export function RecurrentPage() {
         }
 
         notify.success("Transação recorrente cadastrada");
+        await getRecurrent();
         clearForm();
     }
 
@@ -209,36 +210,36 @@ export function RecurrentPage() {
         </div>
         <div className="flex items-center gap-3 flex-wrap lg:flex-nowrap w-full">
             <RecurrentCard
-                title="Receitas Recorrentes" 
-                desc="R$ 3283" 
-                info="2 Recorrencias"
+                title="Ativas" 
+                desc="12" 
+                info="Transações Recorrentes"
                 color="bg-green-padrao"
-                icon={ArrowDownIcon}
+                icon={RefreshCcw}
             />
             <RecurrentCard
-                title="Receitas Recorrentes" 
+                title="Próximos 30 Dias" 
                 desc="R$ 3283" 
-                info="2 Recorrencias"
-                color="bg-green-padrao"
-                icon={ArrowDownIcon}
+                info="Total Previsto"
+                color="bg-blue-padrao"
+                icon={CalendarIcon}
             />
             <RecurrentCard
-                title="Receitas Recorrentes" 
+                title="Este Mês" 
                 desc="R$ 3283" 
-                info="2 Recorrencias"
-                color="bg-green-padrao"
-                icon={ArrowDownIcon}
+                info="Total Executado"
+                color="bg-salmon-padrao"
+                icon={Wallet}
             />
             <RecurrentCard
-                title="Receitas Recorrentes" 
-                desc="R$ 3283" 
-                info="2 Recorrencias"
-                color="bg-green-padrao"
-                icon={ArrowDownIcon}
+                title="Executadas este Mês" 
+                desc="4" 
+                info="Transações"
+                color="bg-purple-padrao"
+                icon={CircleCheck}
             />
         </div>
-        <div className="flex flex-wrap lg:flex-nowrap gap-5 flex-1 min-h-0">
-            <div className="w-full lg:w-[70%] h-full flex flex-col gap-5 p-3 rounded-xl" style={{border: "1px solid #111820"}}>
+        <div className="flex flex-col lg:flex-row gap-5 flex-1 min-h-0">
+            <div className="w-full lg:w-[70%] h-130 lg:h-full flex flex-col gap-5 p-3 rounded-xl" style={{border: "1px solid #111820"}}>
                 <div className="flex items-center justify-between">
                     <h2 className="text-xl font-bold text-white">Suas transações recentes</h2>
                     <div className="flex gap-3">
@@ -253,22 +254,28 @@ export function RecurrentPage() {
                     </div>
                 </div>
                 <div className="flex flex-col gap-3 flex-1 min-h-0">
-                    <div className="grid grid-cols-6 bg-subdiv-padrao p-3 rounded-sm">
+                    <div className="hidden md:grid gap-2 items-center grid-cols-[minmax(0,2fr)_minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1fr)_44px] bg-subdiv-padrao p-3 rounded-sm">
                         <p>Descrição</p>
                         <p>Categoria</p>
                         <p>Valor</p>
                         <p>Frequência</p>
                         <p>Próxima execução</p>
                         <p>Status</p>
+                        <p className="text-right"></p>
                     </div>
                     <div className="flex flex-col gap-3 scrollbar-hide overflow-y-auto flex-1 min-h-0">
                         { recurrent && recurrent.length > 0 ? recurrent.map((recurrent) => (
-                            <RecurrentGrid {...recurrent} key={recurrent.id} />
-                        )) : <div>sem recor</div>}
+                            <RecurrentGrid recurrentData={recurrent} onRefresh={getRecurrent} key={recurrent.id} />
+                        )) : 
+                            <div className="w-full flex items-center justify-center gap-3">
+                                Cadastre uma transação recorrente para começar!
+                                <Sparkle size={15}/>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
-            <div className="w-full lg:w-[30%] h-full flex flex-col gap-5 p-3 rounded-xl overflow-y-auto scrollbar-hide" style={{border: "1px solid #111820"}}>
+            <div className="w-full lg:w-[30%] h-auto lg:h-full flex flex-col gap-5 p-3 rounded-xl overflow-y-auto scrollbar-hide" style={{border: "1px solid #111820"}}>
                 <div className="flex flex-col gap-3">
                     <h2 className="text-xl font-bold text-white">Nova transação recorrente</h2>
                     <div className="flex flex-col gap-3">
