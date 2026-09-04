@@ -68,7 +68,7 @@ export function MFAPage() {
         <div className="bg-dark-padrao p-8 rounded-md shadow-sm flex flex-col items-center gap-5">
             <div className="w-full flex items-center justify-center gap-3">
                 <Shield size={30} color="#5AC388"/>
-                <h1 className="text-white text-2xl">Autenticação multi fatores</h1>
+                <h1 className="text-foreground text-2xl">Autenticação multi fatores</h1>
             </div>
             <div className="flex flex-col items-center">
                 <p>Autenticação de dois fatores requerida</p>
@@ -80,7 +80,7 @@ export function MFAPage() {
                     inputMode="numeric"
                     maxLength={6}
                     className="h-20 w-full p-4 text-center text-3xl font-semibold"
-                    style={{ border: "1px solid #1e2939" }}
+                    style={{ border: "1px solid var(--border)" }}
                     value={code}
                     onChange={(e) => {
                         const value = e.target.value.replace(/\D/g, '');

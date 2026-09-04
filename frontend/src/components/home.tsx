@@ -290,7 +290,7 @@ export function MainPage() {
       <Toaster />
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl text-gray-300 font-medium">Dasboard</h1>
+          <h1 className="text-2xl text-foreground font-medium">Dasboard</h1>
           <p>Visão geral de suas finanças</p>
         </div>
         <div>
@@ -312,7 +312,7 @@ export function MainPage() {
           <DonutChart />
         </div>
 
-        <div className="w-full lg:flex-1 bg-[#0E1621] rounded-xl flex items-center p-3">
+        <div className="w-full lg:flex-1 bg-dark-padrao rounded-xl flex items-center p-3">
           <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
             <BarChart accessibilityLayer data={monthBalForChart}>
               <CartesianGrid vertical={false} horizontal={false}/>
@@ -332,9 +332,9 @@ export function MainPage() {
         </div>
       </div>
       <div>
-        <div className="bg-[#0E1621] p-4 rounded-xl flex flex-col gap-4">
+        <div className="bg-dark-padrao p-4 rounded-xl flex flex-col gap-4">
           <div className="flex justify-between cursor-pointer">
-            <h2 className="text-white">Transações Recentes</h2>
+            <h2 className="text-foreground">Transações Recentes</h2>
             <Link to="/Transactions">Ver Todas</Link>
           </div>
           {recentTransactions && recentTransactions.map((recenTra, i) => {

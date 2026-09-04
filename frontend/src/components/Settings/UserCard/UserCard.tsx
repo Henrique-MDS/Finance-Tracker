@@ -63,7 +63,7 @@ export function UserCard({ userData }:Props) {
                     )
                 }                  
                 <div className="w-full flex flex-col items-center lg:items-baseline">
-                    <p className="text-white">{profile?.name}</p>
+                    <p className="text-foreground">{profile?.name}</p>
                     <p style={{fontSize: "13px"}}>{userData?.email}</p>
                 </div>
             </div>                
@@ -72,7 +72,7 @@ export function UserCard({ userData }:Props) {
                     Editar Perfil
                 </Button>
                 <Dialog open={open} onOpenChange={setOpen}>
-                    <DialogContent className="!max-w-4xl !h-[80vh] bg-dark-padrao text-white">
+                    <DialogContent className="!max-w-4xl !h-[80vh] bg-dark-padrao text-foreground">
                         <DialogHeader>
                         <div className="flex items-center gap-3">
                             <UserRound size={60} color="#2CAE60" className="bg-green-padrao-25 p-2 rounded-full"/>
@@ -82,8 +82,8 @@ export function UserCard({ userData }:Props) {
                         </div>
                         </DialogHeader>
                         <p className="text-text-padrao">Altere informações do seu perfil</p>
-                        <Separator className="bg-gray-800"/>
-                        <div className="flex flex-col gap-4 text-white">
+                        <Separator/>
+                        <div className="flex flex-col gap-4 text-foreground">
                             <div>
                                 <AccountOptions />
                             </div>

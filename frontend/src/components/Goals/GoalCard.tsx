@@ -60,7 +60,7 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
         <div className="w-full flex flex-col gap-3">
             <div className="flex flex-col gap-3 w-full">
                 <div className="flex items-center justify-between">
-                    <p className="text-xl text-white">{goal.title}</p>
+                    <p className="text-xl text-foreground">{goal.title}</p>
                     <div className="flex flex-col">
                         {goal.status == "em_andamento" ? (
                             <p className="text-2xl text-blue-padrao self-end bg-blue-padrao-25 p-1 rounded-sm">
@@ -95,10 +95,10 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
                 <Progress value={progress} className="w-[100%]" />
                 <div className="flex justify-between w-full">
                     <span>
-                        <p className="text-white">{formatCurrencyBR(goal.now_value)}</p>
+                        <p className="text-foreground">{formatCurrencyBR(goal.now_value)}</p>
                         <p className="text-sm">de <span>{formatCurrencyBR(goal.goal_value)}</span></p>
                     </span>
-                    <p>Faltam: <span className="text-white">{formatCurrencyBR(goal.goal_value - goal.now_value)}</span></p>
+                    <p>Faltam: <span className="text-foreground">{formatCurrencyBR(goal.goal_value - goal.now_value)}</span></p>
                 </div>
             </div>
             <div className="flex flex-wrap lg:flex-nowrap items-center gap-3">                
@@ -135,7 +135,7 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
             </div>
         </div>
         <Dialog open={addMoneyPopUp} onOpenChange={setAddMoneyPopUp}>
-            <DialogContent className="!max-w-4xl !h-[80vh] bg-dark-padrao text-white">
+            <DialogContent className="!max-w-4xl !h-[80vh] bg-dark-padrao text-foreground">
                 <DialogHeader>
                 <div className="flex items-center gap-3">
                     <Banknote size={60} color="#2CAE60" className="bg-green-padrao-25 p-2 rounded-full"/>
@@ -145,7 +145,7 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
                 </div>
                 </DialogHeader>
                 <p className="text-text-padrao">Adicione dinheiro em sua meta!</p>
-                <Separator className="bg-gray-800"/>
+                <Separator/>
                 <AddMoneyModal refreshGoals={refreshGoals} goal={goal}/>
             </DialogContent>
         </Dialog>

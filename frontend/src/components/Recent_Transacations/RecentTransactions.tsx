@@ -30,7 +30,7 @@ export function RecentTransactions({ transaction }:RecentTransactionProps) {
                     <Icon className="text-white"/>
                 </div>
                 <div>
-                    <p className="text-gray-300">{transaction.desc}</p>
+                    <p className="text-foreground">{transaction.desc}</p>
                     <p className="text-sm">{transaction.category_name}</p>
                 </div>
             </div>
@@ -41,7 +41,7 @@ export function RecentTransactions({ transaction }:RecentTransactionProps) {
                 <p>{formatDate(transaction.tran_date)}</p>
             </div>
         </div>
-        <Separator className="bg-gray-800"/>
+        <Separator/>
     </div>
   );
 }

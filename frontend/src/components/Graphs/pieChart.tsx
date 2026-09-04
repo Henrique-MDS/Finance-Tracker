@@ -76,7 +76,7 @@ export default function DonutChart() {
 
     return (
         <div className="bg-dark-padrao rounded-xl p-5 h-full">
-            <h2 className="text-white text-xl">Resumo das Despesas</h2>
+            <h2 className="text-foreground text-xl">Resumo das Despesas</h2>
             <div className="flex items-center h-full flex-col sm:flex-row lg:flex-row">
                 <div className="relative w-[300px] h-[300px]">
                     <ResponsiveContainer>

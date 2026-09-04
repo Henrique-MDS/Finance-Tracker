@@ -50,7 +50,7 @@ export function PerfilCard() {
                 className="w-10 h-10 rounded-full"
               />
             ) : (
-              <User className="w-10 h-10 rounded-full bg-gray-700 p-2" />
+              <User className="w-10 h-10 rounded-full bg-muted p-2" />
             )}
             <div>
               <p>{profile.name}</p>

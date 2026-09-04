@@ -87,14 +87,14 @@ export function GoalsPage() {
         <div className="flex items-center gap-3">
             <GoalIcon color="#2CAE60" size={32}/>
             <div>
-                <h1 className="text-2xl text-white">Metas Financeiras</h1>
+                <h1 className="text-2xl text-foreground">Metas Financeiras</h1>
                 <p>Acompanhe o progresso de seus objetivos</p>
             </div>
         </div>
         <Separator />
         <div className="flex gap-5 flex-col lg:flex-row">
             <div className="w-[100%] lg:w-[60%] flex flex-col gap-3 h-full">
-                <h2 className="font-semibold text-xl text-white">Minhas Metas</h2>
+                <h2 className="font-semibold text-xl text-foreground">Minhas Metas</h2>
                 <div className="flex flex-col gap-3 max-h-96 overflow-y-auto scrollbar-hide">
                     {goals.length > 0 ? (
                         goals.map((goal, i) => (
@@ -123,8 +123,8 @@ export function GoalsPage() {
                 </div>
             </div>
             <div className="w-[100%] lg:w-[30%] flex flex-col gap-3 h-full">
-                <h2 className="font-semibold text-xl text-white">Resumo das Metas</h2>
-                <div className="flex flex-col gap-5 max-h-96 overflow-y-auto scrollbar-hide bg-[#0B1723] p-5 rounded-xl">
+                <h2 className="font-semibold text-xl text-foreground">Resumo das Metas</h2>
+                <div className="flex flex-col gap-5 max-h-96 overflow-y-auto scrollbar-hide bg-subdiv2-padrao p-5 rounded-xl">
                     <div className="flex items-center gap-4">
                         <div className="bg-green-padrao-25 p-1 rounded-sm">
                             <GoalIcon size={40} color="#2C8E34" />
@@ -156,7 +156,7 @@ export function GoalsPage() {
             </div>
         </div> 
         <Dialog open={newGoalPopUp} onOpenChange={setNewGoalPopUp}>
-            <DialogContent className="!max-w-4xl !h-[80vh] bg-dark-padrao text-white">
+            <DialogContent className="!max-w-4xl !h-[80vh] bg-dark-padrao text-foreground">
                 <DialogHeader>
                 <div className="flex items-center gap-3">
                     <GoalIcon size={60} color="#2CAE60" className="bg-green-padrao-25 p-2 rounded-full"/>
@@ -166,7 +166,7 @@ export function GoalsPage() {
                 </div>
                 </DialogHeader>
                 <p className="text-text-padrao">Crie uma meta para acompanhar seus objetivos</p>
-                <Separator className="bg-gray-800"/>
+                <Separator/>
                 <NewGoalModal refreshGoals={loadGoals}/>
             </DialogContent>
         </Dialog>

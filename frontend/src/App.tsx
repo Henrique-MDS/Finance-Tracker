@@ -12,7 +12,7 @@ function App() {
         <SidebarProvider>
           <Toaster />
           <AppSidebar />
-          <SidebarInset className="bg-[#060F18]">
+          <SidebarInset className="bg-app-background">
             <header className="flex h-16 items-center border-b px-6">
               <SidebarTrigger />
             </header>

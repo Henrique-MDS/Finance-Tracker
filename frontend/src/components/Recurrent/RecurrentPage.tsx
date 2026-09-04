@@ -236,7 +236,7 @@ export function RecurrentPage() {
   return (
     <div className="flex flex-col gap-5 lg:h-full">
         <div>
-            <h1 className="text-2xl text-white">Transações Recorrentes</h1>
+            <h1 className="text-2xl text-foreground">Transações Recorrentes</h1>
             <p>Gerencie suas despesas e receitas que repetem automaticamente</p>
         </div>
         <div className="flex items-center gap-3 flex-wrap lg:flex-nowrap w-full">
@@ -270,9 +270,9 @@ export function RecurrentPage() {
             />
         </div>
         <div className="flex flex-col lg:flex-row gap-5 lg:flex-1 lg:min-h-0">
-            <div className="w-full lg:w-[70%] h-130 lg:h-full flex flex-col gap-5 p-3 rounded-xl" style={{border: "1px solid #111820"}}>
+            <div className="w-full lg:w-[70%] h-130 lg:h-full flex flex-col gap-5 p-3 rounded-xl" style={{border: "1px solid var(--border)"}}>
                 <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-bold text-white">Suas transações recentes</h2>
+                    <h2 className="text-xl font-bold text-foreground">Suas transações recentes</h2>
                 </div>
                 <div className="flex flex-col gap-3 flex-1 min-h-0">
                     <div className="hidden md:grid gap-2 items-center grid-cols-[minmax(0,2fr)_minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1fr)_44px] bg-subdiv-padrao p-3 rounded-sm">
@@ -301,15 +301,15 @@ export function RecurrentPage() {
                     </div>
                 </div>
             </div>
-            <div className="w-full lg:w-[30%] h-auto lg:h-full flex flex-col gap-5 p-3 rounded-xl overflow-y-auto scrollbar-hide" style={{border: "1px solid #111820"}}>
+            <div className="w-full lg:w-[30%] h-auto lg:h-full flex flex-col gap-5 p-3 rounded-xl overflow-y-auto scrollbar-hide" style={{border: "1px solid var(--border)"}}>
                 <div className="flex flex-col gap-3">
-                    <h2 className="text-xl font-bold text-white">Nova transação recorrente</h2>
+                    <h2 className="text-xl font-bold text-foreground">Nova transação recorrente</h2>
                     <div className="flex flex-col gap-3">
                         <div className="flex flex-col gap-3">
                             <p>Descrição</p>
                             <Input  
                                 className="p-5" 
-                                style={{border: "1px solid #1e2939"}}
+                                style={{border: "1px solid var(--border)"}}
                                 value={desc}
                                 onChange={(e) => setDesc(e.target.value)}
                             />
@@ -353,7 +353,7 @@ export function RecurrentPage() {
                             <Input 
                                 type="number" 
                                 className="p-5" 
-                                style={{border: "1px solid #1e2939"}}
+                                style={{border: "1px solid var(--border)"}}
                                 value={recurrentValue}
                                 onChange={(e) => setRecurrentValue(e.target.value)}
                             />
@@ -394,7 +394,7 @@ export function RecurrentPage() {
                                         }}
                                         placeholder="1 a 31"
                                         className="p-5 w-[50%]"
-                                        style={{ border: "1px solid #1e2939" }}
+                                        style={{ border: "1px solid var(--border)" }}
                                     />
                                 )}
                                 <Popover>
@@ -402,8 +402,8 @@ export function RecurrentPage() {
                                     <Button
                                         variant="outline"
                                         data-empty={!iniDate}
-                                        className={`${requiresDay ? "w-[50%]" : "w-full"} p-5 justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-main-bg border-white`}
-                                        style={{border: "1px solid #1e2939"}}
+                                        className={`${requiresDay ? "w-[50%]" : "w-full"} p-5 justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-main-bg border-border`}
+                                        style={{border: "1px solid var(--border)"}}
                                     >
                                         <CalendarIcon />
                                         {iniDate ? format(iniDate, "PPP") : <span>Data de início</span>}
@@ -421,8 +421,8 @@ export function RecurrentPage() {
                                     <Button
                                         variant="outline"
                                         data-empty={!finalDate}
-                                        className="w-full p-5 justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-main-bg border-white"
-                                        style={{border: "1px solid #1e2939"}}
+                                        className="w-full p-5 justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-main-bg border-border"
+                                        style={{border: "1px solid var(--border)"}}
                                     >
                                         <CalendarIcon />
                                         {finalDate ? format(finalDate, "PPP") : <span>Data Final</span>}

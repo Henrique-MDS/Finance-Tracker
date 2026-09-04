@@ -34,8 +34,8 @@ type TransactionGridProps = {
 export function TransactionGrid({transactionProps, onDelete}:TransactionGridProps) {
   
     const formattedDate = formatDate(transactionProps.tran_date);
-    let color = transactionProps.type == "Receita" ? "#0C1D1D" : "#1D1218";
-    let arrowBgColor = transactionProps.type == "Receita" ? "#0F402C" : "#552021";
+    let color = transactionProps.type == "Receita" ? "var(--income-bg)" : "var(--expense-bg)";
+    let arrowBgColor = transactionProps.type == "Receita" ? "var(--income-arrow-bg)" : "var(--expense-arrow-bg)";
     const transactionId = transactionProps.id;
 
     const deleteOnClick = async () => {
@@ -56,7 +56,7 @@ export function TransactionGrid({transactionProps, onDelete}:TransactionGridProp
     }
     
   return (
-    <div className={`flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-5 rounded-xl text-white shadow-2xl`} style={{ backgroundColor: color }}>
+    <div className={`flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-5 rounded-xl text-foreground shadow-2xl`} style={{ backgroundColor: color }}>
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 min-w-0">
             <div className="flex items-center gap-3">
                 <p className="flex items-center gap-2">

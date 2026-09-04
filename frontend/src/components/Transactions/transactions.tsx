@@ -90,7 +90,7 @@ export function Transactions() {
 
       <Accordion defaultValue={"item-1"} type="single" collapsible>
         <AccordionItem value="item-1">
-          <AccordionTrigger className="flex items-center gap-2 text-xl text-white cursor-pointer">
+          <AccordionTrigger className="flex items-center gap-2 text-xl text-foreground cursor-pointer">
             <Banknote size={35} className="text-green-padrao"/>
             Adicionar Transação
           </AccordionTrigger>
@@ -100,7 +100,7 @@ export function Transactions() {
         </AccordionItem>
 
         <AccordionItem value="item-2">
-          <AccordionTrigger className="flex items-center gap-2 text-xl text-white cursor-pointer">
+          <AccordionTrigger className="flex items-center gap-2 text-xl text-foreground cursor-pointer">
             <FunnelPlus size={35} className="text-blue-padrao"/>
             Filtro
           </AccordionTrigger>

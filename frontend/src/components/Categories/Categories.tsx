@@ -97,10 +97,10 @@ export function CategoriesPage() {
     <div className="flex flex-col gap-4">
         <Toaster />
         <div className="flex flex-col gap-2">
-            <h1 className="text-2xl text-white">Categorias</h1>
+            <h1 className="text-2xl text-foreground">Categorias</h1>
             <p>Gerencie suas categorias de receitas e despesas</p>
         </div>
-        <div className="bg-subdiv-padrao p-5 rounded-xl text-white flex flex-col gap-5">
+        <div className="bg-subdiv-padrao p-5 rounded-xl text-foreground flex flex-col gap-5">
             <h1 className="text-green-padrao text-xl">Nova Categoria</h1>
             <div className="flex flex-col gap-2">
                 <p>Nome da Categoria</p>
@@ -140,7 +140,7 @@ export function CategoriesPage() {
             </div>
           </div>
         </div> 
-        <div className="bg-subdiv-padrao p-5 rounded-xl text-white flex flex-col gap-5">
+        <div className="bg-subdiv-padrao p-5 rounded-xl text-foreground flex flex-col gap-5">
             <div className="flex items-center justify-between">
                 <h2 className="text-emerald-300 text-xl">Suas Categorias</h2>
                 <Field className="w-72">

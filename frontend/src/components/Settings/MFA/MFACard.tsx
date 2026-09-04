@@ -35,7 +35,7 @@ export function MFACard() {
             <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-1">
                     <ShieldPlus />
-                    <p className="text-white font-semibold">
+                    <p className="text-foreground font-semibold">
                         Status: <span className="font-semibold text-red-padrao" style={isVerified ? {color: "green"} : {color: "red"}}>{isVerified ? "Ativado" : "Desativado"}</span>
                     </p>
                 </div>
@@ -55,14 +55,14 @@ export function MFACard() {
         <div className="flex flex-col gap-3">
             <div className="flex items-center gap-1">
                 <Smartphone />
-                <p className="text-white">Como funciona?</p>
+                <p className="text-foreground">Como funciona?</p>
             </div>
             <div>
                 <p>Você receberá códigos de verificação em um aplicativo autenticador como Google Authenticator, Authy, etc, sempre que fizer um login</p>
             </div>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className="!max-w-4xl !h-[80vh] bg-dark-padrao text-white">
+            <DialogContent className="!max-w-4xl !h-[80vh] bg-dark-padrao text-foreground">
                 <DialogHeader>
                 <div className="flex items-center gap-3">
                     <ShieldPlus size={60} color="#2CAE60" className="bg-green-padrao-25 p-2 rounded-full"/>
@@ -71,8 +71,8 @@ export function MFACard() {
                     </DialogTitle>
                 </div>
                 </DialogHeader>
-                <Separator className="bg-gray-800"/>
-                <div className="flex flex-col gap-4 text-white">
+                <Separator/>
+                <div className="flex flex-col gap-4 text-foreground">
                     <div>
                         <ActivateMFA setOpen={setOpen} mfaStatusCard={mfaStatusCard}/>
                     </div>

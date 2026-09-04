@@ -157,7 +157,7 @@ export function NewGoalModal({ refreshGoals }: NewGoalModalProps) {
                 </div>
             </div>
             <div className="flex flex-col gap-4">
-                <Separator className="bg-gray-800"/>
+                <Separator/>
                 <Button 
                     className="bg-green-padrao hover:bg-green-padrao-25 p-5 flex items-center gap-4 cursor-pointer"
                     onClick={() => saveNewGoal()}

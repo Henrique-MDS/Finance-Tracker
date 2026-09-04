@@ -39,7 +39,7 @@ export function ReportPage(){
   return (
     <div className="overflow-x-hidden">
         <div className="pb-5">
-            <h1 className="text-2xl text-white pb-1">Relatórios</h1>
+            <h1 className="text-2xl text-foreground pb-1">Relatórios</h1>
             <p>Gere relatórios detalhados para suas finanças</p>
         </div>
         <div className="px-3 flex items-center gap-5 cursor-pointer">
@@ -48,7 +48,7 @@ export function ReportPage(){
         </div>
         <Separator />
         <div className="pt-5 flex gap-5 flex-wrap lg:flex-nowrap">
-            <div className="text-white flex flex-col gap-5 w-full">
+            <div className="text-foreground flex flex-col gap-5 w-full">
                 <div className="bg-dark-padrao p-7 rounded-xl flex flex-col gap-5 flex-1">
                     <div className="flex items-center gap-3">
                         <CalendarIcon />
@@ -62,7 +62,7 @@ export function ReportPage(){
                                     <Button
                                     variant="outline"
                                     data-empty={!firstDate}
-                                    className="w-[280px] justify-start text-left p-6 font-normal data-[empty=true]:text-muted-foreground bg-[#0B1723]"
+                                    className="w-[280px] justify-start text-left p-6 font-normal data-[empty=true]:text-muted-foreground bg-subdiv2-padrao"
                                     >
                                     <CalendarIcon />
                                     {firstDate ? format(firstDate, "PPP") : <span>Selecione uma data</span>}
@@ -80,7 +80,7 @@ export function ReportPage(){
                                     <Button
                                     variant="outline"
                                     data-empty={!secondDate}
-                                    className="w-[280px] justify-start text-left p-6 font-normal data-[empty=true]:text-muted-foreground bg-[#0B1723]"
+                                    className="w-[280px] justify-start text-left p-6 font-normal data-[empty=true]:text-muted-foreground bg-subdiv2-padrao"
                                     >
                                     <CalendarIcon />
                                     {secondDate ? format(secondDate, "PPP") : <span>Selecione uma data</span>}
@@ -137,7 +137,7 @@ export function ReportPage(){
                     </div>
                 </div>
             </div>
-            <div className="text-white bg-dark-padrao p-7 rounded-xl w-full">
+            <div className="text-foreground bg-dark-padrao p-7 rounded-xl w-full">
                 <div className="flex flex-col gap-5">
                     <div className="flex items-center gap-3">
                         <Eye />
@@ -172,7 +172,7 @@ export function ReportPage(){
                             }
 
                             return (
-                                <p className="text-gray-400">
+                                <p className="text-muted-foreground">
                                     Selecione um período para visualizar a prévia...
                                 </p>
                             );

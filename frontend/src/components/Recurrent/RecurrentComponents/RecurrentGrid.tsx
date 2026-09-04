@@ -130,8 +130,7 @@ export function RecurrentGrid({ recurrentData, onRefresh, onRefreshRecurrentResu
 
   return (
     <div>
-        {/* Layout em tabela para telas médias/grandes */}
-        <div className="hidden md:grid gap-2 items-center grid-cols-[minmax(0,2fr)_minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1fr)_44px] text-white">
+        <div className="hidden md:grid gap-2 items-center grid-cols-[minmax(0,2fr)_minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1fr)_44px] text-foreground">
             <div className="flex gap-2 items-center min-w-0">
                 <div className="p-2 rounded-full shrink-0" style={{backgroundColor: icon.color}}>
                     <Icon className="text-white"/>
@@ -160,8 +159,7 @@ export function RecurrentGrid({ recurrentData, onRefresh, onRefreshRecurrentResu
             </div>
         </div>
 
-        {/* Layout em cartão para telas pequenas */}
-        <div className="md:hidden flex flex-col gap-3 bg-subdiv-padrao p-3 rounded-xl text-white">
+        <div className="md:hidden flex flex-col gap-3 bg-subdiv-padrao p-3 rounded-xl text-foreground">
             <div className="flex items-start justify-between gap-2">
                 <div className="flex gap-2 items-center min-w-0">
                     <div className="p-2 rounded-full shrink-0" style={{backgroundColor: icon.color}}>

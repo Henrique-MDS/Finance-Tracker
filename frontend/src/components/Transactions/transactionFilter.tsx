@@ -97,7 +97,7 @@ export function TransactionFilter({ onFilter }: Props) {
     }, [user.id])
 
   return (
-    <div className="bg-dark-padrao p-5 rounded-xl text-white gap-5 flex flex-col">
+    <div className="bg-dark-padrao p-5 rounded-xl text-foreground gap-5 flex flex-col">
         <div>
           <p className="flex gap-2 items-center"> 
             <span className="bg-green-padrao p-2 rounded-full">
@@ -133,8 +133,7 @@ export function TransactionFilter({ onFilter }: Props) {
                             <Button
                                 variant="outline"
                                 data-empty={!iniDate}
-                                className="w-full p-5 justify-between text-left font-normal data-[empty=true]:text-muted-foreground bg-subdiv2-padrao border-white"
-                                style={{border: "1px solid #1e2939"}}
+                                className="w-full p-5 justify-between text-left font-normal data-[empty=true]:text-muted-foreground bg-subdiv2-padrao border-border"
                             >   
                                 <div className="flex items-center gap-2">
                                     <CalendarIcon />
@@ -157,8 +156,7 @@ export function TransactionFilter({ onFilter }: Props) {
                         <Button
                             variant="outline"
                             data-empty={!finalDate}
-                            className="w-full p-5 justify-between text-left font-normal data-[empty=true]:text-muted-foreground bg-subdiv2-padrao border-white"
-                            style={{border: "1px solid #1e2939"}}
+                            className="w-full p-5 justify-between text-left font-normal data-[empty=true]:text-muted-foreground bg-subdiv2-padrao border-border"
                         >
                             <div className="flex items-center gap-2">
                                 <CalendarIcon />

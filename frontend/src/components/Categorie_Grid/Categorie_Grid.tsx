@@ -34,7 +34,7 @@ export function CategorieGrid({categories, refreshCategories}:CategorieGridProps
 
   return (
     <div>
-        <Separator className="bg-gray-700"/>
+        <Separator/>
         <div className="grid grid-cols-[1fr_1fr_80px] gap-4 items-center py-2">
             <p>{categories.name}</p>
             <p>{formatDate(categories.created_at)}</p>

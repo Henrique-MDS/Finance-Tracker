@@ -27,7 +27,7 @@
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: #131d2c;
+  --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.87 0 0);
@@ -46,20 +46,30 @@
   --sidebar-ring: oklch(0.708 0 0);
 
   /* Cores personalizadas */
-  --bg-dark-padrao: #0E1621;
   --green-padrao: #2CAE60;
   --red-padrao: #EF4444;
-
-
+  --blue-padrao: #1F6FEB;
+  --purple-padrao: #A970FF;
+  --salmon-padrao: #DC6A4F;
+  --dark-padrao: #FFFFFF;
+  --subdiv-padrao: #F1F3F5;
+  --subdiv2-padrao: #E7EAEE;
+  --app-background: #F4F6F8;
+  --main-bg: #FFFFFF;
+  --text-padrao: #5B6472;
+  --income-bg: #E6F4EC;
+  --expense-bg: #FCE8E8;
+  --income-arrow-bg: #CDEEDA;
+  --expense-arrow-bg: #F6D3D3;
 }
 
 html, body {
   width: 100%;
-  min-height: 100vh; 
+  min-height: 100vh;
   margin: 0px;
   padding: 0px;
-  background-color: #060F18;
-  color: #778294;
+  background-color: var(--app-background);
+  color: var(--text-padrao);
 }
 
 @theme inline {
@@ -105,17 +115,17 @@ html, body {
   --radius-4xl: calc(var(--radius) * 2.6);
 
   /* Cores personalizadas */
-  --color-dark-padrao: #0E1621;
-  --color-green-padrao: #2CAE60;
-  --color-red-padrao: #EF4444;
-  --color-blue-padrao: #1F6FEB;
-  --color-purple-padrao: #A970FF;
-  --color-text-padrao: #778294;
-  --color-subdiv-padrao: #111820;
-  --color-subdiv2-padrao: #1A232F;
-  --color-app-background: #060F18;
-  --color-main-bg: #060F18;
-  --color-salmon-padrao: #DC6A4F;
+  --color-dark-padrao: var(--dark-padrao);
+  --color-green-padrao: var(--green-padrao);
+  --color-red-padrao: var(--red-padrao);
+  --color-blue-padrao: var(--blue-padrao);
+  --color-purple-padrao: var(--purple-padrao);
+  --color-text-padrao: var(--text-padrao);
+  --color-subdiv-padrao: var(--subdiv-padrao);
+  --color-subdiv2-padrao: var(--subdiv2-padrao);
+  --color-app-background: var(--app-background);
+  --color-main-bg: var(--main-bg);
+  --color-salmon-padrao: var(--salmon-padrao);
 
   /* Cores personalizadas transparencia*/
   --color-green-padrao-25: rgb(44 174 96 / 25%);
@@ -157,6 +167,19 @@ html, body {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --border: #131d2c;
+
+  /* Cores personalizadas */
+  --dark-padrao: #0E1621;
+  --subdiv-padrao: #111820;
+  --subdiv2-padrao: #1A232F;
+  --app-background: #060F18;
+  --main-bg: #060F18;
+  --text-padrao: #778294;
+  --income-bg: #0C1D1D;
+  --expense-bg: #1D1218;
+  --income-arrow-bg: #0F402C;
+  --expense-arrow-bg: #552021;
 }
 
 @layer base {

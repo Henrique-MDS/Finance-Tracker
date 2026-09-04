@@ -16,7 +16,7 @@ export function SettingsHeader({ theme, title, icon:Icon }: SettingsHeader) {
         {Icon ? <Icon color="#ffffff"/> : <FileQuestion />}
         
       </div>
-      <p className="text-white">{title}</p>
+      <p className="text-foreground">{title}</p>
     </div>
   );
 }

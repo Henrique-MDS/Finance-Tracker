@@ -108,7 +108,7 @@ export function CreateNewTransaction({ onSave }: Props) {
 
 
   return (
-    <div className="bg-dark-padrao p-5 rounded-xl text-white flex flex-col gap-5">
+    <div className="bg-dark-padrao p-5 rounded-xl text-foreground flex flex-col gap-5">
         <div>
           <p className="flex gap-2 items-center"> 
             <span className="bg-green-padrao p-2 rounded-full">
@@ -137,8 +137,7 @@ export function CreateNewTransaction({ onSave }: Props) {
                   <Button
                     variant="outline"
                     data-empty={!date}
-                    className="w-full p-5 justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-subdiv2-padrao border-white"
-                    style={{border: "1px solid #1e2939"}}
+                    className="w-full p-5 justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-subdiv2-padrao border-border"
                   >
                     <CalendarIcon />
                     {date ? format(date, "PPP") : <span>Selecione a data</span>}
@@ -157,7 +156,6 @@ export function CreateNewTransaction({ onSave }: Props) {
                   id="input-field-username"
                   type="number"
                   placeholder="Valor da transação"
-                  style={{border: "1px solid #1e2939"}}
                   className="p-5"
                   value={value}
                   onChange={(e) => {
