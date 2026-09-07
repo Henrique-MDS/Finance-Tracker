@@ -239,7 +239,7 @@ export function RecurrentPage() {
             <h1 className="text-2xl text-foreground">Transações Recorrentes</h1>
             <p>Gerencie suas despesas e receitas que repetem automaticamente</p>
         </div>
-        <div className="flex items-center gap-3 flex-wrap lg:flex-nowrap w-full">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 w-full">
             <RecurrentCard
                 title="Ativas" 
                 desc={recurrentResume.total_active} 
