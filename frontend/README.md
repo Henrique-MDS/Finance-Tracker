@@ -20,24 +20,50 @@ Para uma visão geral completa do projeto (funcionalidades, arquitetura, conceit
 
 ### Pré-requisitos
 
-* Node.js
-* Um projeto Supabase (URL e chave publicável)
+* [Node.js](https://nodejs.org/) 20 ou superior (inclui o `npm`)
+* Um projeto no [Supabase](https://supabase.com/) (URL e chave publicável)
+
+### Passo a passo para clonar e rodar o projeto
+
+1. Clone o repositório e entre na pasta do frontend:
+
+   ```bash
+   git clone https://github.com/<seu-usuario>/Finance-Tracker.git
+   cd Finance-Tracker/frontend
+   ```
+
+2. Instale as dependências:
+
+   ```bash
+   npm install
+   ```
+
+3. Configure as variáveis de ambiente (veja a seção abaixo).
+
+4. Inicie o servidor de desenvolvimento:
+
+   ```bash
+   npm run dev
+   ```
+
+   A aplicação ficará disponível em `http://localhost:5173`.
 
 ### Variáveis de ambiente
 
-Crie um arquivo `.env` na raiz do frontend com:
+Copie o arquivo de exemplo `.env.example` para `.env` na raiz do frontend:
+
+```bash
+cp .env.example .env
+```
+
+Depois, preencha com as credenciais do seu projeto Supabase (disponíveis em *Project Settings > API* no painel do Supabase):
 
 ```env
 VITE_SUPABASE_URL=<url-do-projeto-supabase>
 VITE_SUPABASE_PUBLISHABLE_KEY=<chave-publicavel-do-supabase>
 ```
 
-### Instalação e execução
-
-```bash
-npm install
-npm run dev
-```
+> O arquivo `.env` não é versionado (já está no `.gitignore`). Sem essas variáveis, a aplicação não conseguirá se conectar ao Supabase.
 
 ### Scripts disponíveis
 

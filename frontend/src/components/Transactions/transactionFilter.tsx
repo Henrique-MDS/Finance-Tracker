@@ -65,23 +65,30 @@ export function TransactionFilter({ onFilter }: Props) {
         setCatOptions(options);
     };
 
+    const toUtcMidnightISOString = (date: Date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}T00:00:00.000Z`;
+    }
+
     const callExecuteFilter = async () => {
-        
+
         if(iniDate && finalDate){
             if(iniDate > finalDate){
                 notify.error("Data inicial deve ser menor que a final");
                 return;
             }
         }
-        
+
         const filters = {
             user_id: user.id,
             type: tranType === "T" ? null : tranType || null,
-            iniDate: iniDate ? iniDate.toISOString() : null,
-            finalDate: finalDate ? finalDate.toISOString() : null,
+            iniDate: iniDate ? toUtcMidnightISOString(iniDate) : null,
+            finalDate: finalDate ? toUtcMidnightISOString(finalDate) : null,
             catId: categoryId === "T" ? null : categoryId || null
         }
-    
+
         await onFilter(filters);
     }
 
