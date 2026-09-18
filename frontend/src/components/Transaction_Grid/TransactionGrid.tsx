@@ -56,7 +56,7 @@ export function TransactionGrid({transactionProps, onDelete}:TransactionGridProp
     }
     
   return (
-    <div className={`flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-5 rounded-xl text-foreground shadow-2xl`} style={{ backgroundColor: color }}>
+    <div className={`flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-5 rounded-xl text-foreground`} style={{ backgroundColor: color }}>
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 min-w-0">
             <div className="flex items-center gap-3">
                 <p className="flex items-center gap-2">
