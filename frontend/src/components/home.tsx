@@ -1,3 +1,5 @@
+import { useLanguage } from "@/i18n/LanguageContext";
+import { shortMonth } from "@/i18n/i18n";
 import ResumeCard from "./ResumeCards/ResumeCard";
 import DonutChart from "./Graphs/pieChart";
 import { getData } from "@/Utils/getData";
@@ -60,8 +62,9 @@ type RecentTransaction = {
 
 export function MainPage() {
   const { user, loading } = useAuth();
+  const { t } = useLanguage();
   if (loading) {
-    return <div>Carregando...</div>;
+    return <div>{t("common.loading")}</div>;
   }
   if (!user) {
     return <Navigate to="/Login" replace />;
@@ -80,11 +83,11 @@ export function MainPage() {
   
   const chartConfig = {
     receita: {
-      label: "Receitas",
+      label: t("common.income"),
       color: "#2CAE60",
     },
     despesa: {
-      label: "Despesas",
+      label: t("common.expenses"),
       color: "#EF4444",
     },
   } satisfies ChartConfig
@@ -99,7 +102,7 @@ export function MainPage() {
       );
       
       if(!response.success){
-        notify.error("Erro ao buscar dados");
+        notify.error(t("common.fetchError"));
         return;
       } else {
         if(response && response.data){
@@ -119,13 +122,13 @@ export function MainPage() {
       );
       
       if(!response.success){
-        notify.error("Erro ao buscar dados");
+        notify.error(t("common.fetchError"));
         return;
       } else {
         if(response && response.data){
           setTransactions(response.data);
         } else {
-          notify.error("Sem dados de transações");
+          notify.error(t("common.noTransactionData"));
           return;
         }
       }
@@ -156,13 +159,13 @@ export function MainPage() {
 
       const response = await getMonthTransactionsValue(userId, firstDay, lastDayMonth);
       if(!response.success){
-        notify.error("Erro ao buscar balança mensal");
+        notify.error(t("home.monthlyBalanceError"));
         return;
       } else {
         if(response && response.data !== undefined){
           setMonthTransactionsVal(response.data);
         } else {
-          notify.error("Sem dados de transações");
+          notify.error(t("common.noTransactionData"));
           return;
         }
       }
@@ -172,14 +175,14 @@ export function MainPage() {
       const response = await getMonthlySummary(userId);
       
       if(!response.success){
-        notify.error("Erro ao buscar balanças mensais");
+        notify.error(t("common.monthlyBalancesError"));
         return;
       } else {
         if(response && response.data){
           setMonthBalForChart(response.data);
           return;
         } else {
-          notify.error("Nenhum dado mensal a ser exibido");
+          notify.error(t("common.noMonthlyData"));
           return;
         }
       }
@@ -189,7 +192,7 @@ export function MainPage() {
     const getMonthComparative = async () => {
       const response = await getMonthlyComparativeBalance(userId);
       if(!response.success){
-        notify.error("Erro ao buscar comparativo mensal");
+        notify.error(t("home.comparativeError"));
         return;
       } else {
         if(response && response.data){
@@ -202,7 +205,7 @@ export function MainPage() {
     const getReceitaComparative = async () => {
       const response = await getMonthlyComparativeReceitaDespesa(userId, "Receita");
       if(!response.success){
-        notify.error("Erro ao buscar comparativo mensal");
+        notify.error(t("home.comparativeError"));
         return;
       } else {
         if(response && response.data){
@@ -215,7 +218,7 @@ export function MainPage() {
     const getDespesaComparative = async () => {
       const response = await getMonthlyComparativeReceitaDespesa(userId, "Despesa");
       if(!response.success){
-        notify.error("Erro ao buscar comparativo mensal");
+        notify.error(t("home.comparativeError"));
         return;
       } else {
         if(response && response.data){
@@ -235,7 +238,7 @@ export function MainPage() {
           setRecentTransactions(data);
         }
       } else {
-        notify.error("Erro ao buscar trasações recentes");
+        notify.error(t("home.recentError"));
         return;
       }
     }
@@ -290,21 +293,21 @@ export function MainPage() {
       <Toaster />
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl text-foreground font-medium">Dasboard</h1>
-          <p>Visão geral de suas finanças</p>
+          <h1 className="text-2xl text-foreground font-medium">{t("home.title")}</h1>
+          <p>{t("home.subtitle")}</p>
         </div>
         <div>
           
         </div>
       </div>      
       <div className="flex flex-col gap-3 sm:flex-wrap sm:flex-row lg:flex-nowrap">
-        <ResumeCard title="Saldo atual" value={balance && balance[0] ? Number(balance[0].balance_now) : 0} desc="total de receitas menos despesas" 
+        <ResumeCard title={t("home.currentBalance")} value={balance && balance[0] ? Number(balance[0].balance_now) : 0} desc={t("home.currentBalanceDesc")} 
                     icon={upArrow} themeColor="#2CAE60" bgColor="#12302F"/>
-        <ResumeCard title="Receitas" value={sumByType(filteredType.receitas)} desc={`${receitaPercent}% em relação ao mês anterior`}
+        <ResumeCard title={t("common.income")} value={sumByType(filteredType.receitas)} desc={t("home.vsLastMonth", {percent: receitaPercent})}
                     icon={profitIcon} themeColor="#2763AA" bgColor="#2763AA"/>
-        <ResumeCard title="Despesas" value={sumByType(filteredType.despesas)} desc={`${despesaPercent}% em relação ao mês anterior`} 
+        <ResumeCard title={t("common.expenses")} value={sumByType(filteredType.despesas)} desc={t("home.vsLastMonth", {percent: despesaPercent})} 
                     icon={downArrow} themeColor="#EF4444" bgColor="#EF4444"/>
-        <ResumeCard title={`Saldo de ${currentMonth}`} value={monthTransactionsVal ?? 0} desc={`${saldoPercent}% em relação ao mês anterior`}
+        <ResumeCard title={t("home.monthBalance", {month: currentMonth})} value={monthTransactionsVal ?? 0} desc={t("home.vsLastMonth", {percent: saldoPercent})}
                     icon={walletIcon} themeColor="#3F3663" bgColor="#3F3663"/>
       </div>
       <div className="flex gap-4 flex-col flex-wrap sm:flex-row sm:flex-wrap lg:flex-row lg:flex-nowrap">
@@ -321,7 +324,7 @@ export function MainPage() {
                 tickLine={false}
                 tickMargin={10}
                 axisLine={false}
-                tickFormatter={(value) => value.slice(0, 3)}
+                tickFormatter={(value) => shortMonth(value)}
               />
               <ChartTooltip content={<ChartTooltipContent />} cursor={{ fill: "#111820", fillOpacity: 0.3 }}/>
               <ChartLegend content={<ChartLegendContent />} />
@@ -334,8 +337,8 @@ export function MainPage() {
       <div>
         <div className="bg-dark-padrao p-4 rounded-xl flex flex-col gap-4">
           <div className="flex justify-between cursor-pointer">
-            <h2 className="text-foreground">Transações Recentes</h2>
-            <Link to="/Transactions">Ver Todas</Link>
+            <h2 className="text-foreground">{t("home.recentTransactions")}</h2>
+            <Link to="/Transactions">{t("home.seeAll")}</Link>
           </div>
           {recentTransactions && recentTransactions.map((recenTra, i) => {
             if (i > 3) return null;

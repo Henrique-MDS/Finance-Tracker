@@ -1,3 +1,4 @@
+import { useLanguage } from "@/i18n/LanguageContext";
 import { useState } from "react";
 import NewGoalInput from "../Inputs/newGoalInput";
 import { Button } from "../ui/button";
@@ -16,10 +17,11 @@ interface NewGoalModalProps {
 export function AddMoneyModal({ goal, refreshGoals }: NewGoalModalProps) {
 
     const { user, loading } = useAuth();
+    const { t } = useLanguage();
     const [value, setValue] = useState("");
 
     if (loading) {
-        return <div>Carregando...</div>;
+        return <div>{t("common.loading")}</div>;
     }
     if (!user) {
         return <Navigate to="/Login" replace />;
@@ -36,11 +38,11 @@ export function AddMoneyModal({ goal, refreshGoals }: NewGoalModalProps) {
        const response = await addMoneyToGoal(user.id, goal.id, Number(value), new Date());
 
         if(!response.success){
-            notify.error("Erro ao adicionar valor a meta");
+            notify.error(t("goals.addMoneyError"));
             return;
         }
 
-        notify.success("Quantia adicionada");
+        notify.success(t("goals.amountAdded"));
         setValue("");
         await refreshGoals();
     }
@@ -49,22 +51,22 @@ export function AddMoneyModal({ goal, refreshGoals }: NewGoalModalProps) {
         const MoneyValue = Number(value);
 
         if (!MoneyValue)
-            return "Informe um valor.";
+            return t("common.enterValue");
 
         if (isNaN(MoneyValue))
-            return "Informe um valor válido.";
+            return t("common.invalidValue");
 
         if (MoneyValue <= 0)
-            return "O valor deve ser maior que zero.";
+            return t("common.valueGreaterThanZero");
     }
 
     return (
         <div className="h-full flex flex-col gap-5">
             <div className="flex flex-col gap-5">
                 <NewGoalInput 
-                    title="Quantia" 
-                    placeholder="R$ 0,00" 
-                    desc="Adicione uma quantia para sua meta"
+                    title={t("goals.amount")} 
+                    placeholder={t("goals.amountPlaceholder")} 
+                    desc={t("goals.amountDesc")}
                     type="number"
                     value={value}
                     onChange={(e) => setValue(e.target.value)} 
@@ -73,12 +75,12 @@ export function AddMoneyModal({ goal, refreshGoals }: NewGoalModalProps) {
                     className="p-5 bg-green-padrao hover:bg-green-padrao-25 cursor-pointer"
                     onClick={() => addGoalMoney()}
                 >
-                    Adicionar
+                    {t("common.add")}
                 </Button>
             </div>
             <div className="flex items-center gap-3 text-text-padrao">
                 <ShieldAlert />
-                <p>Ao adicionar dinheiro em uma meta, uma transação automática será gerada</p>
+                <p>{t("goals.autoTransactionHint")}</p>
             </div>
         </div>
     );

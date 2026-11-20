@@ -1,3 +1,4 @@
+import { translate } from "@/i18n/i18n";
 import { notify } from "./notify";
 
 
@@ -8,7 +9,7 @@ export function verifyForm(fields: string[]): boolean {
 
     for (const field of fields) {
         if (!field) {
-            notify.error("Campos obrigatórios não preenchidos");
+            notify.error(translate("common.requiredFields"));
             return false;
         }
     }

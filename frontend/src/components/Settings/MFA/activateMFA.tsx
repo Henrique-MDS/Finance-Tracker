@@ -1,3 +1,4 @@
+import { useLanguage } from "@/i18n/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/services/supabase";
@@ -18,6 +19,7 @@ export function ActivateMFA({ setOpen, mfaStatusCard }: Props) {
     const [code, setCode] = useState<string>("");
     const [factorId, setFactorId] = useState("");
     const [isVerified, setIsVerified] = useState(false);
+    const { t } = useLanguage();
 
     const getMfaData = async () => {
         const { data, error } = await supabase.auth.mfa.enroll({
@@ -27,11 +29,11 @@ export function ActivateMFA({ setOpen, mfaStatusCard }: Props) {
 
         if (error) {
             if(error.code == "mfa_factor_name_conflict"){
-                notify.error("MFA já cadastrado para essa conta");
+                notify.error(t("mfa.alreadyRegistered"));
                 console.error("A factor with the friendly for this user already exists");
                 return;
             }
-            notify.error("Erro ao habilitar MFA");
+            notify.error(t("mfa.enableError"));
             return;
         }
         
@@ -43,12 +45,12 @@ export function ActivateMFA({ setOpen, mfaStatusCard }: Props) {
 
     const verifyMFA = async () => {
         if (!factorId) {
-            notify.error("Fator MFA não encontrado");
+            notify.error(t("mfa.factorNotFound"));
             return;
         }
 
         if (code.length !== 6) {
-            notify.error("Digite o código de 6 dígitos");
+            notify.error(t("mfa.enterSixDigits"));
             return;
         }
 
@@ -57,7 +59,7 @@ export function ActivateMFA({ setOpen, mfaStatusCard }: Props) {
         });   
         
         if(challengeError){
-            notify.error("Erro ao verificar MFA");
+            notify.error(t("mfa.verifyError"));
             return;
         }
 
@@ -68,11 +70,11 @@ export function ActivateMFA({ setOpen, mfaStatusCard }: Props) {
         });
 
         if(verifyError) {
-            notify.error("Código MFA inválido");
+            notify.error(t("mfa.invalidCode"));
             return;
         }
 
-        notify.success("MFA ativado com sucesso!");
+        notify.success(t("mfa.activated"));
         setCode("");
         setOpen(false);
         await mfaStatusCard();
@@ -82,7 +84,7 @@ export function ActivateMFA({ setOpen, mfaStatusCard }: Props) {
         const { data, error } = await supabase.auth.mfa.listFactors();
 
         if (error) {
-            notify.error("Erro ao buscar MFA");
+            notify.error(t("mfa.fetchError"));
             return;
         }
 
@@ -91,7 +93,7 @@ export function ActivateMFA({ setOpen, mfaStatusCard }: Props) {
         );
 
         if (!factor) {
-            notify.error("Nenhum MFA ativo encontrado");
+            notify.error(t("mfa.noActive"));
             return;
         }
 
@@ -101,11 +103,11 @@ export function ActivateMFA({ setOpen, mfaStatusCard }: Props) {
 
         if (unenrollError) {
             console.error(unenrollError);
-            notify.error("Erro ao desativar MFA");
+            notify.error(t("mfa.disableError"));
             return;
         }
 
-        notify.success("MFA desativado com sucesso");
+        notify.success(t("mfa.deactivated"));
         setIsVerified(false);
         setOpen(false);
         await mfaStatusCard();
@@ -132,14 +134,14 @@ export function ActivateMFA({ setOpen, mfaStatusCard }: Props) {
                     className="p-5 bg-red-padrao cursor-pointer"
                     onClick={() => desableMFA()}
                 >
-                    Desativar
+                    {t("mfa.disableButton")}
                 </Button>
                 :
                 <Button
                     className="p-5 bg-green-padrao cursor-pointer"
                     onClick={() => getMfaData()}
                 >
-                    Adicionar MFA
+                    {t("mfa.addButton")}
                 </Button>
             }
             
@@ -149,10 +151,10 @@ export function ActivateMFA({ setOpen, mfaStatusCard }: Props) {
                 <div className="w-full">
                     <div className="flex flex-col items-center bg-white p-4 rounded-lg">
                         <img src={qrCode} 
-                            alt="QR Code para configuração do MFA"
+                            alt={t("mfa.qrAlt")}
                             className="w-64 h-64"
                         />
-                        <p className="text-text-padrao">Aponte a camera do seu Celular para o qrCode no aplicativo de autenticação</p>
+                        <p className="text-text-padrao">{t("mfa.scanQr")}</p>
                     </div>
                     <div>
 
@@ -170,7 +172,7 @@ export function ActivateMFA({ setOpen, mfaStatusCard }: Props) {
             className="w-full flex flex-col gap-3 items-center justify-center"
             style={qrCode ? {display: "flex"} : {display: "none"}}
         >
-            <p>Digite o código que aparce no seu celular</p>
+            <p>{t("mfa.typeCode")}</p>
             <div>
                 <Input
                     type="text"
@@ -190,7 +192,7 @@ export function ActivateMFA({ setOpen, mfaStatusCard }: Props) {
                 className="p-5 bg-green-padrao cursor-pointer"
                 onClick={() => verifyMFA()}
             >
-                Cadastrar
+                {t("mfa.registerButton")}
             </Button>                        
         </div>
     </div>

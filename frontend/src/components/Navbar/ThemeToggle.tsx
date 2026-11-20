@@ -1,3 +1,4 @@
+import { useLanguage } from "@/i18n/LanguageContext";
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
@@ -6,6 +7,7 @@ import { Switch } from "@/components/ui/switch";
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const { t } = useLanguage();
 
   useEffect(() => setMounted(true), []);
 
@@ -17,7 +19,7 @@ export function ThemeToggle() {
     <div className="flex items-center justify-between gap-2 px-2 py-1.5 text-sm">
       <span className="flex items-center gap-2">
         {isDark ? <Moon className="size-4" /> : <Sun className="size-4" />}
-        Modo {isDark ? "escuro" : "claro"}
+        {isDark ? t("nav.darkMode") : t("nav.lightMode")}
       </span>
       <Switch
         checked={isDark}

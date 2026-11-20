@@ -1,5 +1,7 @@
 # 💰 Finance Tracker
 
+🌐 [English](README.en.md) | **Português**
+
 Aplicação web completa para **gerenciamento financeiro pessoal**, desenvolvida com foco em organização de receitas e despesas, acompanhamento do saldo, análise financeira por meio de gráficos e geração de relatórios.
 
 O projeto foi construído como uma aplicação **full stack**, utilizando React e TypeScript no frontend e Supabase/PostgreSQL como backend e banco de dados. Durante o desenvolvimento, foram aplicados conceitos de **autenticação, autorização, modelagem de banco de dados, operações CRUD, funções SQL, validação de dados, gerenciamento de estado, visualização de dados, segurança e deploy em produção**.
@@ -21,6 +23,7 @@ O projeto foi construído como uma aplicação **full stack**, utilizando React 
 * 📥 Exportação de dados/relatórios
 * 👤 Perfil do usuário
 * 🖼️ Upload e gerenciamento de avatar
+* 🌐 Interface em português e inglês (salva por usuário)
 * 📱 Interface responsiva
 * ✅ Validação de formulários
 * 🔒 Controle de acesso aos dados por usuário
@@ -76,6 +79,7 @@ O desenvolvimento envolveu a construção de uma interface utilizando **React co
 * Gerenciamento de estado
 * Rotas protegidas
 * Manipulação de datas
+* Internacionalização (i18n)
 * Responsividade
 * Design de interfaces
 * Acessibilidade
@@ -255,6 +259,20 @@ O desenvolvimento deste projeto envolveu conhecimentos práticos em:
 * Deploy
 * Vercel
 * Debugging e resolução de problemas
+
+## ▶️ Como rodar o projeto
+
+O código da aplicação está na pasta [`frontend`](frontend). Resumo rápido:
+
+```bash
+git clone https://github.com/<seu-usuario>/Finance-Tracker.git
+cd Finance-Tracker/frontend
+npm install
+cp .env.example .env   # preencha com as credenciais do seu projeto Supabase
+npm run dev
+```
+
+Pré-requisitos: Node.js 20+ e um projeto no Supabase. Instruções detalhadas (variáveis de ambiente, scripts disponíveis, estrutura do projeto) estão no [README do frontend](frontend/README.md).
 
 ## 🎯 Objetivo do projeto
 

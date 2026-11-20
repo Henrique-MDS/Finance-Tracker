@@ -1,3 +1,4 @@
+import { useLanguage } from "@/i18n/LanguageContext";
 import { User as UserIcon, UserRound } from "lucide-react";
 import * as React from "react"
 import { Button } from "@/components/ui/button"
@@ -22,6 +23,7 @@ export function UserCard({ userData }:Props) {
     const [open, setOpen] = React.useState(false);
     const [profile, setProfile] = React.useState<UserProfile>();
     const { user } = useAuth();
+    const { t } = useLanguage();
 
     if (!user) {
         return <Navigate to="/Login" replace />;
@@ -36,7 +38,7 @@ export function UserCard({ userData }:Props) {
                     setProfile(response.data[0]);
                 }
             } else {
-                notify.error("Erro ao buscar informações do perfil");
+                notify.error(t("settings.profileFetchError"));
                 return;
             }
         }
@@ -46,7 +48,7 @@ export function UserCard({ userData }:Props) {
     
   return (
     <div className="bg-dark-padrao p-5 rounded-xl min-w-[250px] lg:w-[450px] flex flex-col gap-5">
-        <SettingsHeader theme="bg-purple-padrao" title="Conta" icon={UserIcon}/>
+        <SettingsHeader theme="bg-purple-padrao" title={t("settings.account")} icon={UserIcon}/>
         <div className="flex flex-col lg:flex-row items-center justify-between">
             <div className="flex flex-col lg:flex-row items-center gap-3">
                 {profile && profile.avatar_url ? 
@@ -69,7 +71,7 @@ export function UserCard({ userData }:Props) {
             </div>                
             <div>
                 <Button onClick={() => setOpen(true)} variant="outline" className="w-fit cursor-pointer">
-                    Editar Perfil
+                    {t("settings.editProfile")}
                 </Button>
                 <Dialog open={open} onOpenChange={setOpen}>
                     <DialogContent className="!max-w-4xl !h-[80vh] bg-dark-padrao text-foreground">
@@ -77,11 +79,11 @@ export function UserCard({ userData }:Props) {
                         <div className="flex items-center gap-3">
                             <UserRound size={60} color="#2CAE60" className="bg-green-padrao-25 p-2 rounded-full"/>
                             <DialogTitle className="text-xl">
-                                Conta
+                                {t("settings.account")}
                             </DialogTitle>
                         </div>
                         </DialogHeader>
-                        <p className="text-text-padrao">Altere informações do seu perfil</p>
+                        <p className="text-text-padrao">{t("settings.editProfileDesc")}</p>
                         <Separator/>
                         <div className="flex flex-col gap-4 text-foreground">
                             <div>

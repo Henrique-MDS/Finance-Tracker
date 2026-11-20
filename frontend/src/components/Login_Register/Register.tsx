@@ -1,3 +1,4 @@
+import { useLanguage } from "@/i18n/LanguageContext";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { insertUser } from "../../Utils/insertUser";
@@ -12,21 +13,12 @@ export function RegisterPage() {
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     let navigate = useNavigate();
-
-    const getCredentials = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if(e.target.placeholder == "Email"){
-           setEmail(e.target.value); 
-        } else if(e.target.placeholder == "Nome") {
-            setName(e.target.value);
-        } else if(e.target.placeholder == "Senha") {
-            setPassword(e.target.value);
-        }
-    }
+    const { t } = useLanguage();
 
     const registerUser = async () => {
         if(!name || !email || !password){
             toast.dismiss();
-            toast.error("Todos os campos deve estar preenchidos", {
+            toast.error(t("common.allFieldsRequired"), {
                 duration: 1500,
                 position: "top-center",
             });
@@ -35,7 +27,7 @@ export function RegisterPage() {
         
         if(!verifyEmail(email)){
             toast.dismiss();
-            toast.error("Email inválido", {
+            toast.error(t("common.invalidEmail"), {
                 duration: 1500,
                 position: "top-center",
             });
@@ -44,7 +36,7 @@ export function RegisterPage() {
 
         if(name.length < 5){
             toast.dismiss();
-            toast.error("Nome deve conter no mínimo 5 digitos", {
+            toast.error(t("common.nameMinLength"), {
                 duration: 1500,
                 position: "top-center",
             });
@@ -53,7 +45,7 @@ export function RegisterPage() {
 
         if(password.length < 5){
             toast.dismiss();
-            toast.error("Senha deve conter no mínimo 5 digitos", {
+            toast.error(t("common.passwordMinLength"), {
                 duration: 1500,
                 position: "top-center",
             });
@@ -69,19 +61,19 @@ export function RegisterPage() {
             return;
         } else {
             if(getResult.error.code == "email_address_invalid"){
-                notify.error("Email inválido");
+                notify.error(t("common.invalidEmail"));
                 return;
             } else if(getResult.error.code == "weak_password"){
-                notify.error("Senha deve ter no mínimo 6 caracteres");
+                notify.error(t("auth.weakPassword"));
                 return;
             } else if (getResult.error.code == "over_email_send_rate_limit") {
-                notify.error("Muitas tentativas. Aguarde para tentar novamente");
+                notify.error(t("auth.rateLimit"));
                 return;
             }else if (getResult.error.code == "user_already_exists") {
-                notify.error("Usuário já cadastrado");
+                notify.error(t("auth.userExists"));
                 return;
             } else {
-                notify.error("Erro ao registrar conta");
+                notify.error(t("auth.registerError"));
                 return;
             }
         }
@@ -92,11 +84,11 @@ export function RegisterPage() {
     <div className="min-h-screen flex flex-col items-center justify-center">
         <Toaster />
         <div className="flex flex-col gap-8 bg-dark-padrao p-10 rounded-xl">
-            <h1 className="text-2xl">Crie uma conta</h1>
+            <h1 className="text-2xl">{t("auth.registerTitle")}</h1>
             <input 
                 type="text" 
-                placeholder="Nome" 
-                onChange={(e) => getCredentials(e)} 
+                placeholder={t("common.name")} 
+                onChange={(e) => setName(e.target.value)} 
                 required
                 className="p-3 rounded-sm"
                 style={{border: "1px solid #1e2939"}}
@@ -104,22 +96,22 @@ export function RegisterPage() {
             <input 
                 type="text" 
                 placeholder="Email" 
-                onChange={(e) => getCredentials(e)} 
+                onChange={(e) => setEmail(e.target.value)} 
                 required
                 className="p-3 rounded-sm"
                 style={{border: "1px solid #1e2939"}}
             />
             <input 
                 type="password" 
-                placeholder="Senha" 
-                onChange={(e) => getCredentials(e)} 
+                placeholder={t("common.password")} 
+                onChange={(e) => setPassword(e.target.value)} 
                 required
                 className="p-3 rounded-sm"
                 style={{border: "1px solid #1e2939"}}
             />
             <div className="flex items-center justify-center">
                 <button className="text-xl cursor-pointer bg-emerald-800 p-2.5 rounded-xl w-full hover:bg-emerald-600 text-amber-50"
-                onClick={() => registerUser()}>Registrar</button>
+                onClick={() => registerUser()}>{t("auth.register")}</button>
             </div> 
         </div>          
     </div>

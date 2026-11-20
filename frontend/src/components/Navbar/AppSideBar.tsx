@@ -1,3 +1,4 @@
+import { useLanguage } from "@/i18n/LanguageContext";
 import {
   Sidebar,
   SidebarContent,
@@ -22,39 +23,41 @@ import PerfilCard from "./PerfilCard";
 import { ThemeToggle } from "./ThemeToggle";
 import { logout } from "@/Utils/logOutUser";
 
-const items = [
+import type { TranslationKey } from "@/i18n/translations";
+
+const items: { title: TranslationKey; url: string; icon: typeof Home }[] = [
   {
-    title: "Dashboard",
+    title: "nav.dashboard",
     url: "/",
     icon: Home,
   },
   {
-    title: "Transações",
+    title: "nav.transactions",
     url: "/transactions",
     icon: Wallet,
   },
   {
-    title: "Categorias",
+    title: "nav.categories",
     url: "/categories",
     icon: CreditCard,
   },
   {
-    title: "Recorrencias",
+    title: "nav.recurrent",
     url: "/Recurrent",
     icon: RotateCcw,
   },
   {
-    title: "Relatórios",
+    title: "nav.reports",
     url: "/reports",
     icon: ChartColumn,
   },
   {
-    title: "Metas",
+    title: "nav.goals",
     url: "/Goals",
     icon: Goal,
   },
   {
-    title: "Configurações",
+    title: "nav.settings",
     url: "/settings",
     icon: Settings,
   },
@@ -63,6 +66,7 @@ const items = [
 
 
 export function AppSidebar() {
+  const { t } = useLanguage();
   return (
     <Sidebar>
       <SidebarContent className="bg-app-background text-foreground">
@@ -76,7 +80,7 @@ export function AppSidebar() {
                     <SidebarMenuButton asChild>
                       <a href={item.url}>
                         <item.icon />
-                        <span className="text-[17px]">{item.title}</span>
+                        <span className="text-[17px]">{t(item.title)}</span>
                       </a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -85,7 +89,7 @@ export function AppSidebar() {
                   <SidebarMenuButton asChild>
                     <a>
                       <LogOut />
-                      <span className="text-[17px]">Sair</span>
+                      <span className="text-[17px]">{t("nav.logout")}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

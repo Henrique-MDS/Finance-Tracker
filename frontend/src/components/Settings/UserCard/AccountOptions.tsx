@@ -1,3 +1,4 @@
+import { useLanguage } from "@/i18n/LanguageContext";
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useState } from "react";
@@ -9,6 +10,7 @@ import { Save } from "lucide-react";
 export function AccountOptions() {
 
     const [newPassword, setNewPassword] = useState("");
+    const { t } = useLanguage();
 
     const saveFormData = async () => {
         if(verifyPassword(newPassword)){
@@ -17,23 +19,23 @@ export function AccountOptions() {
             });
             
             if(error){
-                notify.error("Erro ao atualizar senha");
+                notify.error(t("settings.passwordError"));
                 return;
             }
 
-            notify.success("Senha atualizada");
+            notify.success(t("settings.passwordUpdated"));
             setNewPassword("");
         }
     }
 
   return (
     <div>
-        <h1 className="text-xl">Informações da Conta</h1>
+        <h1 className="text-xl">{t("settings.accountInfo")}</h1>
         <div className="flex flex-col gap-3">
-            <h2 className="text-text-padrao py-3">Alterar Senha</h2>
+            <h2 className="text-text-padrao py-3">{t("settings.changePassword")}</h2>
             <div className="flex flex-col gap-3">
                 <Input 
-                    placeholder="Senha nova" name="newPass" 
+                    placeholder={t("settings.newPassword")} name="newPass" 
                     onChange={(e) => setNewPassword(e.target.value)}
                     type="password"
                     value={newPassword}
@@ -47,7 +49,7 @@ export function AccountOptions() {
                     onClick={() => saveFormData()}
                 >
                     <Save />
-                    Salvar
+                    {t("common.save")}
                 </Button>
             </div>
         </div>

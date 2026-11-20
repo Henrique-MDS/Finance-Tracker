@@ -1,3 +1,4 @@
+import { translate } from "@/i18n/i18n";
 import { supabase } from "../services/supabase";
 
 type InsertTransactionResult = {
@@ -28,7 +29,7 @@ export async function insertTransactionFormData(sentData:TransactionFormData):Pr
     })
 
     if(error){
-        return {success: false, message: "Erro ao cadastrar Transação", error: error}
+        return {success: false, message: translate("transactions.saveError"), error: error}
     }
-    return {success: true, message: "Transação cadastrada", dados: data}
+    return {success: true, message: translate("transactions.saved"), dados: data}
 }

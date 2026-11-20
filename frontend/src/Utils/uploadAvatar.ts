@@ -1,3 +1,4 @@
+import { translate } from "@/i18n/i18n";
 import { supabase } from "@/services/supabase";
 
 type UploadAvatarResponse = {
@@ -11,7 +12,7 @@ export const uploadAvatar = async (file:File, path:string, userId: string):Promi
     if (!file || !path || !userId){
         return {
             success: false,
-            message: "Arquivo, caminho ou ID do usuário não fornecidos"
+            message: translate("settings.uploadMissing")
         };
     };
 
@@ -35,7 +36,7 @@ export const uploadAvatar = async (file:File, path:string, userId: string):Promi
     if (error) {
         return {
             "success": false,
-            "message": "Erro ao realizar upload da imagem",
+            "message": translate("settings.uploadError"),
             "error": error
         }
     }
@@ -54,14 +55,14 @@ export const uploadAvatar = async (file:File, path:string, userId: string):Promi
     if(profileError){
         return {
             success: false,
-            message: "Erro ao salvar url da imagem",
+            message: translate("settings.uploadUrlError"),
             error: profileError
         };
     }
 
     return {
         success: true,
-        message: "Upload realizado com sucesso",
+        message: translate("settings.uploadSuccess"),
         publicUrl: data.publicUrl
     };
 };

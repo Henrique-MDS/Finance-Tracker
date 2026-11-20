@@ -2,6 +2,7 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import { supabase } from "@/services/supabase";
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 type Props = {
     children: React.ReactNode;
@@ -10,6 +11,7 @@ type Props = {
 export default function ProtectedRoute({ children }: Props) {
 
     const { user, loading } = useAuth();
+    const { t } = useLanguage();
 
     const [checkingMFA, setCheckingMFA] = useState(true);
     const [requiresMFA, setRequiresMFA] = useState(false);
@@ -46,7 +48,7 @@ export default function ProtectedRoute({ children }: Props) {
     }, [user]);
 
     if (loading || checkingMFA) {
-        return <div>Carregando...</div>;
+        return <div>{t("common.loading")}</div>;
     }
 
     if (!user) {

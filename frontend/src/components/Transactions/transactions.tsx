@@ -1,3 +1,4 @@
+import { useLanguage } from "@/i18n/LanguageContext";
 import { useEffect, useState } from "react";
 import { getData } from "@/Utils/getData";
 import { Toaster } from "react-hot-toast";
@@ -28,9 +29,10 @@ interface Category {
 export function Transactions() {
   const [cat, setCat] = useState<Category[]>([]);
   const { user, loading } = useAuth();
+  const { t } = useLanguage();
 
   if (loading) {
-    return <div>Carregando...</div>;
+    return <div>{t("common.loading")}</div>;
   }
   if (!user) {
     return <Navigate to="/Login" replace />;
@@ -47,7 +49,7 @@ export function Transactions() {
     );
 
     if (!categories.success) {
-      notify.error(categories.message);
+      notify.error(t("common.fetchCategoriesError"));
       return;
     }
 
@@ -68,7 +70,7 @@ export function Transactions() {
     const response = await filterTransactions(filters);
 
     if (!response.success) {
-      notify.error(response.message);
+      notify.error(t("transactions.filterError"));
       return;
     }
 
@@ -85,14 +87,14 @@ export function Transactions() {
     <div className="flex flex-col gap-5">
       <Toaster />
       <div>
-        <h1 className="text-2xl">Cadastrar Transações</h1>
+        <h1 className="text-2xl">{t("transactions.title")}</h1>
       </div>
 
       <Accordion defaultValue={"item-1"} type="single" collapsible>
         <AccordionItem value="item-1">
           <AccordionTrigger className="flex items-center gap-2 text-xl text-foreground cursor-pointer">
             <Banknote size={35} className="text-green-padrao"/>
-            Adicionar Transação
+            {t("transactions.add")}
           </AccordionTrigger>
           <AccordionContent>
             <CreateNewTransaction onSave={loadTransactions}/>
@@ -102,7 +104,7 @@ export function Transactions() {
         <AccordionItem value="item-2">
           <AccordionTrigger className="flex items-center gap-2 text-xl text-foreground cursor-pointer">
             <FunnelPlus size={35} className="text-blue-padrao"/>
-            Filtro
+            {t("transactions.filter")}
           </AccordionTrigger>
           <AccordionContent>
             <TransactionFilter  onFilter={loadTransactions}/>
@@ -111,7 +113,7 @@ export function Transactions() {
       </Accordion>
 
       <div className="flex flex-col gap-5">
-        <p className="text-2xl">Suas Transações</p>
+        <p className="text-2xl">{t("transactions.yours")}</p>
         <div className="max-h-96 overflow-y-auto flex flex-col gap-3 scrollbar-hide">
           {transactions &&
             transactions.map((transaction) => {

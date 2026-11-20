@@ -7,15 +7,19 @@ import { useAuth } from "@/Utils/AuthContext";
 import { Navigate } from "react-router-dom";
 import { notify } from "@/Utils/notify";
 import { getData } from "@/Utils/getData";
-import { Settings } from "lucide-react";
+import { Languages, Settings } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
+import { LANGUAGES, isLanguage } from "@/i18n/i18n";
+import SelectInput from "@/components/Inputs/Select_Input";
 
 export function ParamsCard() {
 
     const [idgerAutomatico, setIdGeraAutomatico] = useState(false);
     const { user, loading } = useAuth();
+    const { t, language, setLanguage } = useLanguage();
 
     if (loading) {
-        return <div>Carregando...</div>;
+        return <div>{t("common.loading")}</div>;
     }
 
     if (!user) {
@@ -26,7 +30,7 @@ export function ParamsCard() {
         const response = await getData("Params", {user_id: user.id}, "Buscar parâmetros");
 
         if(!response.success){
-            notify.error("Erro ao carregar parâmetros");
+            notify.error(t("settings.paramsLoadError"));
             return;
         }
 
@@ -40,7 +44,7 @@ export function ParamsCard() {
         const { error } = await supabase.from("Params").update({IDGERTRANAUT: checked}).eq("user_id", user.id);
 
         if(error) {
-            notify.error("Erro ao atualizar parâmetro");
+            notify.error(t("settings.paramsUpdateError"));
             return;
         }
     }
@@ -52,18 +56,30 @@ export function ParamsCard() {
 
   return (
     <div className="bg-dark-padrao p-5 rounded-xl min-w-[250px] lg:w-[450px] flex flex-col gap-5">
-      <SettingsHeader theme="bg-blue-padrao" title="Configurações" icon={Settings}/>
-      <div>
+      <SettingsHeader theme="bg-blue-padrao" title={t("settings.title")} icon={Settings}/>
+      <div className="flex flex-col gap-5">
         <div className="flex items-center gap-x-3.5">
-            <Switch 
-                className="cursor-pointer" 
+            <Switch
+                className="cursor-pointer"
                 id="IDGERTRANAUT"
                 checked={idgerAutomatico}
                 onCheckedChange={(checked) => saveIdgerAutomatico(checked)}
             />
             <FieldLabel htmlFor="IDGERTRANAUT">
-                Gera transação automática ao fazer aporte de metas
+                {t("settings.autoTransaction")}
             </FieldLabel>
+        </div>
+        <div className="flex items-start gap-x-3.5">
+            <Languages className="mt-1 shrink-0"/>
+            <div className="w-full">
+                <SelectInput
+                    label={t("settings.language")}
+                    placeholder={t("settings.language")}
+                    options={LANGUAGES}
+                    value={language}
+                    onValueChange={(value) => isLanguage(value) && setLanguage(value)}
+                />
+            </div>
         </div>
       </div>
     </div>

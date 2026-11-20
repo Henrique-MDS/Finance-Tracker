@@ -1,3 +1,4 @@
+import { useLanguage } from "@/i18n/LanguageContext";
 import { Calendar, Pen, Plus, Trash, Banknote, ShieldAlert } from "lucide-react";
 import { Progress } from "@/components/ui/progress"
 import { Button } from "../ui/button";
@@ -27,6 +28,7 @@ interface GoalCardProps {
 
 export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProps) {
 
+    const { t } = useLanguage();
     const progress = percentage;
     const mainColor = generateColor(index);
     const mainColorTransparent = generateColor(index, 0.25);
@@ -44,11 +46,11 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
         const response = await deleteData("Goals", {id: goal.id}, "Excluir Meta");
 
         if(!response.success){
-            notify.error("Erro ao excluir meta");
+            notify.error(t("goals.deleteError"));
             return;
         }
 
-        notify.success("Meta excluída!");
+        notify.success(t("goals.deleted"));
         await refreshGoals();
     }
 
@@ -75,11 +77,11 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
                         <p>
                             {(() => {
                                 if ((todayDate.getTime() > goalLimitDate.getTime()) && (goal.status == "em_andamento") ) {
-                                    return "Atrasada";
+                                    return t("goals.late");
                                 } else if (goal.status == "em_andamento") {
-                                    return "Em Andamento";
+                                    return t("goals.inProgress");
                                 }
-                                return "Concluída";
+                                return t("goals.done");
                             })()}
                         </p>
                     </div>                    
@@ -87,7 +89,7 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
                 <div className="flex items-center gap-1">
                     <Calendar size={18}/>
                     <p>
-                        Meta até <span>{formatDate(goal.limit_date)}</span>
+                        {t("goals.until")} <span>{formatDate(goal.limit_date)}</span>
                     </p>
                 </div>
             </div>
@@ -96,9 +98,9 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
                 <div className="flex justify-between w-full">
                     <span>
                         <p className="text-foreground">{formatCurrencyBR(goal.now_value)}</p>
-                        <p className="text-sm">de <span>{formatCurrencyBR(goal.goal_value)}</span></p>
+                        <p className="text-sm">{t("goals.of")} <span>{formatCurrencyBR(goal.goal_value)}</span></p>
                     </span>
-                    <p>Faltam: <span className="text-foreground">{formatCurrencyBR(goal.goal_value - goal.now_value)}</span></p>
+                    <p>{t("goals.remaining")} <span className="text-foreground">{formatCurrencyBR(goal.goal_value - goal.now_value)}</span></p>
                 </div>
             </div>
             <div className="flex flex-wrap lg:flex-nowrap items-center gap-3">                
@@ -107,18 +109,18 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
                     style={goal.status == "em_andamento" ? { display: "flex" } : { display: "none" }}
                 >
                     <Plus />
-                    Adicionar Dinheiro
+                    {t("goals.addMoney")}
                 </Button>                
                 <Button 
                     className="cursor-pointer"
                     style={goal.status == "em_andamento" ? { display: "flex" } : { display: "none" }}
                 >
                     <Pen />
-                    Editar
+                    {t("common.edit")}
                 </Button> 
                 <Button className="cursor-pointer bg-red-padrao" onClick={() => deleteGoal()}>
                     <Trash />
-                    Excluir
+                    {t("common.delete")}
                 </Button> 
             </div>
             <div 
@@ -127,9 +129,9 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
             >
                 <ShieldAlert size={18}/>
                 <HoverCard>
-                    <HoverCardTrigger>Meta Atrasada</HoverCardTrigger>
+                    <HoverCardTrigger>{t("goals.lateGoal")}</HoverCardTrigger>
                     <HoverCardContent>
-                        <p>sua meta venceu dia {formatDate(goal.limit_date)}</p>
+                        <p>{t("goals.expiredOn", {date: formatDate(goal.limit_date) ?? ""})}</p>
                     </HoverCardContent>
                 </HoverCard>
             </div>
@@ -140,11 +142,11 @@ export function GoalCard({ goal, percentage, index, refreshGoals }: GoalCardProp
                 <div className="flex items-center gap-3">
                     <Banknote size={60} color="#2CAE60" className="bg-green-padrao-25 p-2 rounded-full"/>
                     <DialogTitle className="text-xl">
-                        Adicionar Dinheiro
+                        {t("goals.addMoney")}
                     </DialogTitle>
                 </div>
                 </DialogHeader>
-                <p className="text-text-padrao">Adicione dinheiro em sua meta!</p>
+                <p className="text-text-padrao">{t("goals.addMoneyDesc")}</p>
                 <Separator/>
                 <AddMoneyModal refreshGoals={refreshGoals} goal={goal}/>
             </DialogContent>

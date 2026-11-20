@@ -1,3 +1,4 @@
+import { translate } from "@/i18n/i18n";
 import { supabase } from "@/services/supabase";
 import type { DataResponse } from "@/types/generalTypes";
 
@@ -7,7 +8,7 @@ export const getMFAStatus = async (): Promise<DataResponse> => {
     if (error) {
         return {
             success: false,
-            message: "Erro ao buscar status MFA",
+            message: translate("mfa.statusError"),
             error: error
         };
     }

@@ -1,3 +1,5 @@
+import { useLanguage } from "@/i18n/LanguageContext";
+import { getDateLocale, translateCategory } from "@/i18n/i18n";
 import { useEffect, useState } from "react";
 import { getData } from "@/Utils/getData";
 import * as React from "react"
@@ -41,9 +43,10 @@ export function CreateNewTransaction({ onSave }: Props) {
     const [value, setValue] = useState("");
     const [desc, setDesc] = useState("");
     const { user, loading } = useAuth();
+    const { t } = useLanguage();
     
     if (loading) {
-        return <div>Carregando...</div>;
+        return <div>{t("common.loading")}</div>;
     }
     if (!user) {
         return <Navigate to="/Login" replace />;
@@ -61,7 +64,7 @@ export function CreateNewTransaction({ onSave }: Props) {
             const safeCategories = Array.isArray(categories.data) ? categories.data : [];
 
             const options = safeCategories.map((c) => ({
-                label: c.name,
+                label: translateCategory(c.name),
                 value: c.id,
             }));
             setCatOptions(options);
@@ -81,7 +84,7 @@ export function CreateNewTransaction({ onSave }: Props) {
     const saveFormData = async () => {
         if(verifyForm([type, categoryId, value])){
             if(desc && desc.length > 100){
-                notify.error("Descrição deve ter menos que 100 caracteres");
+                notify.error(t("transactions.descTooLong"));
                 return false;
             }
 
@@ -114,24 +117,24 @@ export function CreateNewTransaction({ onSave }: Props) {
             <span className="bg-green-padrao p-2 rounded-full">
               <CreditCard />
             </span> 
-            Dados da transação
+            {t("transactions.data")}
           </p>
         </div>
         <div className="flex gap-5 flex-wrap flex-col">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-subdiv2-padrao p-8 rounded-xl">
             <SelectInput 
-                label="Tipo" placeholder="Tipo" options={[{ label: "Receita", value: "Receita" }, { label: "Despesa", value: "Despesa" }]}
+                label={t("common.type")} placeholder={t("common.type")} options={[{ label: t("type.Receita"), value: "Receita" }, { label: t("type.Despesa"), value: "Despesa" }]}
                 onValueChange={(e) => setType(e)} 
                 value={type}
             />
             <SelectInput 
-                label="Categoria" 
-                placeholder="Categoria" 
+                label={t("common.category")} 
+                placeholder={t("common.category")} 
                 options={catOptions} 
                 onValueChange={(e) => setCategoryId(e)} value={categoryId}
             />
             <div className="flex flex-col gap-3">
-              <p>Data da transação</p>
+              <p>{t("transactions.date")}</p>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -140,7 +143,7 @@ export function CreateNewTransaction({ onSave }: Props) {
                     className="w-full p-5 justify-start text-left font-normal data-[empty=true]:text-muted-foreground bg-subdiv2-padrao border-border"
                   >
                     <CalendarIcon />
-                    {date ? format(date, "PPP") : <span>Selecione a data</span>}
+                    {date ? format(date, "PPP", { locale: getDateLocale() }) : <span>{t("common.selectDate")}</span>}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
@@ -151,11 +154,11 @@ export function CreateNewTransaction({ onSave }: Props) {
             <div className="flex flex-col gap-2">
               <p></p>
               <Field>
-                <FieldLabel htmlFor="input-field-username">Valor R$</FieldLabel>
+                <FieldLabel htmlFor="input-field-username">{t("transactions.valueLabel")}</FieldLabel>
                 <Input
                   id="input-field-username"
                   type="number"
-                  placeholder="Valor da transação"
+                  placeholder={t("transactions.valuePlaceholder")}
                   className="p-5"
                   value={value}
                   onChange={(e) => {
@@ -169,8 +172,8 @@ export function CreateNewTransaction({ onSave }: Props) {
             </div>
           </div>
           <div className="w-full min-w-0 bg-subdiv2-padrao p-8 rounded-xl flex flex-col gap-5">
-            <p>Descrição (Opicional)</p>
-            <Textarea placeholder="Adicione uma descrição para sua transação" 
+            <p>{t("transactions.descOptional")}</p>
+            <Textarea placeholder={t("transactions.descPlaceholder")} 
             onChange={(e)=>setDesc(e.target.value)} 
             className="w-full break-all border-none" value={desc}/>
           </div>
@@ -181,11 +184,11 @@ export function CreateNewTransaction({ onSave }: Props) {
             onClick={()=>saveFormData()}
           > 
             <Save /> 
-            Salvar Transação
+            {t("transactions.saveButton")}
           </Button>
           <div className="flex items-center gap-2 text-text-padrao text-sm">
             <ShieldAlert />
-            <p>Crie novas categorias na página de categoria</p>
+            <p>{t("transactions.createCategoryHint")}</p>
           </div>
         </div>
     </div>

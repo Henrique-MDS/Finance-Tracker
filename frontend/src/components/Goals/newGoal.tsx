@@ -1,3 +1,5 @@
+import { useLanguage } from "@/i18n/LanguageContext";
+import { getDateLocale } from "@/i18n/i18n";
 import { CalendarIcon, FileText, Save } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar"
 import NewGoalInput from "../Inputs/newGoalInput";
@@ -19,13 +21,14 @@ interface NewGoalModalProps {
 export function NewGoalModal({ refreshGoals }: NewGoalModalProps) {
 
     const { user, loading } = useAuth();
+    const { t } = useLanguage();
     const [title, setTitle] = useState("");
     const [goalValue, setGoalValue] = useState("");
     const [date, setDate] = React.useState<Date>();
     const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
 
     if (loading) {
-        return <div>Carregando...</div>;
+        return <div>{t("common.loading")}</div>;
     }
 
     if (!user) {
@@ -46,11 +49,11 @@ export function NewGoalModal({ refreshGoals }: NewGoalModalProps) {
         );
 
         if(!response.success){
-            notify.error("Erro ao criar meta");
+            notify.error(t("goals.createError"));
             return;
         }
 
-        notify.success("Meta criada com sucesso!");
+        notify.success(t("goals.created"));
         await refreshGoals();
         resetFields();
     }
@@ -60,28 +63,28 @@ export function NewGoalModal({ refreshGoals }: NewGoalModalProps) {
         const value = Number(goalValue);
 
         if (!trimmedTitle)
-            return "Informe o nome da meta.";
+            return t("goals.enterName");
 
         if (trimmedTitle.length > 20)
-            return "O nome da meta deve ter no máximo 20 caracteres.";
+            return t("goals.nameTooLong");
 
         if (!goalValue)
-            return "Informe o valor da meta.";
+            return t("goals.enterValue");
 
         if (isNaN(value))
-            return "Informe um valor válido.";
+            return t("common.invalidValue");
 
         if (value <= 0)
-            return "O valor deve ser maior que zero.";
+            return t("common.valueGreaterThanZero");
 
         if (!date)
-            return "Selecione uma data.";
+            return t("goals.selectDate");
 
         const today = new Date();
         today.setHours(0,0,0,0);
 
         if (date < today)
-            return "A data deve ser hoje ou futura.";
+            return t("goals.futureDate");
 
         return null;
     }
@@ -97,27 +100,27 @@ export function NewGoalModal({ refreshGoals }: NewGoalModalProps) {
             <div className="flex flex-col gap-5">
                 <div className="flex items-center gap-2">
                     <FileText color="#2CAE60"/>
-                    <h2 className="text-[16px]">Informações da Meta</h2>
+                    <h2 className="text-[16px]">{t("goals.info")}</h2>
                 </div>
                 <div className="flex flex-col gap-4">
                     <NewGoalInput 
-                        title="Nome da Meta *" 
-                        placeholder="Ex: Viagem para o Havaii" 
-                        desc="Dê um nome inspirador a sua meta"
+                        title={t("goals.nameLabel")} 
+                        placeholder={t("goals.namePlaceholder")} 
+                        desc={t("goals.nameDesc")}
                         type="text"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}                        
                     />
                     <NewGoalInput 
-                        title="Valor da Meta" 
-                        placeholder="R$ 0,00" 
-                        desc="Qual valor total deseja alcançar?"
+                        title={t("goals.valueLabel")} 
+                        placeholder={t("goals.amountPlaceholder")} 
+                        desc={t("goals.valueDesc")}
                         type="number"
                         value={goalValue}
                         onChange={(e) => setGoalValue(e.target.value)}                        
                     />
                     <div className="flex flex-col gap-2">
-                        <p>Data limite para atingir a meta</p>
+                        <p>{t("goals.limitDate")}</p>
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button
@@ -126,7 +129,7 @@ export function NewGoalModal({ refreshGoals }: NewGoalModalProps) {
                                     className="w-full justify-start text-left p-5 font-normal data-[empty=true]:text-muted-foreground bg-dark-padrao"
                                 >
                                 <CalendarIcon />
-                                {date ? format(date, "PPP") : <span>Selecione uma data</span>}
+                                {date ? format(date, "PPP", { locale: getDateLocale() }) : <span>{t("common.selectDate")}</span>}
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-auto p-0">
@@ -136,7 +139,7 @@ export function NewGoalModal({ refreshGoals }: NewGoalModalProps) {
                     </div>         
                 </div>
                 <div className="flex flex-col gap-3">
-                    <p className="text-text-padrao">Selecione um ícone que representa sua meta</p>
+                    <p className="text-text-padrao">{t("goals.selectIcon")}</p>
                     <div className="grid sm:grid-cols-3 lg:grid-cols-8 gap-3">
                         {defaultIcons.map(({ name, icon: Icon }) => (
                             <button
@@ -163,7 +166,7 @@ export function NewGoalModal({ refreshGoals }: NewGoalModalProps) {
                     onClick={() => saveNewGoal()}
                 >
                     <Save />
-                    Salvar
+                    {t("common.save")}
                 </Button>
             </div>
         </div>

@@ -1,3 +1,4 @@
+import { useLanguage } from "@/i18n/LanguageContext";
 import { supabase } from "@/services/supabase";
 import { useAuth } from "@/Utils/AuthContext";
 import { getReportData } from "@/Utils/callGetReportData";
@@ -30,6 +31,7 @@ type ReportData = {
 export function CashFlowReport({iniDate, finalDate}:{iniDate:string | null, finalDate:string | null}){
 
     const { user, loading } = useAuth();
+    const { t } = useLanguage();
     const [reportData, setReportData] = useState<ReportData[]>();
     const [receitas, setReceitas] = useState<number>(0);
     const [despesas, setDespesas] = useState<number>(0);
@@ -37,33 +39,24 @@ export function CashFlowReport({iniDate, finalDate}:{iniDate:string | null, fina
     let saldo = receitas - despesas;
 
     if (loading) {
-        return <div>Carregando...</div>;
+        return <div>{t("common.loading")}</div>;
     }
     if (!user) {
         return <Navigate to="/Login" replace />;
     }
     
-    function formatDateToUS(date:string | null): string {
-        if(!date || date == null){
-            return "";
-        }
-        const [day, month, year] = date.split("/");
-
-        return `${year}/${month}/${day}`;
-    }
-
     const getCashFlow = async () => {
         const { data, error } = await supabase.rpc(
             "fluxo_de_caixa",
             {
                 p_user_id: user.id,
-                p_data_inicial: formatDateToUS(iniDate),
-                p_data_final: formatDateToUS(finalDate),
+                p_data_inicial: (iniDate ?? ""),
+                p_data_final: (finalDate ?? ""),
             }
         );
 
         if(error){
-            notify.error("Erro ao buscar fluxo de caixa");
+            notify.error(t("reports.cashFlowError"));
             return;
         }
 
@@ -79,25 +72,25 @@ export function CashFlowReport({iniDate, finalDate}:{iniDate:string | null, fina
     }
 
     const getReceitas = async () => {
-        const response = await getReportData(user.id, formatDateToUS(iniDate), formatDateToUS(finalDate), "Receita");
+        const response = await getReportData(user.id, (iniDate ?? ""), (finalDate ?? ""), "Receita");
         if(response.success){
             if(response && response.data){
                 response.data[0] ? setReceitas(response.data[0].total_value) : setReceitas(0);
             }
         } else {
-            notify.error("Erro ao buscar dados do relatório");
+            notify.error(t("common.reportDataError"));
             return;
         }
     }
 
     const getDespesas = async () => {
-        const response = await getReportData(user.id, formatDateToUS(iniDate), formatDateToUS(finalDate), "Despesa");
+        const response = await getReportData(user.id, (iniDate ?? ""), (finalDate ?? ""), "Despesa");
         if(response.success){
             if(response && response.data){
                 response.data[0] ? setDespesas(response.data[0].total_value) : setDespesas(0);
             }
         } else {
-            notify.error("Erro ao buscar dados do relatório");
+            notify.error(t("common.reportDataError"));
             return;
         }
     }
@@ -116,19 +109,19 @@ export function CashFlowReport({iniDate, finalDate}:{iniDate:string | null, fina
                     <img src={logo} alt="finance-tracker-logo" />
                 </div>
                 <div>
-                    <h3 className="font-semibold">Relatório Financeiro</h3>
-                    <p>{`Período: ${iniDate} a ${finalDate}`}</p>
-                    <p>{`Gerado em: ${dataAtual}`}</p>
+                    <h3 className="font-semibold">{t("reports.docTitle")}</h3>
+                    <p>{t("reports.period", { start: formatDate(iniDate) ?? "", end: formatDate(finalDate) ?? "" })}</p>
+                    <p>{t("reports.generatedAt", { date: dataAtual ?? "" })}</p>
                 </div>
             </div>
 
             <div>
-                <h3 className="font-bold">Resumo do Período</h3>
+                <h3 className="font-bold">{t("reports.periodSummary")}</h3>
                 <div className="flex items-center gap-3 flex-wrap lg:flex-nowrap">
-                    <ReportResumeCard title={"Receitas"} value={formatCurrencyBR(receitas)} themeColor={"#009966"}/>
-                    <ReportResumeCard title={"Despesas"} value={formatCurrencyBR(despesas)} themeColor={"#9E0F18"}/>
-                    <ReportResumeCard title={"Saldo"} value={formatCurrencyBR(saldo)} themeColor={"#00A7E1"}/>
-                    <ReportResumeCard title={"Economia"} value={`${calculateEconomy(receitas, despesas)}%`} themeColor={"#000000"}/>
+                    <ReportResumeCard title={t("common.income")} value={formatCurrencyBR(receitas)} themeColor={"#009966"}/>
+                    <ReportResumeCard title={t("common.expenses")} value={formatCurrencyBR(despesas)} themeColor={"#9E0F18"}/>
+                    <ReportResumeCard title={t("common.balance")} value={formatCurrencyBR(saldo)} themeColor={"#00A7E1"}/>
+                    <ReportResumeCard title={t("common.savings")} value={`${calculateEconomy(receitas, despesas)}%`} themeColor={"#000000"}/>
                 </div>
             </div>
         </div>
@@ -156,8 +149,7 @@ export function CashFlowReport({iniDate, finalDate}:{iniDate:string | null, fina
 
                 <Tooltip
                     labelFormatter={(value) => {
-                        const [year, month, day] = String(value).split("-");
-                        return `${day}/${month}/${year}`;
+                        return formatDate(String(value)) ?? "";
                     }}
                     formatter={(value) =>
                     `R$ ${Number(value).toFixed(2)}`
@@ -168,15 +160,14 @@ export function CashFlowReport({iniDate, finalDate}:{iniDate:string | null, fina
 
                 <XAxis dataKey="tran_date" 
                     tickFormatter={(value) => {
-                        const [year, month, day] = value.split("-");
-                        return `${day}/${month}/${year.slice(2)}`;
+                        return formatDate(value)?.replace(/\d{2}(\d{2})$/, "$1") ?? "";
                     }}
                 />
 
                     <Line
                         type="monotone"
                         dataKey="receitas"
-                        name="Entradas"
+                        name={t("reports.inflows")}
                         stroke="#22c55e"
                         strokeWidth={2}
                         dot={false}
@@ -185,7 +176,7 @@ export function CashFlowReport({iniDate, finalDate}:{iniDate:string | null, fina
                     <Line
                         type="monotone"
                         dataKey="despesas"
-                        name="Saídas"
+                        name={t("reports.outflows")}
                         stroke="#ef4444"
                         strokeWidth={2}
                         dot={false}
@@ -194,7 +185,7 @@ export function CashFlowReport({iniDate, finalDate}:{iniDate:string | null, fina
                     <Line
                         type="monotone"
                         dataKey="saldo_acumulado"
-                        name="Saldo"
+                        name={t("common.balance")}
                         stroke="#3b82f6"
                         strokeWidth={2}
                         strokeDasharray="5 5"
@@ -205,11 +196,11 @@ export function CashFlowReport({iniDate, finalDate}:{iniDate:string | null, fina
         </div>
 
         <div className="flex flex-col gap-3">
-            <h3 className="font-semibold">Saldos diários</h3>
+            <h3 className="font-semibold">{t("reports.dailyBalances")}</h3>
             <div>
                 <div className="grid grid-cols-2">
-                    <p className="text-sm font-bold">Data</p>
-                    <p className="text-sm font-bold">Saldo do dia</p>
+                    <p className="text-sm font-bold">{t("reports.date")}</p>
+                    <p className="text-sm font-bold">{t("reports.dayBalance")}</p>
                 </div>
                 { reportData && reportData.map((data, i) => (
                     <div className={ i % 2 == 0 ? "grid grid-cols-2 py-1" : "grid grid-cols-2 py-1 bg-gray-200 rounded-sm"} key={i}>

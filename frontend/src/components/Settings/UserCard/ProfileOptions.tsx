@@ -1,3 +1,4 @@
+import { useLanguage } from "@/i18n/LanguageContext";
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useState } from "react";
@@ -10,9 +11,10 @@ import { Save } from "lucide-react";
 export function ProfileOptions() {
 
     const { user, loading } = useAuth();
+    const { t } = useLanguage();
 
     if (loading) {
-        return <div>Carregando...</div>;
+        return <div>{t("common.loading")}</div>;
     }
 
     if (!user) {
@@ -36,7 +38,7 @@ export function ProfileOptions() {
             }
             notify.error(response.message);
         }
-        notify.success("Informações atualizadas");
+        notify.success(t("settings.infoUpdated"));
         setTimeout(() => {
             window.location.reload();
         }, 1500);
@@ -44,12 +46,12 @@ export function ProfileOptions() {
     
   return (
     <div>
-        <h1 className="text-xl">Informações do Perfil</h1>
+        <h1 className="text-xl">{t("settings.profileInfo")}</h1>
         <div className="flex flex-col gap-3">
-            <h2 className="text-text-padrao py-3">Alterar foto de perfil</h2>
+            <h2 className="text-text-padrao py-3">{t("settings.changePhoto")}</h2>
             <div className="flex flex-col gap-3">
                 <Input 
-                    placeholder="Faça o upload" 
+                    placeholder={t("settings.upload")} 
                     type="file" 
                     onChange={(e) => {
                         const file = e.target.files?.[0];
@@ -70,10 +72,10 @@ export function ProfileOptions() {
                 />
             </div>
             <div className="flex flex-col gap-5">
-                <p>Previa...</p>
+                <p>{t("settings.preview")}</p>
                 {preview && (
                     <div>
-                        <img src={preview} alt="imagem de perfil" className="w-32 h-32 rounded-full object-cover"/>                                     
+                        <img src={preview} alt={t("settings.profilePicAlt")} className="w-32 h-32 rounded-full object-cover"/>                                     
                     </div>
                 )}
             </div>
@@ -83,7 +85,7 @@ export function ProfileOptions() {
                     onClick={() => salvarFotoDePerfil()}
                 >
                     <Save />
-                    Salvar
+                    {t("common.save")}
                 </Button>
             </div>
         </div>

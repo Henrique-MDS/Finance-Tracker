@@ -2,12 +2,10 @@ import { Outlet } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "./components/ui/sidebar";
 import { AppSidebar } from "./components/Navbar/AppSideBar";
-import { AuthProvider } from "./Utils/AuthContext";
 
 function App() {
   
   return (
-    <AuthProvider>
       <div className="flex h-screen">
         <SidebarProvider>
           <Toaster />
@@ -22,7 +20,6 @@ function App() {
           </SidebarInset>
         </SidebarProvider>
       </div>
-    </AuthProvider>
   );
 }
 

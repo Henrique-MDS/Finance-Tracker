@@ -2,6 +2,8 @@ Descriçao dos campos da tabela Params
 
 IDGERTRANAUT -> gera transação automática após adicionar valor em meta
 
+LANGUAGE -> idioma da interface do usuário ('pt-BR' ou 'en-US'), padrão 'pt-BR'
+
 
 
 

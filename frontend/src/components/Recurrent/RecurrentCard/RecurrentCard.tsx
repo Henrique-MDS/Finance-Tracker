@@ -12,14 +12,14 @@ export function RecurrentCard({ title, desc, info, color, icon }: Props) {
     const Icon = icon;
 
   return (
-    <div className="flex gap-3 p-5 w-full h-full rounded-xl" style={{border: "1px solid #111820"}}>
-        <div className={`${color} h-fit p-3 rounded-full`}>
-            <Icon color="#ffffff"/>
+    <div className="flex items-start gap-3 p-4 sm:p-5 w-full h-full min-w-0 rounded-xl" style={{border: "1px solid var(--border)"}}>
+        <div className={`${color} shrink-0 p-2 sm:p-3 rounded-full`}>
+            <Icon color="#ffffff" className="size-5 sm:size-6"/>
         </div>
-        <div className="flex flex-col gap-1">
-            <p>{ title }</p>
-            <span className="text-xl font-bold">{ desc }</span>
-            <p>{ info }</p>
+        <div className="flex flex-col gap-1 min-w-0">
+            <p className="text-sm sm:text-base leading-tight">{ title }</p>
+            <span className="text-lg sm:text-xl font-bold break-words">{ desc }</span>
+            <p className="text-sm text-text-padrao leading-tight">{ info }</p>
         </div>
     </div>
   );

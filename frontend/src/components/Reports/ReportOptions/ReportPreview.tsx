@@ -1,3 +1,5 @@
+import { useLanguage } from "@/i18n/LanguageContext";
+import { shortMonth, translateCategory, translateType } from "@/i18n/i18n";
 import { Separator } from "@/components/ui/separator"
 import ReportResumeCard from "../ReportResumeCards";
 import { useEffect, useState } from "react";
@@ -37,22 +39,22 @@ type TotalByCategory = {
     total: number;
 }
 
-const chartConfig = {
-    receita: {
-      label: "Receitas",
-      color: "#2CAE60",
-    },
-    despesa: {
-      label: "Despesas",
-      color: "#EF4444",
-    },
-} satisfies ChartConfig
-
 export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, finalDate:string | null}){
 
     const { user, loading } = useAuth();
+    const { t } = useLanguage();
+    const chartConfig = {
+        receita: {
+          label: t("common.income"),
+          color: "#2CAE60",
+        },
+        despesa: {
+          label: t("common.expenses"),
+          color: "#EF4444",
+        },
+    } satisfies ChartConfig
     if (loading) {
-        return <div>Carregando...</div>;
+        return <div>{t("common.loading")}</div>;
     }
     if (!user) {
         return <Navigate to="/Login" replace />;
@@ -66,21 +68,9 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
     const [totalDespesa, setTotalDespesa] = useState<any>(0);
     let saldo = receitas - despesas;
     
-    function formatDateToUS(date: string | null): string {
-        if(!date || date == null){
-            return "";
-        }
-        const [day, month, year] = date.split("/");
-
-        return `${year}/${month}/${day}`;
-    }
-    
-    const dataBrInicial = iniDate;
-    const dataBrFinal = finalDate;
     const dataAtual = formatDate(new Date());
-
-    const dataInicial = formatDateToUS(iniDate);
-    const dataFinal = formatDateToUS(finalDate);
+    const dataInicial = iniDate ?? "";
+    const dataFinal = finalDate ?? "";
 
     if(!userId){
         return <Navigate to="/login" replace />;
@@ -95,7 +85,7 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
                     setTransactions(response.data);
                 }
             } else {
-                notify.error("Erro ao buscar dados do relatório");
+                notify.error(t("common.reportDataError"));
                 return;
             }
         }
@@ -107,7 +97,7 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
                     response.data[0] ? setReceitas(response.data[0].total_value) : setReceitas(0);
                 }
             } else {
-                notify.error("Erro ao buscar dados do relatório");
+                notify.error(t("common.reportDataError"));
                 return;
             }
         }
@@ -119,7 +109,7 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
                     response.data[0] ? setDespesas(response.data[0].total_value) : setDespesas(0);
                 }
             } else {
-                notify.error("Erro ao buscar dados do relatório");
+                notify.error(t("common.reportDataError"));
                 return;
             }
         }
@@ -128,14 +118,14 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
             const response = await getMonthlySummaryByDate(userId, dataInicial, dataFinal);
             
             if(!response.success){
-            notify.error("Erro ao buscar balanças mensais");
+            notify.error(t("common.monthlyBalancesError"));
             return;
             } else {
             if(response && response.data){
                 setBarChartData(response.data);
                 return;
             } else {
-                notify.error("Nenhum dado mensal a ser exibido");
+                notify.error(t("common.noMonthlyData"));
                 return;
             }
             }
@@ -151,7 +141,7 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
             )
             
             if(!response.success){
-                notify.error("Erro ao buscar total por categoria");
+                notify.error(t("common.categoryTotalError"));
                 return;
             } else {
                 if(response && response.data){
@@ -170,7 +160,7 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
             )
             
             if(!response.success){
-                notify.error("Erro ao buscar total por categoria");
+                notify.error(t("common.categoryTotalError"));
                 return;
             } else {
                 if(response && response.data){
@@ -203,19 +193,19 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
                 <img src={logo} alt="finance-tracker-logo" />
             </div>
             <div>
-                <h3 className="font-semibold">Relatório Financeiro</h3>
-                <p>{`Período: ${dataBrInicial} a ${dataBrFinal}`}</p>
-                <p>{`Gerado em: ${dataAtual}`}</p>
+                <h3 className="font-semibold">{t("reports.docTitle")}</h3>
+                <p>{t("reports.period", { start: formatDate(iniDate) ?? "", end: formatDate(finalDate) ?? "" })}</p>
+                <p>{t("reports.generatedAt", { date: dataAtual ?? "" })}</p>
             </div>
         </div>
         <Separator  className="bg-gray-200"/>
         <div className="py-4 flex flex-col gap-3">
-            <h3 className="font-bold">Resumo do Período</h3>
+            <h3 className="font-bold">{t("reports.periodSummary")}</h3>
             <div className="flex items-center gap-3 flex-wrap lg:flex-nowrap">
-                <ReportResumeCard title={"Receitas"} value={formatCurrencyBR(receitas)} themeColor={"#009966"}/>
-                <ReportResumeCard title={"Despesas"} value={formatCurrencyBR(despesas)} themeColor={"#9E0F18"}/>
-                <ReportResumeCard title={"Saldo"} value={formatCurrencyBR(saldo)} themeColor={"#00A7E1"}/>
-                <ReportResumeCard title={"Economia"} value={`${calculateEconomy(receitas, despesas)}%`} themeColor={"#000000"}/>
+                <ReportResumeCard title={t("common.income")} value={formatCurrencyBR(receitas)} themeColor={"#009966"}/>
+                <ReportResumeCard title={t("common.expenses")} value={formatCurrencyBR(despesas)} themeColor={"#9E0F18"}/>
+                <ReportResumeCard title={t("common.balance")} value={formatCurrencyBR(saldo)} themeColor={"#00A7E1"}/>
+                <ReportResumeCard title={t("common.savings")} value={`${calculateEconomy(receitas, despesas)}%`} themeColor={"#000000"}/>
             </div>
             <div className="grid grid-cols-1 gap-6 items-stretch">
                 <div className="border rounded-xl p-4 h-[320px] border-gray-200">
@@ -227,7 +217,7 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
                             tickLine={false}
                             tickMargin={10}
                             axisLine={false}
-                            tickFormatter={(value) => value.slice(0, 3)}
+                            tickFormatter={(value) => shortMonth(value)}
                         />
                         <ChartTooltip content={<ChartTooltipContent />} cursor={{ fill: "#111820", fillOpacity: 0.3 }}/>
                         <ChartLegend content={<ChartLegendContent />} />
@@ -238,7 +228,7 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
                 </div>
                 <div className="border rounded-xl p-4 min-h-[320px] flex flex-wrap items-center justify-center gap-5 border-gray-200">
                     <div className="relative w-full max-w-[320px] h-[320px] p-5 mx-auto sm:mx-0">
-                        <h2 className="font-semibold">Resumo das Despesas</h2>
+                        <h2 className="font-semibold">{t("home.expenseSummary")}</h2>
                         <ResponsiveContainer width="100%" height={220}>
                             <PieChart>
                             <Pie
@@ -256,12 +246,12 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
 
                         {totalDespesa.toString().length > 8 ? (
                             <div className="flex flex-col items-center justify-center mt-4 static">
-                                <span className="text-sm text-gray-400">Total</span>
+                                <span className="text-sm text-gray-400">{t("common.total")}</span>
                                 <span className="text-xl font-bold">R$ {totalDespesa}</span>
                             </div>
                             ) : (
                             <div className="top-0 left-0 right-0 bottom-6 flex flex-col items-center justify-center absolute">
-                                <span className="text-sm text-gray-400">Total</span>
+                                <span className="text-sm text-gray-400">{t("common.total")}</span>
                                 <span className="text-xl font-bold">R$ {totalDespesa}</span>
                             </div>
                         )}
@@ -286,7 +276,7 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
                                         }}
                                     />
 
-                                    <span>{item.category_name.length > 15 ? item.category_name.slice(0, 15) + "..." : item.category_name}</span>
+                                    <span>{(() => { const name = translateCategory(item.category_name); return name.length > 15 ? name.slice(0, 15) + "..." : name; })()}</span>
                                 </div>
 
                                 <span>{percentage}%</span>
@@ -297,25 +287,25 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
                 </div>
             </div>
             <div className="border-[1px] border-gray-200 rounded-[4px] p-5">
-                <h3 className="font-semibold py-3">Transações Do Período</h3>
+                <h3 className="font-semibold py-3">{t("reports.periodTransactions")}</h3>
                 <div className="overflow-x-auto print:overflow-visible">
                     <div className="min-w-[560px] print:min-w-0">
                         <div className="grid grid-cols-[100px_2fr_1.5fr_120px_100px] gap-3 font-semibold border-b pb-2">
-                            <p>data</p>
-                            <p>descrição</p>
-                            <p>categoria</p>
-                            <p>tipo</p>
-                            <p>valor</p>
+                            <p>{t("reports.colDate")}</p>
+                            <p>{t("reports.colDesc")}</p>
+                            <p>{t("reports.colCategory")}</p>
+                            <p>{t("reports.colType")}</p>
+                            <p>{t("reports.colValue")}</p>
                         </div>
-                        {transactions && transactions.map((t)=>(
-                            <div key={t.id} className="grid grid-cols-[100px_2fr_1.5fr_120px_100px] gap-3 py-2 border-b border-gray-200">
-                                <p>{formatDate(t.tran_date)}</p>
-                                <p>{t.desc}</p>
-                                <p>{t.category_name}</p>
-                                <p>{t.type}</p>
-                                <p style={t.type == "Receita" ? {color: "#2CAE60"}: {color: "#DD3C3C"}}
+                        {transactions && transactions.map((tran)=>(
+                            <div key={tran.id} className="grid grid-cols-[100px_2fr_1.5fr_120px_100px] gap-3 py-2 border-b border-gray-200">
+                                <p>{formatDate(tran.tran_date)}</p>
+                                <p>{tran.desc}</p>
+                                <p>{translateCategory(tran.category_name)}</p>
+                                <p>{translateType(tran.type)}</p>
+                                <p style={tran.type == "Receita" ? {color: "#2CAE60"}: {color: "#DD3C3C"}}
                                     className="font-bold">
-                                    {t.type == "Receita" ? `+ ${t.value}` : `- ${t.value}`}
+                                    {tran.type == "Receita" ? `+ ${tran.value}` : `- ${tran.value}`}
                                 </p>
                             </div>
                         ))}
@@ -324,7 +314,7 @@ export function ReportPreviewPage({iniDate, finalDate}:{iniDate:string | null, f
             </div>
         </div>
         <div className="flex w-full items-center justify-center text-gray-500">
-            <p>Relatório Gerado por Finance Tracker</p>
+            <p>{t("reports.footer")}</p>
         </div>
     </div>
   );

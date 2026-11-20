@@ -1,3 +1,6 @@
+import { computeNextExecution } from "@/Utils/nextExecution";
+import { useLanguage } from "@/i18n/LanguageContext";
+import { translateCategory, translateFrequency, translateType } from "@/i18n/i18n";
 import type { RecurrentTable } from "@/types/generalTypes";
 import { useAuth } from "@/Utils/AuthContext";
 import { formatDate } from "@/Utils/formatDate";
@@ -27,6 +30,7 @@ type RecurrentGridProps = {
 export function RecurrentGrid({ recurrentData, onRefresh, onRefreshRecurrentResume }:RecurrentGridProps) {
 
     const { user, loading } = useAuth();
+    const { t } = useLanguage();
     const [catName, setCatName] = useState("");
     const [catIcon, setCatIcon] = useState("");
 
@@ -36,13 +40,13 @@ export function RecurrentGrid({ recurrentData, onRefresh, onRefreshRecurrentResu
 
         if(response.success){
             if(response.data && response.data.length > 0){
-                setCatName(response.data[0].name);
+                setCatName(translateCategory(response.data[0].name));
                 setCatIcon(response.data[0].icon);
             } else {
-                setCatName("Categoria não encontrada");
+                setCatName(t("categories.notFound"));
             }
         } else {
-            notify.error("Erro ao buscar categoria");
+            notify.error(t("common.fetchCategoryError"));
             return;
         }
     }
@@ -52,7 +56,7 @@ export function RecurrentGrid({ recurrentData, onRefresh, onRefreshRecurrentResu
     }, [user?.id])
 
     if (loading) {
-        return <div>Carregando...</div>;
+        return <div>{t("common.loading")}</div>;
     }
 
     if (!user) {
@@ -70,32 +74,37 @@ export function RecurrentGrid({ recurrentData, onRefresh, onRefreshRecurrentResu
         );
 
         if(response.success){
-            notify.success("Recorrência excluída");
+            notify.success(t("recurrent.deleted"));
             await onRefresh();
             await onRefreshRecurrentResume();
         } else {
-            notify.error("Erro ao excluir recorrência");
+            notify.error(t("recurrent.deleteError"));
         }
     }
 
     const toggleStatus = async () => {
+        const activating = !recurrentData.active;
+        const changes = activating
+            ? { active: true, next_execution: computeNextExecution(recurrentData).toISOString() }
+            : { active: false };
+
         const { error } = await supabase
             .from("Recurrent")
-            .update({ active: !recurrentData.active })
+            .update(changes)
             .eq("id", recurrentData.id);
 
         if(error){
-            notify.error("Erro ao atualizar status da recorrência");
+            notify.error(t("recurrent.statusError"));
             return;
         }
 
-        notify.success(recurrentData.active ? "Recorrência desativada" : "Recorrência ativada");
+        notify.success(recurrentData.active ? t("recurrent.deactivated") : t("recurrent.activated"));
         await onRefresh();
         await onRefreshRecurrentResume();
     }
 
     const typeBadge = (
-        <span title={recurrentData.type}>
+        <span title={translateType(recurrentData.type)}>
             {recurrentData.type === "Receita"
                 ? <ArrowUpIcon size={14} color="#2CAE60" className="shrink-0"/>
                 : <ArrowDownIcon size={14} color="#EF4444" className="shrink-0"/>}
@@ -104,7 +113,7 @@ export function RecurrentGrid({ recurrentData, onRefresh, onRefreshRecurrentResu
 
     const statusBadge = (
         <p className={`${recurrentData.active ? "bg-green-padrao-25 w-fit px-3 rounded-sm truncate max-w-full" : "bg-red-padrao-25 w-fit px-3 rounded-sm truncate max-w-full"}`}>
-            {recurrentData.active ? "Ativa" : "Inativa"}
+            {recurrentData.active ? t("recurrent.statusActive") : t("recurrent.statusInactive")}
         </p>
     );
 
@@ -118,11 +127,11 @@ export function RecurrentGrid({ recurrentData, onRefresh, onRefreshRecurrentResu
             <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => toggleStatus()}>
                     <RefreshCw />
-                    {recurrentData.active ? "Desativar" : "Ativar"}
+                    {recurrentData.active ? t("recurrent.deactivate") : t("recurrent.activate")}
                 </DropdownMenuItem>
                 <DropdownMenuItem variant="destructive" onClick={() => deleteRecurrent()}>
                     <Trash />
-                    Excluir
+                    {t("common.delete")}
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
@@ -146,7 +155,7 @@ export function RecurrentGrid({ recurrentData, onRefresh, onRefreshRecurrentResu
                 <p className="truncate">{formatCurrencyBR(recurrentData.value)}</p>
             </div>
             <div className="min-w-0">
-                <p className="truncate">{recurrentData.frequency}</p>
+                <p className="truncate">{translateFrequency(recurrentData.frequency)}</p>
             </div>
             <div className="min-w-0">
                 <p className="truncate">{formatDate(recurrentData.next_execution)}</p>
@@ -174,22 +183,22 @@ export function RecurrentGrid({ recurrentData, onRefresh, onRefreshRecurrentResu
             </div>
             <div className="grid grid-cols-2 gap-3 text-sm">
                 <div className="min-w-0">
-                    <p className="text-text-padrao">Valor</p>
+                    <p className="text-text-padrao">{t("common.value")}</p>
                     <p className="truncate flex items-center gap-1">
                         {typeBadge}
                         {formatCurrencyBR(recurrentData.value)}
                     </p>
                 </div>
                 <div className="min-w-0">
-                    <p className="text-text-padrao">Frequência</p>
-                    <p className="truncate">{recurrentData.frequency}</p>
+                    <p className="text-text-padrao">{t("common.frequency")}</p>
+                    <p className="truncate">{translateFrequency(recurrentData.frequency)}</p>
                 </div>
                 <div className="min-w-0">
-                    <p className="text-text-padrao">Próxima execução</p>
+                    <p className="text-text-padrao">{t("recurrent.nextExecution")}</p>
                     <p className="truncate">{formatDate(recurrentData.next_execution)}</p>
                 </div>
                 <div className="min-w-0">
-                    <p className="text-text-padrao">Status</p>
+                    <p className="text-text-padrao">{t("common.status")}</p>
                     {statusBadge}
                 </div>
             </div>

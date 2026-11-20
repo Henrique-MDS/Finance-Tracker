@@ -1,3 +1,5 @@
+import { useLanguage } from "@/i18n/LanguageContext";
+import { getDateLocale, translateCategory } from "@/i18n/i18n";
 import { BrushCleaning, CalendarIcon, Funnel, X } from "lucide-react";
 import SelectInput from "../Inputs/Select_Input";
 import { useEffect, useState } from "react";
@@ -29,6 +31,7 @@ export function TransactionFilter({ onFilter }: Props) {
     const [catOptions, setCatOptions] = useState<SelectOption[]>([]);
     
     const { user, loading } = useAuth();
+    const { t } = useLanguage();
 
     // filtros das trasações
     const [iniDate, setIniDate] = useState<Date>();
@@ -37,7 +40,7 @@ export function TransactionFilter({ onFilter }: Props) {
     const [tranType, setTranType] = useState("");
     
     if (loading) {
-        return <div>Carregando...</div>;
+        return <div>{t("common.loading")}</div>;
     }
 
     if (!user) {
@@ -53,12 +56,12 @@ export function TransactionFilter({ onFilter }: Props) {
         const safeCategories = Array.isArray(categories.data) ? categories.data : [];
 
         const options = safeCategories.map((c) => ({
-            label: c.name,
+            label: translateCategory(c.name),
             value: c.id,
         }));
 
         options.unshift({
-            label: "Todos",
+            label: t("common.all"),
             value: "T",
         })
 
@@ -76,7 +79,7 @@ export function TransactionFilter({ onFilter }: Props) {
 
         if(iniDate && finalDate){
             if(iniDate > finalDate){
-                notify.error("Data inicial deve ser menor que a final");
+                notify.error(t("transactions.dateRangeError"));
                 return;
             }
         }
@@ -110,31 +113,31 @@ export function TransactionFilter({ onFilter }: Props) {
             <span className="bg-green-padrao p-2 rounded-full">
               <Funnel />
             </span> 
-            Filtrar Transações
+            {t("transactions.filterTitle")}
           </p>
         </div>
         <div className="bg-subdiv2-padrao p-8 rounded-xl">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                 <SelectInput 
-                    label="Tipo" 
-                    placeholder="Tipo" 
+                    label={t("common.type")} 
+                    placeholder={t("common.type")} 
                     options={[
-                        { label: "Todos", value: "T" },
-                        { label: "Receita", value: "Receita" }, 
-                        { label: "Despesa", value: "Despesa" }
+                        { label: t("common.all"), value: "T" },
+                        { label: t("type.Receita"), value: "Receita" }, 
+                        { label: t("type.Despesa"), value: "Despesa" }
                     ]}
                     onValueChange={(e) => setTranType(e)} 
                     value={tranType}
                 />
                 <SelectInput 
-                    label="Categoria" 
-                    placeholder="Categoria"
+                    label={t("common.category")} 
+                    placeholder={t("common.category")}
                     options={catOptions} 
                     onValueChange={(e) => setCategoryId(e)} 
                     value={categoryId}
                 />
                 <div>
-                    <p>Data Inicial</p>
+                    <p>{t("common.initialDate")}</p>
                     <Popover>
                         <PopoverTrigger asChild>
                             <Button
@@ -144,7 +147,7 @@ export function TransactionFilter({ onFilter }: Props) {
                             >   
                                 <div className="flex items-center gap-2">
                                     <CalendarIcon />
-                                    {iniDate ? format(iniDate, "PPP") : <span>Selecione a data</span>}
+                                    {iniDate ? format(iniDate, "PPP", { locale: getDateLocale() }) : <span>{t("common.selectDate")}</span>}
                                 </div>
                                 <div className="cursor-pointer" onClick={() => setIniDate(undefined)}>
                                     <X />
@@ -157,7 +160,7 @@ export function TransactionFilter({ onFilter }: Props) {
                     </Popover>
                 </div>
                 <div>
-                    <p>Data Final</p>
+                    <p>{t("common.finalDate")}</p>
                     <Popover>
                         <PopoverTrigger asChild>
                         <Button
@@ -167,7 +170,7 @@ export function TransactionFilter({ onFilter }: Props) {
                         >
                             <div className="flex items-center gap-2">
                                 <CalendarIcon />
-                                {finalDate ? format(finalDate, "PPP") : <span>Selecione a data</span>}
+                                {finalDate ? format(finalDate, "PPP", { locale: getDateLocale() }) : <span>{t("common.selectDate")}</span>}
                             </div>
                             <div className="cursor-pointer" onClick={() => setFinalDate(undefined)}>
                                 <X />
@@ -186,14 +189,14 @@ export function TransactionFilter({ onFilter }: Props) {
                 className="cursor-pointer bg-green-padrao"
                 onClick={() => callExecuteFilter()}
             >
-                Filtrar
+                {t("transactions.filterButton")}
             </Button>
             <Button 
                 className="cursor-pointer bg-blue-padrao"
                 onClick={() => cleanFilter()}
             >
                 <BrushCleaning />
-                Limpar Filtro
+                {t("transactions.clearFilter")}
             </Button>
         </div>
     </div>

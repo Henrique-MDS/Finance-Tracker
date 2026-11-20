@@ -5,7 +5,8 @@ import {
   type DayButton,
   type Locale,
 } from "react-day-picker"
-import { ptBR } from "date-fns/locale";
+import { useLanguage } from "@/i18n/LanguageContext";
+import { getDateLocale } from "@/i18n/i18n";
 
 import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -17,13 +18,15 @@ function Calendar({
   showOutsideDays = true,
   captionLayout = "label",
   buttonVariant = "ghost",
-  locale = ptBR,
+  locale,
   formatters,
   components,
   ...props
 }: React.ComponentProps<typeof DayPicker> & {
   buttonVariant?: React.ComponentProps<typeof Button>["variant"]
 }) {
+  useLanguage()
+  locale = locale ?? getDateLocale()
   const defaultClassNames = getDefaultClassNames()
 
   return (
@@ -186,6 +189,8 @@ function CalendarDayButton({
   locale,
   ...props
 }: React.ComponentProps<typeof DayButton> & { locale?: Partial<Locale> }) {
+  useLanguage()
+  locale = locale ?? getDateLocale()
   const defaultClassNames = getDefaultClassNames()
 
   const ref = React.useRef<HTMLButtonElement>(null)

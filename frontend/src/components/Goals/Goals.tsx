@@ -1,3 +1,4 @@
+import { useLanguage } from "@/i18n/LanguageContext";
 import { Flag, Ghost, Goal as GoalIcon, Plus, Trophy } from "lucide-react";
 import { Separator } from "@/components/ui/separator"
 import GoalCard from "./GoalCard";
@@ -15,6 +16,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 export function GoalsPage() {
 
     const { user, loading } = useAuth();
+    const { t } = useLanguage();
     const [goals, setGoals] = useState<Goal[]>([]);
     const [newGoalPopUp, setNewGoalPopUp] = useState(false);
 
@@ -28,7 +30,7 @@ export function GoalsPage() {
                 setGoals(response.data);
             }
         } else {
-            notify.error("Erro ao buscar metas");
+            notify.error(t("goals.fetchError"));
             return;
         }
     }
@@ -38,7 +40,7 @@ export function GoalsPage() {
     }, [user])
 
     if (loading) {
-        return <div>Carregando...</div>;
+        return <div>{t("common.loading")}</div>;
     }
     if (!user) {
         return <Navigate to="/Login" replace />;
@@ -87,14 +89,14 @@ export function GoalsPage() {
         <div className="flex items-center gap-3">
             <GoalIcon color="#2CAE60" size={32}/>
             <div>
-                <h1 className="text-2xl text-foreground">Metas Financeiras</h1>
-                <p>Acompanhe o progresso de seus objetivos</p>
+                <h1 className="text-2xl text-foreground">{t("goals.title")}</h1>
+                <p>{t("goals.subtitle")}</p>
             </div>
         </div>
         <Separator />
         <div className="flex gap-5 flex-col lg:flex-row">
             <div className="w-[100%] lg:w-[60%] flex flex-col gap-3 h-full">
-                <h2 className="font-semibold text-xl text-foreground">Minhas Metas</h2>
+                <h2 className="font-semibold text-xl text-foreground">{t("goals.mine")}</h2>
                 <div className="flex flex-col gap-3 max-h-96 overflow-y-auto scrollbar-hide">
                     {goals.length > 0 ? (
                         goals.map((goal, i) => (
@@ -109,7 +111,7 @@ export function GoalsPage() {
                     ) : (
                         <div className="flex items-center gap-3">
                             <Ghost />
-                            <p>Sem metas por enquanto...</p>
+                            <p>{t("goals.empty")}</p>
                         </div>
                     )}
                 </div>
@@ -118,19 +120,19 @@ export function GoalsPage() {
                             onClick={() => setNewGoalPopUp(true)}
                     >
                         <Plus />
-                        Criar nova meta
+                        {t("goals.create")}
                     </Button>
                 </div>
             </div>
             <div className="w-[100%] lg:w-[30%] flex flex-col gap-3 h-full">
-                <h2 className="font-semibold text-xl text-foreground">Resumo das Metas</h2>
+                <h2 className="font-semibold text-xl text-foreground">{t("goals.summary")}</h2>
                 <div className="flex flex-col gap-5 max-h-96 overflow-y-auto scrollbar-hide bg-subdiv2-padrao p-5 rounded-xl">
                     <div className="flex items-center gap-4">
                         <div className="bg-green-padrao-25 p-1 rounded-sm">
                             <GoalIcon size={40} color="#2C8E34" />
                         </div>
                         <div>
-                            <p className="text-sm">Metas Ativas</p>
+                            <p className="text-sm">{t("goals.active")}</p>
                             <span className="text-xl font-semibold">{goalsInfo.activeGoals}</span>
                         </div>
                     </div>
@@ -139,7 +141,7 @@ export function GoalsPage() {
                             <Trophy size={40} color="#1F6FEB"/>
                         </div>
                         <div>
-                            <p className="text-sm">Metas Concluídas</p>
+                            <p className="text-sm">{t("goals.completed")}</p>
                             <span className="text-xl font-semibold">{goalsInfo.completedGoals}</span>
                         </div>
                     </div>
@@ -148,7 +150,7 @@ export function GoalsPage() {
                             <Flag size={40} color="#A970FF"/>
                         </div>
                         <div>
-                            <p className="text-sm">Total de Metas</p>
+                            <p className="text-sm">{t("goals.total")}</p>
                             <span className="text-xl font-semibold">{goalsInfo.totalGoals}</span>
                         </div>
                     </div>
@@ -161,11 +163,11 @@ export function GoalsPage() {
                 <div className="flex items-center gap-3">
                     <GoalIcon size={60} color="#2CAE60" className="bg-green-padrao-25 p-2 rounded-full"/>
                     <DialogTitle className="text-xl">
-                        Nova Meta
+                        {t("goals.new")}
                     </DialogTitle>
                 </div>
                 </DialogHeader>
-                <p className="text-text-padrao">Crie uma meta para acompanhar seus objetivos</p>
+                <p className="text-text-padrao">{t("goals.newDesc")}</p>
                 <Separator/>
                 <NewGoalModal refreshGoals={loadGoals}/>
             </DialogContent>

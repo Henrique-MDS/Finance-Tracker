@@ -1,3 +1,5 @@
+import { useLanguage } from "@/i18n/LanguageContext";
+import { translateCategory } from "@/i18n/i18n";
 import { formatDate } from "@/Utils/formatDate";
 import upArrow from "../../assets/up-arrow-icon.svg";
 import downArrow from "../../assets/down-arrow-icon.svg";
@@ -32,6 +34,7 @@ type TransactionGridProps = {
 };
 
 export function TransactionGrid({transactionProps, onDelete}:TransactionGridProps) {
+    const { t } = useLanguage();
   
     const formattedDate = formatDate(transactionProps.tran_date);
     let color = transactionProps.type == "Receita" ? "var(--income-bg)" : "var(--expense-bg)";
@@ -46,11 +49,11 @@ export function TransactionGrid({transactionProps, onDelete}:TransactionGridProp
         );
 
         if(isDeleted.success){
-            notify.success("Transação excluída!");
+            notify.success(t("transactions.deleted"));
             await onDelete();
             return;
         } else {
-            notify.error("Erro ao excluir transação");
+            notify.error(t("transactions.deleteError"));
             return;
         }
     }
@@ -67,7 +70,7 @@ export function TransactionGrid({transactionProps, onDelete}:TransactionGridProp
                     {transactionProps.value}
                 </p>
                 <div>
-                    <p>{transactionProps.specificCat && transactionProps.specificCat.name}</p>
+                    <p>{transactionProps.specificCat && translateCategory(transactionProps.specificCat.name)}</p>
                 </div>
             </div>
             <div className="flex-1">
@@ -80,7 +83,7 @@ export function TransactionGrid({transactionProps, onDelete}:TransactionGridProp
                     <span>
                         <img src={trash} alt="trash icon" className="w-[25px]"/>
                     </span>
-                    Excluir
+                    {t("common.delete")}
                 </Button>
             </div>
             <p>{formattedDate}</p>

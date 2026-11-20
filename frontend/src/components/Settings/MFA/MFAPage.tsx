@@ -1,3 +1,4 @@
+import { useLanguage } from "@/i18n/LanguageContext";
 import { Shield } from "lucide-react";
 import logo from "@/assets/logo-tracker.png";
 import { Input } from "@/components/ui/input";
@@ -12,17 +13,18 @@ export function MFAPage() {
 
     const [code, setCode] = useState("");
     let navigate = useNavigate();
+    const { t } = useLanguage();
 
     const verifyMFA = async () => {
         if(!code || code.length != 6) {
-            notify.error("Digite o código corretamente");
+            notify.error(t("mfa.enterCodeCorrectly"));
             return;
         }
 
         const { data, error } = await supabase.auth.mfa.listFactors();
 
         if(error) {
-            notify.error("Erro ao buscar MFA");
+            notify.error(t("mfa.fetchError"));
             return;
         }
 
@@ -31,7 +33,7 @@ export function MFAPage() {
         );
 
         if (!factor) {
-            notify.error("Nenhum MFA ativo encontrado");
+            notify.error(t("mfa.noActive"));
             return;
         }
 
@@ -40,7 +42,7 @@ export function MFAPage() {
         });
 
         if(challengError) {
-            notify.error("Erro ao buscar id do MFA");
+            notify.error(t("mfa.challengeError"));
             return;
         }
 
@@ -51,11 +53,11 @@ export function MFAPage() {
         });
 
         if(errorVerify){
-            notify.error("Erro ao verificar código mfa");
+            notify.error(t("mfa.codeVerifyError"));
             return;
         }
 
-        notify.success("Autenticação concluída");
+        notify.success(t("mfa.authDone"));
         navigate("/");
     }
 
@@ -68,11 +70,11 @@ export function MFAPage() {
         <div className="bg-dark-padrao p-8 rounded-md shadow-sm flex flex-col items-center gap-5">
             <div className="w-full flex items-center justify-center gap-3">
                 <Shield size={30} color="#5AC388"/>
-                <h1 className="text-foreground text-2xl">Autenticação multi fatores</h1>
+                <h1 className="text-foreground text-2xl">{t("mfa.pageTitle")}</h1>
             </div>
             <div className="flex flex-col items-center">
-                <p>Autenticação de dois fatores requerida</p>
-                <p>Digite o código de 6 dígitos de seu app de segurança para continuar o login</p>
+                <p>{t("mfa.required")}</p>
+                <p>{t("mfa.pageDesc")}</p>
             </div>            
             <div>
                 <Input
@@ -95,7 +97,7 @@ export function MFAPage() {
                     className="bg-green-padrao cursor-pointer p-5"
                     onClick={() => verifyMFA()}
                 >
-                    Entrar
+                    {t("mfa.enter")}
                 </Button>
             </div>
         </div>

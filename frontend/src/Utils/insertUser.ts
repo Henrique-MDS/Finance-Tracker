@@ -1,3 +1,4 @@
+import { translate } from "@/i18n/i18n";
 import { supabase } from "../services/supabase"
 
 type InsertUserResult = {
@@ -23,13 +24,13 @@ export const insertUser = async (name:string, email: string, password:string): P
     if(error){
         return {
             success: false, 
-            message: "Erro ao cadastrar email", 
+            message: translate("auth.registerEmailError"), 
             error: error
         } 
     }
 
     return {
         success: true, 
-        message: "Usuário cadastrado com sucesso!"
+        message: translate("auth.registerSuccess")
     }  
 }

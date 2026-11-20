@@ -1,3 +1,5 @@
+import { useLanguage } from "@/i18n/LanguageContext";
+import { translateCategory } from "@/i18n/i18n";
 import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Button } from "../ui/button";
@@ -22,9 +24,10 @@ export function CategoriesPage() {
     const [catName, setCatName] = useState("");
     const [selectedIcon, setSelectedIcon] = useState("money");
     const { user, loading } = useAuth();
+    const { t } = useLanguage();
 
     if (loading) {
-        return <div>Carregando...</div>;
+        return <div>{t("common.loading")}</div>;
     }
     if (!user) {
         return <Navigate to="/Login" replace />;
@@ -42,7 +45,7 @@ export function CategoriesPage() {
             setCat(categories.data ?? []);
             setFilteredCat(categories.data ?? []);
         } else {
-            notify.error("Erro ao buscar categorias");
+            notify.error(t("common.fetchCategoriesError"));
             return;
         }
     }
@@ -54,7 +57,7 @@ export function CategoriesPage() {
     const saveCategory = async () => {
         if(verifyForm([catName])){
             if(catName.length > 20){
-                notify.error("Nome deve ter menos que 20 caracteres");
+                notify.error(t("categories.nameTooLong"));
                 return;
             }
 
@@ -69,13 +72,13 @@ export function CategoriesPage() {
             );
             
             if(saveResponse.success){
-                notify.success("Categoria Adicionada");
+                notify.success(t("categories.added"));
                 getAllCategories();
             } else {
                 if(saveResponse.error.code == "23505"){
-                    notify.error("Categoria já existe");
+                    notify.error(t("categories.exists"));
                 } else {
-                    notify.error("Erro ao adicionar categoria");
+                    notify.error(t("categories.addError"));
                 }                
             }
             setCatName("");
@@ -86,7 +89,7 @@ export function CategoriesPage() {
         const value = e.target.value.toLowerCase();
 
         const filtered = cat.filter((c) =>
-            c.name.toLowerCase().includes(value)
+            translateCategory(c.name).toLowerCase().includes(value)
         );
 
         setFilteredCat(filtered);
@@ -97,18 +100,18 @@ export function CategoriesPage() {
     <div className="flex flex-col gap-4">
         <Toaster />
         <div className="flex flex-col gap-2">
-            <h1 className="text-2xl text-foreground">Categorias</h1>
-            <p>Gerencie suas categorias de receitas e despesas</p>
+            <h1 className="text-2xl text-foreground">{t("categories.title")}</h1>
+            <p>{t("categories.subtitle")}</p>
         </div>
         <div className="bg-subdiv-padrao p-5 rounded-xl text-foreground flex flex-col gap-5">
-            <h1 className="text-green-padrao text-xl">Nova Categoria</h1>
+            <h1 className="text-green-padrao text-xl">{t("categories.new")}</h1>
             <div className="flex flex-col gap-2">
-                <p>Nome da Categoria</p>
+                <p>{t("categories.name")}</p>
                 <div className="flex items-center gap-2">
                     <Field>
-                        <Input id="input-demo-api-key" type="text" placeholder="Nome da categoria..." onChange={(e) => setCatName(e.target.value)} value={catName}/>
+                        <Input id="input-demo-api-key" type="text" placeholder={t("categories.namePlaceholder")} onChange={(e) => setCatName(e.target.value)} value={catName}/>
                     </Field>
-                    <Button className="bg-green-padrao cursor-pointer" onClick={() => saveCategory()}>Salvar</Button>
+                    <Button className="bg-green-padrao cursor-pointer" onClick={() => saveCategory()}>{t("common.save")}</Button>
                 </div>                
             </div>
             <div className="flex flex-col gap-3 bg-subdiv2-padrao p-8 rounded-xl">
@@ -116,9 +119,9 @@ export function CategoriesPage() {
               <span>
                 <UserSearch className="text-blue-padrao"/>
               </span>
-              Escolha um ícone
+              {t("categories.chooseIcon")}
             </h3>
-            <p className="text-sm text-text-padrao">Escolha um ícone que melhor representa sua transação</p>
+            <p className="text-sm text-text-padrao">{t("categories.chooseIconDesc")}</p>
             <div>
               <div className="grid sm:grid-cols-3 lg:grid-cols-8 gap-3">
                 {defaultIcons.map(({ name, icon: Icon }) => (
@@ -142,18 +145,18 @@ export function CategoriesPage() {
         </div> 
         <div className="bg-subdiv-padrao p-5 rounded-xl text-foreground flex flex-col gap-5">
             <div className="flex items-center justify-between">
-                <h2 className="text-emerald-300 text-xl">Suas Categorias</h2>
+                <h2 className="text-emerald-300 text-xl">{t("categories.yours")}</h2>
                 <Field className="w-72">
-                    <Input id="input-demo-api-key" type="text" placeholder="Nome da categoria..." 
+                    <Input id="input-demo-api-key" type="text" placeholder={t("categories.namePlaceholder")} 
                            onChange={(e) => filterCategory(e)}
                            />
                 </Field>
             </div>
             <Separator />
             <div className="flex items-center justify-between text-sm text-text-padrao">
-                <p>Nome</p>
-                <p>Criado em</p>
-                <p>Ações</p>
+                <p>{t("categories.colName")}</p>
+                <p>{t("categories.colCreated")}</p>
+                <p>{t("categories.colActions")}</p>
             </div>
             <div className="max-h-96 overflow-y-auto scrollbar-hide">
                 {

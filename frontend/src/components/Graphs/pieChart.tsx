@@ -1,3 +1,5 @@
+import { useLanguage } from "@/i18n/LanguageContext";
+import { translateCategory } from "@/i18n/i18n";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
@@ -14,8 +16,9 @@ type TotalCategory = {
 
 export default function DonutChart() {
     const { user, loading } = useAuth();
+    const { t } = useLanguage();
     if (loading) {
-    return <div>Carregando...</div>;
+    return <div>{t("common.loading")}</div>;
     }
     if (!user) {
     return <Navigate to="/Login" replace />;
@@ -35,14 +38,14 @@ export default function DonutChart() {
             )
             
             if(!response.success){
-                notify.error("Erro ao buscar total por categoria");
+                notify.error(t("common.categoryTotalError"));
                 return;
             } else {
                 if(response && response.data){
                     setTotalDespesasCat(response.data);
                     return;
                 } else {
-                    notify.error("Nenhum dado a ser exibido");
+                    notify.error(t("common.noDataToShow"));
                     return;
                 }
             }
@@ -57,14 +60,14 @@ export default function DonutChart() {
             )
             
             if(!response.success){
-                notify.error("Erro ao buscar total por categoria");
+                notify.error(t("common.categoryTotalError"));
                 return;
             } else {
                 if(response && response.data !== undefined){
                     setTotalDespesa(response.data);
                     return;
                 } else {
-                    notify.error("Nenhum dado a ser exibido");
+                    notify.error(t("common.noDataToShow"));
                     return;
                 }
             }
@@ -76,7 +79,7 @@ export default function DonutChart() {
 
     return (
         <div className="bg-dark-padrao rounded-xl p-5 h-full">
-            <h2 className="text-foreground text-xl">Resumo das Despesas</h2>
+            <h2 className="text-foreground text-xl">{t("home.expenseSummary")}</h2>
             <div className="flex items-center h-full flex-col sm:flex-row lg:flex-row">
                 <div className="relative w-[300px] h-[300px]">
                     <ResponsiveContainer>
@@ -95,7 +98,7 @@ export default function DonutChart() {
                     </ResponsiveContainer>
 
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <span className="text-sm text-text-padrao">Total</span>
+                        <span className="text-sm text-text-padrao">{t("common.total")}</span>
                         <span className="text-2xl font-bold">R$ {totalDespesa}</span>
                     </div>
                 </div>
@@ -118,7 +121,7 @@ export default function DonutChart() {
                                     }}
                                 />
 
-                                <span>{item.category_name.length > 15 ? item.category_name.slice(0, 15) + "..." : item.category_name}</span>
+                                <span>{(() => { const name = translateCategory(item.category_name); return name.length > 15 ? name.slice(0, 15) + "..." : name; })()}</span>
                             </div>
 
                             <span>{percentage}%</span>

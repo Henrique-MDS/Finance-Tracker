@@ -1,3 +1,4 @@
+import { useLanguage } from "@/i18n/LanguageContext";
 import { Navigate } from "react-router-dom"
 import { useAuth } from "@/Utils/AuthContext";
 import UserCard from "./UserCard/UserCard";
@@ -7,9 +8,10 @@ import MFACard from "./MFA/MFACard";
 export function SettingsPage() {
 
   const { user, loading } = useAuth();
+  const { t } = useLanguage();
   
   if (loading) {
-    return <div>Carregando...</div>;
+    return <div>{t("common.loading")}</div>;
   }
 
   if (!user) {

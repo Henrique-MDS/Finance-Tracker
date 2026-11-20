@@ -1,3 +1,4 @@
+import { useLanguage } from "@/i18n/LanguageContext";
 import type { UserProfile } from "@/types/generalTypes";
 import { useAuth } from "@/Utils/AuthContext";
 import { getData } from "@/Utils/getData";
@@ -9,6 +10,7 @@ import { Navigate } from "react-router-dom";
 export function PerfilCard() {
 
   const { user, loading } = useAuth();
+  const { t } = useLanguage();
   const [profile, setProfile] = useState<UserProfile>();
 
   useEffect(() => {
@@ -22,7 +24,7 @@ export function PerfilCard() {
           setProfile(response.data[0]);
         }
       } else {
-        notify.error("Erro ao buscar dados do usuário");
+        notify.error(t("nav.fetchUserError"));
         return;
       }
     }
@@ -31,7 +33,7 @@ export function PerfilCard() {
   }, [user])
 
   if (loading) {
-    return <div>Carregando...</div>;
+    return <div>{t("common.loading")}</div>;
   }
 
   if (!user) {
@@ -62,7 +64,7 @@ export function PerfilCard() {
         (
           <div className="flex items-center gap-3">
             <User />
-            <p>Carregando...</p>
+            <p>{t("common.loading")}</p>
           </div>
         )}
       </div>

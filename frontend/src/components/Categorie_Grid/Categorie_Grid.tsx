@@ -1,3 +1,5 @@
+import { useLanguage } from "@/i18n/LanguageContext";
+import { translateCategory } from "@/i18n/i18n";
 import { formatDate } from "@/Utils/formatDate";
 import trash from "../../assets/trash-icon.svg";
 import { Button } from "../ui/button";
@@ -12,6 +14,7 @@ type CategorieGridProps = {
 };
 
 export function CategorieGrid({categories, refreshCategories}:CategorieGridProps) {
+    const { t } = useLanguage();
 
     const deleteCategory = async () => {
         const response = await deleteData(
@@ -21,13 +24,13 @@ export function CategorieGrid({categories, refreshCategories}:CategorieGridProps
         );
 
         if(response.success){
-            notify.success("Categoria removida");
+            notify.success(t("categories.removed"));
             await refreshCategories();
         } else {
             if(response.error.code == "23503"){
-                notify.error("Existem transações com essa categoria");
+                notify.error(t("categories.inUse"));
             } else {
-                notify.error("Erro ao remover categoria");
+                notify.error(t("categories.removeError"));
             }            
         }
     }
@@ -36,7 +39,7 @@ export function CategorieGrid({categories, refreshCategories}:CategorieGridProps
     <div>
         <Separator/>
         <div className="grid grid-cols-[1fr_1fr_80px] gap-4 items-center py-2">
-            <p>{categories.name}</p>
+            <p>{translateCategory(categories.name)}</p>
             <p>{formatDate(categories.created_at)}</p>
 
             <Button 

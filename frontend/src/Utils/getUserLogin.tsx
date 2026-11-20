@@ -1,3 +1,4 @@
+import { translate } from "@/i18n/i18n";
 import { supabase } from "../services/supabase"
 
 type LogInUserResult = {
@@ -19,7 +20,7 @@ export const getUserLogin = async (email:string, password:string): Promise<LogIn
     if(error){
         return {
             success: false,
-            message: "Falha no Login, verifique se o usuário existe",
+            message: translate("auth.loginFailed"),
             error: error,
             hasMFA: false
         }
@@ -30,7 +31,7 @@ export const getUserLogin = async (email:string, password:string): Promise<LogIn
     if (aalError) {
         return {
             success: false,
-            message: "Erro ao verificar nível de autenticação",
+            message: translate("auth.aalError"),
             error: aalError,
             hasMFA: false,
         };
@@ -40,7 +41,7 @@ export const getUserLogin = async (email:string, password:string): Promise<LogIn
 
     return {
         success: true,
-        message: "Sessão Iniciada!",
+        message: translate("auth.loginSuccess"),
         hasMFA: hasMFA
     }
 }

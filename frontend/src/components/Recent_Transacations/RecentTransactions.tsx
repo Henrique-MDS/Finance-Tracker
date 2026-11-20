@@ -1,3 +1,4 @@
+import { translateCategory } from "@/i18n/i18n";
 import { Separator } from "@/components/ui/separator"
 import { formatDate } from "@/Utils/formatDate";
 import { defaultIcons } from "@/Utils/icons";
@@ -31,7 +32,7 @@ export function RecentTransactions({ transaction }:RecentTransactionProps) {
                 </div>
                 <div>
                     <p className="text-foreground">{transaction.desc}</p>
-                    <p className="text-sm">{transaction.category_name}</p>
+                    <p className="text-sm">{translateCategory(transaction.category_name)}</p>
                 </div>
             </div>
             <div>

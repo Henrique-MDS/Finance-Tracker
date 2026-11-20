@@ -1,3 +1,5 @@
+import { useLanguage } from "@/i18n/LanguageContext";
+import { getDateLocale, translateCategory } from "@/i18n/i18n";
 import { Button } from "../ui/button";
 import RecurrentCard from "./RecurrentCard/RecurrentCard";
 import { ArrowDownIcon, ArrowUpIcon, CalendarIcon, CircleCheck, RefreshCcw, Sparkle, Wallet } from "lucide-react";
@@ -48,6 +50,7 @@ export function RecurrentPage() {
     const [categoryId, setCategoryId] = useState("");
     const [catOptions, setCatOptions] = useState<SelectOption[]>([]);
     const { user, loading } = useAuth();
+    const { t } = useLanguage();
     const [freq, setFreq] = useState("");
     const [day, setDay] = useState("");
     const [iniDate, setIniDate] = React.useState<Date>();
@@ -63,10 +66,10 @@ export function RecurrentPage() {
         value_to_be_executed_next_30_days: 0
     });
     const frequencyOptions = [
-        {label: "Diária", value: "Diaria"},
-        {label: "Semanal", value: "Semanal"},
-        {label: "Mensal", value: "Mensal"},
-        {label: "Anual", value: "Anual"}
+        {label: t("freq.Diaria"), value: "Diaria"},
+        {label: t("freq.Semanal"), value: "Semanal"},
+        {label: t("freq.Mensal"), value: "Mensal"},
+        {label: t("freq.Anual"), value: "Anual"}
     ]
 
     const getCategories = async () => {
@@ -79,7 +82,7 @@ export function RecurrentPage() {
         const safeCategories = Array.isArray(categories.data) ? categories.data : [];
 
         const options = safeCategories.map((c) => ({
-            label: c.name,
+            label: translateCategory(c.name),
             value: c.id,
         }));
         setCatOptions(options);
@@ -99,21 +102,20 @@ export function RecurrentPage() {
     const requiresDay = freq === "Mensal" || freq === "Anual";
 
     const verifyFormData = (): VerifyData => {
-        const fields = {
-            "Descrição": desc,
-            "Categoria": categoryId,
-            "Tipo (Receita/Despesa)": type,
-            "Valor": recurrentValue,
-            "Frequência": freq,
-            "Data de início": iniDate,
-            "Data Final": finalDate,
-        };
+        const fields: [string, unknown][] = [
+            [t("common.description"), desc],
+            [t("common.category"), categoryId],
+            [t("recurrent.typeField"), type],
+            [t("common.value"), recurrentValue],
+            [t("common.frequency"), freq],
+            [t("recurrent.startDate"), iniDate],
+        ];
 
-        for (const [key, val] of Object.entries(fields)) {
-            if ((!val || val === "") && key !== "Data Final") {
+        for (const [field, val] of fields) {
+            if (!val) {
                 return {
                     error: true,
-                    message: `Campo ${key} não pode ficar vazio`,
+                    message: t("recurrent.emptyField", { field }),
                 };
             }
         }
@@ -123,7 +125,7 @@ export function RecurrentPage() {
         if (isNaN(numericValue) || numericValue <= 0) {
             return {
                 error: true,
-                message: "O valor deve ser maior que zero",
+                message: t("common.valueGreaterThanZero"),
             };
         }
 
@@ -138,7 +140,7 @@ export function RecurrentPage() {
             ) {
                 return {
                     error: true,
-                    message: "O dia de execução deve estar entre 1 e 31",
+                    message: t("recurrent.dayRange"),
                 };
             }
         }
@@ -146,7 +148,7 @@ export function RecurrentPage() {
         if (finalDate && iniDate && finalDate < iniDate) {
             return {
                 error: true,
-                message: "A data final não pode ser anterior à data de início",
+                message: t("recurrent.dateOrder"),
             };
         }
 
@@ -183,11 +185,11 @@ export function RecurrentPage() {
         );
 
         if (!result.success) {
-            notify.error("Erro ao cadastrar transação recorrente");
+            notify.error(t("recurrent.saveError"));
             return;
         }
 
-        notify.success("Transação recorrente cadastrada");
+        notify.success(t("recurrent.saved"));
         await getRecurrent();
         await callGetRecurrentResume();
         clearForm();
@@ -199,7 +201,7 @@ export function RecurrentPage() {
         if(response.success){
             setRecurrent(response.data ?? []);
         } else {
-            notify.error("Erro ao buscar recorrências");
+            notify.error(t("recurrent.fetchError"));
             return;
         }
 
@@ -214,7 +216,7 @@ export function RecurrentPage() {
                 setRecurrentResume(response.data[0]);
             }
         } else {
-            notify.error("Erro ao buscar resumo de recorrências");
+            notify.error(t("recurrent.resumeError"));
             return;
         }
     }
@@ -226,7 +228,7 @@ export function RecurrentPage() {
     }, [user?.id])
 
     if (loading) {
-        return <div>Carregando...</div>;
+        return <div>{t("common.loading")}</div>;
     }
 
     if (!user) {
@@ -236,35 +238,35 @@ export function RecurrentPage() {
   return (
     <div className="flex flex-col gap-5 lg:h-full">
         <div>
-            <h1 className="text-2xl text-foreground">Transações Recorrentes</h1>
-            <p>Gerencie suas despesas e receitas que repetem automaticamente</p>
+            <h1 className="text-2xl text-foreground">{t("recurrent.title")}</h1>
+            <p>{t("recurrent.subtitle")}</p>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 w-full">
             <RecurrentCard
-                title="Ativas" 
+                title={t("recurrent.active")} 
                 desc={recurrentResume.total_active} 
-                info="Transações Recorrentes"
+                info={t("recurrent.recurringTransactions")}
                 color="bg-green-padrao"
                 icon={RefreshCcw}
             />
             <RecurrentCard
-                title="Próximos 30 Dias" 
+                title={t("recurrent.next30")} 
                 desc={formatCurrencyBR(recurrentResume.value_to_be_executed_next_30_days)} 
-                info="Total Previsto"
+                info={t("recurrent.expectedTotal")}
                 color="bg-blue-padrao"
                 icon={CalendarIcon}
             />
             <RecurrentCard
-                title="Este Mês" 
+                title={t("recurrent.thisMonth")} 
                 desc={formatCurrencyBR(recurrentResume.total_value_executed_this_month)}
-                info="Total Executado"
+                info={t("recurrent.executedTotal")}
                 color="bg-salmon-padrao"
                 icon={Wallet}
             />
             <RecurrentCard
-                title="Executadas este Mês" 
+                title={t("recurrent.executedThisMonth")} 
                 desc={recurrentResume.executed_this_month}
-                info="Transações"
+                info={t("recurrent.transactions")}
                 color="bg-purple-padrao"
                 icon={CircleCheck}
             />
@@ -272,16 +274,16 @@ export function RecurrentPage() {
         <div className="flex flex-col lg:flex-row gap-5 lg:flex-1 lg:min-h-0">
             <div className="w-full lg:w-[70%] h-130 lg:h-full flex flex-col gap-5 p-3 rounded-xl" style={{border: "1px solid var(--border)"}}>
                 <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-bold text-foreground">Suas transações recentes</h2>
+                    <h2 className="text-xl font-bold text-foreground">{t("recurrent.yours")}</h2>
                 </div>
                 <div className="flex flex-col gap-3 flex-1 min-h-0">
                     <div className="hidden md:grid gap-2 items-center grid-cols-[minmax(0,2fr)_minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1fr)_44px] bg-subdiv-padrao p-3 rounded-sm">
-                        <p>Descrição</p>
-                        <p>Categoria</p>
-                        <p>Valor</p>
-                        <p>Frequência</p>
-                        <p>Próxima execução</p>
-                        <p>Status</p>
+                        <p>{t("common.description")}</p>
+                        <p>{t("common.category")}</p>
+                        <p>{t("common.value")}</p>
+                        <p>{t("common.frequency")}</p>
+                        <p>{t("recurrent.nextExecution")}</p>
+                        <p>{t("common.status")}</p>
                         <p className="text-right"></p>
                     </div>
                     <div className="flex flex-col gap-3 scrollbar-hide overflow-y-auto flex-1 min-h-0">
@@ -294,7 +296,7 @@ export function RecurrentPage() {
                             />
                         )) : 
                             <div className="w-full flex items-center justify-center gap-3">
-                                Cadastre uma transação recorrente para começar!
+                                {t("recurrent.empty")}
                                 <Sparkle size={15}/>
                             </div>
                         }
@@ -303,10 +305,10 @@ export function RecurrentPage() {
             </div>
             <div className="w-full lg:w-[30%] h-auto lg:h-full flex flex-col gap-5 p-3 rounded-xl overflow-y-auto scrollbar-hide" style={{border: "1px solid var(--border)"}}>
                 <div className="flex flex-col gap-3">
-                    <h2 className="text-xl font-bold text-foreground">Nova transação recorrente</h2>
+                    <h2 className="text-xl font-bold text-foreground">{t("recurrent.new")}</h2>
                     <div className="flex flex-col gap-3">
                         <div className="flex flex-col gap-3">
-                            <p>Descrição</p>
+                            <p>{t("common.description")}</p>
                             <Input  
                                 className="p-5" 
                                 style={{border: "1px solid var(--border)"}}
@@ -316,8 +318,8 @@ export function RecurrentPage() {
                         </div>
                         <div className="flex flex-col gap-3">
                             <SelectInput 
-                                label="Categoria" 
-                                placeholder="Categoria" 
+                                label={t("common.category")} 
+                                placeholder={t("common.category")} 
                                 options={catOptions} 
                                 onValueChange={(e) => setCategoryId(e)} value={categoryId}
                             />
@@ -336,7 +338,7 @@ export function RecurrentPage() {
                                     className="w-[50%] p-5 cursor-pointer"                                
                                 >
                                     <ArrowUpIcon color="#2CAE60"/>
-                                    Receita
+                                    {t("type.Receita")}
                                 </ToggleGroupItem>
                                 <ToggleGroupItem 
                                     value="Despesa" 
@@ -344,12 +346,12 @@ export function RecurrentPage() {
                                     className="w-[50%] p-5 cursor-pointer"
                                 >
                                     <ArrowDownIcon color="#EF4444"/>
-                                    Despesa
+                                    {t("type.Despesa")}
                                 </ToggleGroupItem>
                             </ToggleGroup>
                         </div>
                         <div>
-                            <p>Valor</p>
+                            <p>{t("common.value")}</p>
                             <Input 
                                 type="number" 
                                 className="p-5" 
@@ -360,14 +362,14 @@ export function RecurrentPage() {
                         </div>
                         <div>
                             <SelectInput 
-                                label="Frequência" 
-                                placeholder="Frequência" 
+                                label={t("common.frequency")} 
+                                placeholder={t("common.frequency")} 
                                 options={frequencyOptions} 
                                 onValueChange={(e) => setFreq(e)} value={freq}
                             />
                         </div>
                         <div className="flex flex-col gap-3">
-                            {requiresDay && <p>Dia da execução</p>}
+                            {requiresDay && <p>{t("recurrent.executionDay")}</p>}
                             <div className="flex gap-3">
                                 {requiresDay && (
                                     <Input
@@ -392,7 +394,7 @@ export function RecurrentPage() {
                                                 setDay(value);
                                             }
                                         }}
-                                        placeholder="1 a 31"
+                                        placeholder={t("recurrent.dayPlaceholder")}
                                         className="p-5 w-[50%]"
                                         style={{ border: "1px solid var(--border)" }}
                                     />
@@ -406,7 +408,7 @@ export function RecurrentPage() {
                                         style={{border: "1px solid var(--border)"}}
                                     >
                                         <CalendarIcon />
-                                        {iniDate ? format(iniDate, "PPP") : <span>Data de início</span>}
+                                        {iniDate ? format(iniDate, "PPP", { locale: getDateLocale() }) : <span>{t("recurrent.startDate")}</span>}
                                     </Button>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-auto p-0">
@@ -415,7 +417,7 @@ export function RecurrentPage() {
                                 </Popover>
                             </div>
                             <div className="flex flex-col gap-3">
-                                <p>Data Final (Opcional)</p>
+                                <p>{t("recurrent.finalDateOptional")}</p>
                                 <Popover>
                                     <PopoverTrigger asChild>
                                     <Button
@@ -425,7 +427,7 @@ export function RecurrentPage() {
                                         style={{border: "1px solid var(--border)"}}
                                     >
                                         <CalendarIcon />
-                                        {finalDate ? format(finalDate, "PPP") : <span>Data Final</span>}
+                                        {finalDate ? format(finalDate, "PPP", { locale: getDateLocale() }) : <span>{t("common.finalDate")}</span>}
                                     </Button>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-auto p-0">
@@ -438,13 +440,13 @@ export function RecurrentPage() {
                                     className="bg-red-padrao cursor-pointer p-5 w-[50%]"
                                     onClick={() => clearForm()}
                                 >
-                                    Limpar
+                                    {t("common.clear")}
                                 </Button>
                                 <Button 
                                     className="bg-green-padrao cursor-pointer p-5 w-[50%]"
                                     onClick={() => insertRecurrentData()}
                                 >
-                                    Salvar Recorrente
+                                    {t("recurrent.saveButton")}
                                 </Button>
                             </div>
                         </div>
